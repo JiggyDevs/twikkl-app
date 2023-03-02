@@ -19,7 +19,8 @@ module.exports = function (api) {
                         "@assets": "./assets"
                     }
                 }
-            ]
+            ],
+            'react-native-paper/babel'
         ]
     };
 };

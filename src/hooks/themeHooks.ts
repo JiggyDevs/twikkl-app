@@ -1,7 +1,6 @@
-import { Theme } from "../configs";
+import { useTheme as _useTheme } from "react-native-paper";
+import { AppTheme } from "@twikkl/configs/theme";
 
-export const useTheme = () => Theme;
+export const useTheme = () => _useTheme<AppTheme>();
 
-export const useColors = () => Theme.colors;
-
-export const useTypography = () => Theme.typography;
+export const useColors = () => useTheme().colors;
