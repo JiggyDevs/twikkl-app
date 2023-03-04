@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useState } from "react";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+const axiforma = require("@assets/fonts/Axiforma-Regular.ttf") as Font.FontResource;
 
 export default (): boolean => {
-
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   // Load any resources or data that we need prior to rendering the app
@@ -13,9 +14,7 @@ export default (): boolean => {
         await SplashScreen.preventAutoHideAsync();
 
         // Load fonts
-        await Font.loadAsync({
-          'axiforma': require('@assets/fonts/Axiforma-Regular.ttf'),
-        });
+        await Font.loadAsync({ axiforma });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);
@@ -25,9 +24,8 @@ export default (): boolean => {
       }
     }
 
-    loadResourcesAndDataAsync();
-
+    loadResourcesAndDataAsync().catch(console.error);
   }, []);
 
   return isLoadingComplete;
-}
+};
