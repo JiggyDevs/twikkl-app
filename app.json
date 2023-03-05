@@ -5,10 +5,10 @@
     "slug": "twikkl-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/imgs/logo.png",
+    "icon": "./assets/imgs/logos/logo.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/imgs/logo.png",
+      "image": "./assets/imgs/logos/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
