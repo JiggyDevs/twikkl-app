@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { createIconSetFromIcoMoon } from "@expo/vector-icons";
 
 const axiforma = require("@assets/fonts/Axiforma-Regular.ttf") as Font.FontResource;
 
 const IcoMoon = require("@assets/fonts/icomoon/fonts/icomoon.ttf") as Font.FontResource;
-
-export const TwikklIcon = createIconSetFromIcoMoon(
-  require("@assets/fonts/icomoon/selection.json"),
-  'IcoMoon',
-  'icomoon.ttf'
-);
 
 export default (): boolean => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
