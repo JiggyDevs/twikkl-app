@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { createIconSetFromIcoMoon } from "@expo/vector-icons";
 
 const axiforma = require("@assets/fonts/Axiforma-Regular.ttf") as Font.FontResource;
+
+const IcoMoon = require("@assets/fonts/icomoon/fonts/icomoon.ttf") as Font.FontResource;
+
+export const TwikklIcon = createIconSetFromIcoMoon(
+  require("@assets/fonts/icomoon/selection.json"),
+  'IcoMoon',
+  'icomoon.ttf'
+);
 
 export default (): boolean => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -14,7 +23,7 @@ export default (): boolean => {
         await SplashScreen.preventAutoHideAsync();
 
         // Load fonts
-        await Font.loadAsync({ axiforma });
+        await Font.loadAsync({ axiforma, IcoMoon });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);

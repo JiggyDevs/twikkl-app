@@ -1,4 +1,21 @@
-import { MD3DarkTheme as DefaultTheme } from "react-native-paper";
+import { MD3DarkTheme as DefaultTheme, configureFonts } from "react-native-paper";
+
+const fontConfig = {
+  // ...DefaultTheme.fonts,
+  default:{
+    fontFamily: "axiforma"
+  },
+  bodySmall: {
+    
+  },
+  titleMedium: {
+    fontFamily: "axiforma",
+    fontStyle: "normal",
+    fontSize: 20,
+    lineHeight: 33,
+    textAlign: "center",
+  }
+};
 
 const theme = {
   ...DefaultTheme,
@@ -20,8 +37,9 @@ const theme = {
     inactive: "#C0CCC1",
     errorMsg: "#E20000",
     whiteTint: "#FFFFFF72",
-    blackTint: "#00000072"
+    blackTint: "#00000072",
   },
+  fonts: configureFonts({ config: fontConfig }),
 };
 
 type AppTheme = typeof theme;
