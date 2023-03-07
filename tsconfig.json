@@ -4,7 +4,7 @@
     "strict": true,
     "paths": {
       "@twikkl/*": ["./src/*"],
-      "@assets/*": ["./assets/*"] 
+      "@assets/*": ["./assets/*"]
     }
   }
 }
