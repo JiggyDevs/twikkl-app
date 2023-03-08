@@ -18,3 +18,5 @@ web-build/
 .metro-health-check*
 
 babel.config.js 
+
+assets/

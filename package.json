@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "build-preview:android": "eas build --platform android --profile preview",
-    "start": "expo start && eslint .",
+    "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "apply-prettier": "prettier --write ."
   },
   "dependencies": {
     "expo": "~48.0.4",
