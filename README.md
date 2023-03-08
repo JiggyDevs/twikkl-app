@@ -16,13 +16,13 @@ This app is intended to be a cross-platform
 
 NOTE:  
 If you are an experienced person and want to give us your support or point of view or if you are a beginner who would
-like to ask some questions feel free to contact us in [Discussion](/) window.
+like to ask some questions feel free to contact us in [Discussion](https://github.com/JiggyDevs/twikkl-app/discussions) window.
 
 ## Demo:
 This following demo animated image, represents the actual version of the app. Yes, it's still new 🤣
 <details>
   <summary>Expand 👈</summary>
-<img alt="demo-here" src="docs/demo/demo-1.gif"/>
+  <img alt="demo-here" src="docs/demo/demo-1.gif"/>
 </details>
 
 ## Getting started
@@ -72,14 +72,18 @@ Once it's done, run the following command from project root directory:
 npx expo start
 ```
 
-NOTE: If you're looking to contribute, then you'll have to **fork** the repo then send your Pull request(s) (check the GitHub ["Creating a pull request from a fork" guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)).
+NOTE:  
+If you're looking to contribute please check [contributing section](#contributing) below 👇.
 
-## Styling
-The styling integration must follow the design prototype, which is currently exposed as few images under [/docs/design-images](/) folder.
+### Styling
+The styling integration must follow the design prototype, which is currently exposed as few images under [/docs](https://github.com/JiggyDevs/twikkl-app/tree/set-guidelines-and-docs/docs/design-imgs) folder.
 
 We are actually working on a way to provide full design sources to you via one click 😉.
 
-Also, notice the theme setup under [`/configs/theme.ts`](/), this configuration is made following [React Native Paper theming guide](https://callstack.github.io/react-native-paper/docs/guides/theming/).
+Also, notice the theme setup in [theme.ts](/https://github.com/JiggyDevs/twikkl-app/blob/set-guidelines-and-docs/src/configs/theme.ts) file, this configuration is made following [React Native Paper theming guide](https://callstack.github.io/react-native-paper/docs/guides/theming/).
 
 Finally, as for the icons, we use [IcoMoon](https://icomoon.io/) tool to generate our own icon-set. 
 
+## Contributing
+Please see the [contributing](CONTRIBUTING.md) guide for detailed instructions on how to get started with us. We accept any sort of help 
+that can make this project better, even a word like "Good luck!" 😍. 
