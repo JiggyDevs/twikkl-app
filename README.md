@@ -78,7 +78,7 @@ If you're looking to contribute please check [contributing section](#contributin
 ### Styling
 The styling integration must follow the design prototype, which is currently exposed as few images under [/docs](https://github.com/JiggyDevs/twikkl-app/tree/set-guidelines-and-docs/docs/design-imgs) folder.
 
-We are actually working on a way to provide full design sources to you via one click 😉.
+The design sources are accessible here (https://www.figma.com/file/TtG5t7l8EQIA4BwfFMRAAI/TwikkL?node-id=418%3A36&t=rxx6eB7V3se1yrOr-1) 😉.
 
 Also, notice the theme setup in [theme.ts](/https://github.com/JiggyDevs/twikkl-app/blob/set-guidelines-and-docs/src/configs/theme.ts) file, this configuration is made following [React Native Paper theming guide](https://callstack.github.io/react-native-paper/docs/guides/theming/).
 
