@@ -8,9 +8,9 @@
 - [Intro](#intro)
 - [Demo](#demo)
 - [Getting started](#getting-started)
-    * [Tech stack](#tech-stack)
-    * [Deploy locally](#deploy-locally)
-    * [Styling](#styling)
+  - [Tech stack](#tech-stack)
+  - [Deploy locally](#deploy-locally)
+  - [Styling](#styling)
 - [Contributing](#contributing)
 
 ## Intro
@@ -30,6 +30,7 @@ like to ask some questions feel free to contact us in [Discussions](https://gith
 ## Demo
 
 This following demo animated image, represents the actual version of the app. Yes, it's still new 🤣
+
 <details>
   <summary>Expand 👈</summary>
   <img alt="demo-here" src="docs/demo/demo-1.gif"/>
@@ -78,7 +79,7 @@ Once you're ready with the tools mentioned above, you can import source code usi
 git clone https://github.com/JiggyDevs/twikkl-app.git
 ```
 
-2. Next, install the app using npm:``npm install``.
+2. Next, install the app using npm:`npm install`.
 
 3. run the following command from the project root directory:
 
@@ -88,9 +89,19 @@ npx expo start
 
 NOTE:  
 If you're looking to use [Yarn](https://yarnpkg.com/) then you have to delete the [package-lock.json](package-lock.json)
-file just after the clone. Use ``yarn install`` to install dependencies.
+file just after the clone. Use `yarn install` to install dependencies.
+
+### Navigation
+
+We use [expo-router](https://expo.github.io/router/docs) as a small framework to manage routing.
+All screens are defined under [/app](/app) folder (based on the official guide). Currently, there are few pages to test
+the navigation.
+
+We think that navigation business logic can become much better when we pass to state management.
 
 ### Styling
+
+The styling integration must follow the design prototype, which is currently exposed as few images under [/docs](https://github.com/JiggyDevs/twikkl-app/tree/set-guidelines-and-docs/docs/design-imgs) folder.
 
 The styling integration must follow the design prototype, which is currently exposed as few examples
 under [/docs](/docs/design-imgs) folder.
@@ -108,4 +119,4 @@ use [IcoMoon](https://icomoon.io/) tool to generate our own icon-set.
 ## Contributing
 
 Please see the [contributing](CONTRIBUTING.md) guide for detailed instructions on how to get started with us. We accept
-any sort of help that can make this project better, even a word like "Good luck!" 😍. 
+any sort of help that can make this project better, even a word like "Good luck!" 😍.
