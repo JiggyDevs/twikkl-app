@@ -1,0 +1,75 @@
+@font-face {
+  font-family: 'twikkl-icons';
+  src:  url('fonts/twikkl-icons.eot?wtwyde');
+  src:  url('fonts/twikkl-icons.eot?wtwyde#iefix') format('embedded-opentype'),
+    url('fonts/twikkl-icons.ttf?wtwyde') format('truetype'),
+    url('fonts/twikkl-icons.woff?wtwyde') format('woff'),
+    url('fonts/twikkl-icons.svg?wtwyde#twikkl-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="tw-icon-"], [class*=" tw-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'twikkl-icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tw-icon-heart:before {
+  content: "\e900";
+  color: #f1fcf2;
+}
+.tw-icon-eye-close-fill:before {
+  content: "\e901";
+  color: #f1fcf2;
+}
+.tw-icon-eye-fill:before {
+  content: "\e902";
+  color: #f1fcf2;
+}
+.tw-icon-pin:before {
+  content: "\e903";
+  color: #f1fcf2;
+}
+.tw-icon-plus:before {
+  content: "\e904";
+  color: #f1fcf2;
+}
+.tw-icon-profile:before {
+  content: "\e905";
+  color: #f1fcf2;
+}
+.tw-icon-share-network:before {
+  content: "\e906";
+  color: #f1fcf2;
+}
+.tw-icon-wallet:before {
+  content: "\e907";
+  color: #f1fcf2;
+}
+.tw-icon-bell:before {
+  content: "\e908";
+  color: #fff;
+}
+.tw-icon-comment:before {
+  content: "\e909";
+  color: #f1fcf2;
+}
+.tw-icon-fluentui-timer-24:before {
+  content: "\e90a";
+  color: #f1fcf2;
+}
+.tw-icon-hand-thumbs-down:before {
+  content: "\e90b";
+  color: #f1fcf2;
+}

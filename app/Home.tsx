@@ -1,40 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, ImageBackground, Text, TouchableOpacity } from "react-native";
+import { CommonViewStyles } from "@twikkl/configs";
 import { useRouter } from "expo-router";
 
 // TODO - homepage
-export default function Page() {
-  const router = useRouter();
-
+export default function ScreenHome() {
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Home Page</Text>
-        <Text style={styles.subtitle} onPress={router.back}>
-          Go Back
-        </Text>
-      </View>
-    </View>
+    <ImageBackground
+      style={[CommonViewStyles.page, CommonViewStyles.centered]}
+      imageStyle={{ opacity: 0.5 }}
+      resizeMode="cover"
+      source={require("@assets/imgs/temp/home.jpg")}
+    >
+      <TouchableOpacity style={{ backgroundColor: "#409fe1", borderRadius: 10 }} onPress={useRouter().back}>
+        <Text style={{ fontSize: 35, color: "#1a1010", fontWeight: "bold" }}> Go back </Text>
+      </TouchableOpacity>
+    </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#03d5c3",
-  },
-});
+const styles = StyleSheet.create({});

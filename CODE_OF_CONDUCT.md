@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# TwikkL Contributor Code of Conduct
 
 ## Our Pledge
 
