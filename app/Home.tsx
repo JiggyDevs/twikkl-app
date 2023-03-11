@@ -1,40 +1,25 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import { StyleSheet, ImageBackground, View } from "react-native";
+import { CommonViewStyles, TwikklIcon } from "@twikkl/configs";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 // TODO - homepage
-export default function Page() {
-  const router = useRouter();
-
+export default function ScreenHome() {
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Home Page</Text>
-        <Text style={styles.subtitle} onPress={router.back}>
-          Go Back
-        </Text>
+    <ImageBackground
+      style={[CommonViewStyles.page, CommonViewStyles.centered, {justifyContent: "flex-start"}]}
+      resizeMode="cover"
+      source={require("@assets/imgs/temp/home.jpg")}
+    >
+      <SafeAreaView>
+      <View style={{flexDirection:"row"}}>
+        <TwikklIcon name="fluentui-timer-24" size={25} color={DEFAULT_CAMERA_ACTION_COLOR}/>
       </View>
-    </View>
+      </SafeAreaView>
+
+    </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#03d5c3",
-  },
-});
+const styles = StyleSheet.create({});
