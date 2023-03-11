@@ -3,6 +3,7 @@
     "owner": "twikkl",
     "name": "twikkl-app",
     "slug": "twikkl-app",
+    "scheme": "twikkl",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/imgs/logos/logo.png",
@@ -24,6 +25,7 @@
       "package": "com.twikkl.twikklapp"
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
     "extra": {

@@ -4,11 +4,14 @@ import { Button, Checkbox } from "react-native-paper";
 import { useColors, useTheme } from "@twikkl/hooks";
 import { TwikklIcon } from "@twikkl/configs";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useRouter } from "expo-router";
 
 const logoImg = require("@assets/imgs/logos/logo.png") as ImagePropsBase["source"];
 const logoGoogle = require("@assets/imgs/logos/google.png") as ImagePropsBase["source"];
 
 export default (): ReactElement => {
+  const router = useRouter();
+
   const {
     primary: colorPrimary,
     brand: colorBrand,
@@ -26,40 +29,26 @@ export default (): ReactElement => {
           <Image style={styles.logo} source={logoImg} />
           <Text style={{ ...fonts.titleMedium, color: colorWhite }}>Create an Account</Text>
           <TextInput
-            value={"john.doe@test.com"}
-            style={{
-              ...styles.input,
-              backgroundColor: colorTertiary,
-            }}
-            placeholder={"username"}
+            value="john.doe@test.com"
+            style={{ ...styles.input, backgroundColor: colorTertiary }}
+            placeholder="username"
             placeholderTextColor={colorInactive}
           />
-          <View
-            style={{
-              width: 343,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
+          <View style={{ width: 343, flexDirection: "row", alignItems: "center" }}>
             <TextInput
-              value={"123456"}
+              value="123456"
               secureTextEntry
               style={{
                 ...styles.input,
                 backgroundColor: colorTertiary,
               }}
-              placeholder={"password"}
+              placeholder="password"
               placeholderTextColor={colorInactive}
             />
-            <TwikklIcon
-              name={"eye-fill"}
-              size={25}
-              color={colorPrimary}
-              style={{ position: "absolute", left: "88%" }}
-            />
+            <TwikklIcon name="eye-fill" size={25} color={colorPrimary} style={{ position: "absolute", left: "88%" }} />
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Checkbox uncheckedColor={colorPrimary} color={colorPrimary} onPress={() => {}} status={"unchecked"} />
+            <Checkbox uncheckedColor={colorPrimary} color={colorPrimary} onPress={() => {}} status="unchecked" />
             <View style={{ flexDirection: "row" }}>
               <Text style={{ ...fonts.bodySmall, color: colorWhite }}>I agree to </Text>
               <Text style={{ ...fonts.bodySmall, color: colorPrimary, textDecorationLine: "underline" }}>
@@ -72,7 +61,6 @@ export default (): ReactElement => {
             </View>
           </View>
           <Button
-            textColor={colorWhite}
             style={{
               backgroundColor: colorInactive,
               width: 343,
@@ -81,10 +69,12 @@ export default (): ReactElement => {
               marginBottom: "5%",
               justifyContent: "center",
             }}
+            onPress={() => router.push("/Home")}
           >
             <Text style={{ ...fonts.labelLarge, color: colorWhite }}>Create Account</Text>
           </Button>
           <Text style={{ ...fonts.bodySmall, color: colorWhite }}>Or</Text>
+
           <Button
             textColor={colorWhite}
             style={{

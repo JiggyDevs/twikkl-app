@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { Provider as PaperProvider } from "react-native-paper";
-import ScreenRegister from "@twikkl/screens/Register";
 import { useCachedResources } from "@twikkl/hooks";
 import { theme } from "@twikkl/configs";
+import ScreenRegister from "./Register";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
