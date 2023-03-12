@@ -4,3 +4,5 @@ import { AppTheme } from "@twikkl/configs/theme";
 export const useTheme = (): NonNullable<AppTheme> => _useTheme<AppTheme>();
 
 export const useColors = (): NonNullable<AppTheme["colors"]> => useTheme().colors;
+
+export const useFonts = (): NonNullable<AppTheme["fonts"]> => useTheme().fonts;

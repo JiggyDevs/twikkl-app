@@ -5,3 +5,8 @@ export const TwikklIcon = createIconSetFromIcoMoon(
   "TwikkLIconFonts",
   "twikkl-icons.ttf",
 );
+
+export enum Icon {
+  TIMER_24 = "fluentui-timer-24",
+  BELL = "bell",
+}

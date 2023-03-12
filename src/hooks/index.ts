@@ -1,1 +1,1 @@
-export { useTheme, useColors } from "./themeHooks";
+export { useTheme, useColors, useFonts } from "./themeHooks";

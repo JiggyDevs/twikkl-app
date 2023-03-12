@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { Image, Text, View, StyleSheet, ImagePropsBase, TextInput, SafeAreaView } from "react-native";
 import { Button, Checkbox } from "react-native-paper";
 import { useColors, useTheme } from "@twikkl/hooks";
-import { TwikklIcon, CommonViewStyles } from "@twikkl/configs";
+import { TwikklIcon, ViewVariant } from "@twikkl/configs";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRouter } from "expo-router";
 
@@ -23,9 +23,9 @@ export default function ScreenRegister(): ReactElement {
   const { fonts } = useTheme();
 
   return (
-    <SafeAreaView style={{ ...CommonViewStyles.page, backgroundColor: colorBrand }}>
-      <KeyboardAwareScrollView contentContainerStyle={CommonViewStyles.centered}>
-        <View style={{ ...CommonViewStyles.centered, ...styles.inner, paddingTop: "20%" }}>
+    <SafeAreaView style={{ ...ViewVariant.page, backgroundColor: colorBrand }}>
+      <KeyboardAwareScrollView contentContainerStyle={ViewVariant.centered}>
+        <View style={{ ...ViewVariant.centered, ...styles.inner, paddingTop: "20%" }}>
           <Image style={styles.logo} source={logoImg} />
           <Text style={{ ...fonts.titleMedium, color: colorWhite }}>Create an Account</Text>
           <TextInput
