@@ -1,19 +1,23 @@
-import { StyleSheet, ImageBackground, Text, TouchableOpacity } from "react-native";
-import { CommonViewStyles } from "@twikkl/configs";
-import { useRouter } from "expo-router";
+import { StyleSheet, ImageBackground, View } from "react-native";
+import { CommonViewStyles, TwikklIcon } from "@twikkl/configs";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 // TODO - homepage
 export default function ScreenHome() {
   return (
     <ImageBackground
-      style={[CommonViewStyles.page, CommonViewStyles.centered]}
-      imageStyle={{ opacity: 0.5 }}
+      style={[CommonViewStyles.page, CommonViewStyles.centered, {justifyContent: "flex-start"}]}
       resizeMode="cover"
       source={require("@assets/imgs/temp/home.jpg")}
     >
-      <TouchableOpacity style={{ backgroundColor: "#409fe1", borderRadius: 10 }} onPress={useRouter().back}>
-        <Text style={{ fontSize: 35, color: "#1a1010", fontWeight: "bold" }}> Go back </Text>
-      </TouchableOpacity>
+      <SafeAreaView>
+      <View style={{flexDirection:"row"}}>
+        <TwikklIcon name="fluentui-timer-24" size={25} color={DEFAULT_CAMERA_ACTION_COLOR}/>
+      </View>
+      </SafeAreaView>
+
     </ImageBackground>
   );
 }

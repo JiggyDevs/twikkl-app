@@ -8,9 +8,9 @@
 - [Intro](#intro)
 - [Demo](#demo)
 - [Getting started](#getting-started)
-  - [Tech stack](#tech-stack)
-  - [Deploy locally](#deploy-locally)
-  - [Styling](#styling)
+- [Deploy locally](#deploy-locally)
+- [Navigation](#navigation)
+- [Styling](#styling)
 - [Contributing](#contributing)
 
 ## Intro
@@ -40,9 +40,7 @@ This following demo animated image, represents the actual version of the app. Ye
 
 Before you start make sure that you have at least ~15 minutes ⏱ to set up your dev environment.
 
-### Tech stack
-
-The most important techs used in this app are :
+The most important techs used are :
 
 1. React v18
 2. React Native v0.71
@@ -71,7 +69,7 @@ If you want to use emulator or iOS simulator, we recommend you to visit the foll
 If you want to run the app on web navigator like Chrome or Mozilla, then you'll have
 to [add few additional dependencies](https://docs.expo.dev/workflow/web/).
 
-### Deploy locally
+## Deploy locally
 
 Once you're ready with the tools mentioned above, you can import source code using _Git CLI_ with the following command:
 
@@ -91,7 +89,7 @@ NOTE:
 If you're looking to use [Yarn](https://yarnpkg.com/) then you have to delete the [package-lock.json](package-lock.json)
 file just after the clone. Use `yarn install` to install dependencies.
 
-### Navigation
+## Navigation
 
 We use [expo-router](https://expo.github.io/router/docs) as a small framework to manage routing.
 All screens are defined under [/app](/app) folder (based on the official guide). Currently, there are few pages to test
@@ -99,7 +97,7 @@ the navigation.
 
 We think that navigation business logic can become much better when we pass to state management.
 
-### Styling
+## Styling
 
 The styling integration must follow the design prototype, which is currently exposed as few images under [/docs](https://github.com/JiggyDevs/twikkl-app/tree/set-guidelines-and-docs/docs/design-imgs) folder.
 
