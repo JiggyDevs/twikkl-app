@@ -6,15 +6,14 @@ const { getDefaultConfig } = require("expo/metro-config");
  * Check [this GitHub issue.](https://github.com/expo/expo-cli/issues/2021#issuecomment-1239989633)
  * @returns {RegExp}
  */
-const getBlacklistRE = function getBlacklistRE() {
-  return new RegExp(
-    "(.*\\android\\.*|.*__fixtures__\\.*|node_modules[\\\\]react[\\\\]dist[\\\\].*|website\\node_modules\\.*|heapCapture\\bundle.js|.*__tests__\\.*)$",
-  );
-};
+const blackList =
+  /.*git.*|.*android.*|.*__fixtures__.*|.*node_modules.*|.*react.*|.*dist.*|.*website\\node_modules.*|.heapCapture\\bundle.js|.*__tests__.*/gm;
+
 module.exports = {
-  ...getDefaultConfig(__dirname),
   resolver: {
-    blockList: getBlacklistRE(),
-    blockListRE: getBlacklistRE(),
+    blacklist: blackList,
+    blacklistRE: blackList,
   },
 };
+
+module.exports = getDefaultConfig(__dirname);

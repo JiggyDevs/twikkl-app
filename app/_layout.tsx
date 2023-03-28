@@ -1,10 +1,10 @@
+import { useEffect } from "react";
 import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { theme } from "@twikkl/configs";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
+import { theme } from "@twikkl/configs";
 
 export {
   // Catch any errors thrown by the Layout component.
