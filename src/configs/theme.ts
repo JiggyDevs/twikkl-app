@@ -9,7 +9,7 @@ const fontConfig = {
     lineHeight: 33,
     textAlign: "center",
   },
-};
+} as const;
 
 const theme = {
   ...DefaultTheme,
