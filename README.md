@@ -33,7 +33,7 @@ This following demo animated image, represents the actual version of the app. Ye
 
 <details>
   <summary>Expand 👈</summary>
-  <img alt="demo-here" src="docs/demo/demo-1.gif"/>
+  <img alt="demo-here" src="docs/demo/demo-2.gif"/>
 </details>
 
 ## Getting started
@@ -42,10 +42,11 @@ Before you start make sure that you have at least ~15 minutes ⏱ to set up your
 
 The most important techs used are :
 
-1. React v18
-2. React Native v0.71
-3. Expo v48 (Managed)
-4. React Native Paper v5 (UI library)
+1. [ReactJS](https://react.dev/) 
+2. [React Native](https://reactnative.dev/) (Without need for RN CLI)
+3. Expo [Managed](https://docs.expo.dev/archive/managed-vs-bare/#managed-workflow)
+4. [React Native Paper](https://callstack.github.io/react-native-paper/) (This is a UI library)
+5. [Expo Router](https://docs.expo.dev/guides/routing-and-navigation) (Smart routing)
 
 NOTE:  
 Don't worry if you don't know few of these, it's fine 😅. But if you are totally new to these, then we recommend you to
@@ -54,15 +55,14 @@ the [React Native basics guide](https://reactnative.dev/docs/getting-started)
 
 Next, make sure to install the following tools on your local machine and Os:
 
-1. Node.js (We recommend [LTS version](https://nodejs.org/en/) higher than v16 )
-2. A JavaScript IDE such as VsCode, Webstorm etc...
-3. Git (visit [the GitHub's guide on how to set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git))
+1. Node.js (We recommend [LTS version](https://nodejs.org/en/) v16 or higher)
+2. A JavaScript IDE such as VsCode/Webstorm etc...
+3. Git installed (visit [the GitHub's guide on how to set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git))
 
-You can run the app directly on your own device by using [Expo Go App](https://expo.dev/client) (available on Android
-and iOS), it makes you run the app directly on a physical device 🤩.
+You can run the app for free, by using [Expo Go App](https://expo.dev/client) (available on Android
+and iOS), it makes you run the app on a physical device.
 
 If you want to use emulator or iOS simulator, we recommend you to visit the following links:
-
 - [Android emulator setup guide](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator setup guide](https://docs.expo.dev/workflow/ios-simulator/)
 
@@ -70,14 +70,12 @@ If you want to run the app on web navigator like Chrome or Mozilla, then you'll 
 to [add few additional dependencies](https://docs.expo.dev/workflow/web/).
 
 ## Deploy locally
-
 Once you're ready with the tools mentioned above, you can import source code using _Git CLI_ with the following command:
-
 ```
 git clone https://github.com/JiggyDevs/twikkl-app.git
 ```
 
-2. Next, install the app using npm:`npm install`.
+2. Next, install the app using npm: `npm install`)
 
 3. run the following command from the project root directory:
 
@@ -87,26 +85,23 @@ npx expo start
 
 NOTE:  
 If you're looking to use [Yarn](https://yarnpkg.com/) then you have to delete the [package-lock.json](package-lock.json)
-file just after the clone. Use `yarn install` to install dependencies.
+file just after the clone. Then, use `yarn install` to install dependencies.
 
 ## Navigation
 
-We use [expo-router](https://expo.github.io/router/docs) as a small framework to manage routing.
-All screens are defined under [/app](/app) folder (based on the official guide). Currently, there are few pages to test
-the navigation.
+We use [Expo Router](https://expo.github.io/router/docs) as a small framework to manage routing.
+All screens are defined under [/app](/app) folder. Currently, there are few pages to test
+the navigation (Register and Home).
 
-We think that navigation business logic can become much better when we pass to state management.
+We think that navigation business logic can become much better as the app grow and state management is up.
 
 ## Styling
-
-The styling integration must follow the design prototype, which is currently exposed as few images under [/docs](https://github.com/JiggyDevs/twikkl-app/tree/set-guidelines-and-docs/docs/design-imgs) folder.
-
 The styling integration must follow the design prototype, which is currently exposed as few examples
 under [/docs](/docs/design-imgs) folder.
 
 If you are interested in watching all examples (the design roadmap), we invite you to use
 our [Figma link](https://www.figma.com/file/TtG5t7l8EQIA4BwfFMRAAI/TwikkL?node-id=418%3A36&t=rxx6eB7V3se1yrOr-1)
-😉, just create a free account, and you're done.
+😉, just create a free account, and you're to download it.
 
 Also, notice the theme setup in [theme.ts](/src/configs/theme.ts) file, this configuration is made
 following [React Native Paper theming guide](https://callstack.github.io/react-native-paper/docs/guides/theming/).
@@ -115,6 +110,5 @@ Finally, as for the icons, following the [Expo icons guide](https://docs.expo.de
 use [IcoMoon](https://icomoon.io/) tool to generate our own icon-set.
 
 ## Contributing
-
 Please see the [contributing](CONTRIBUTING.md) guide for detailed instructions on how to get started with us. We accept
 any sort of help that can make this project better, even a word like "Good luck!" 😍.
