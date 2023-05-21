@@ -11,8 +11,8 @@ const blackList =
 
 module.exports = {
   resolver: {
-    blacklist: blackList,
-    blacklistRE: blackList,
+    blockList: blackList,
+    blackListRE: blackList,
   },
 };
 

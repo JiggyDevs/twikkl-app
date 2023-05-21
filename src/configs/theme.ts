@@ -1,7 +1,7 @@
 import { MD3DarkTheme as DefaultTheme, configureFonts } from "react-native-paper";
 
 const fontConfig = {
-  // ...DefaultTheme.fonts,
+  ...DefaultTheme.fonts,
   titleMedium: {
     fontFamily: "axiforma",
     fontStyle: "normal",
