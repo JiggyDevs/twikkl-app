@@ -2,14 +2,14 @@ import { ReactElement } from "react";
 import { Image, Text, View, StyleSheet, ImagePropsBase, TextInput, SafeAreaView } from "react-native";
 import { Button, Checkbox } from "react-native-paper";
 import { useColors, useTheme } from "@twikkl/hooks";
-import { TwikklIcon } from "@twikkl/configs";
+import { TwikklIcon, ViewVariant } from "@twikkl/configs";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRouter } from "expo-router";
 
 const logoImg = require("@assets/imgs/logos/logo.png") as ImagePropsBase["source"];
 const logoGoogle = require("@assets/imgs/logos/google.png") as ImagePropsBase["source"];
 
-export default (): ReactElement => {
+export default function ScreenRegister(): ReactElement {
   const router = useRouter();
 
   const {
@@ -23,9 +23,9 @@ export default (): ReactElement => {
   const { fonts } = useTheme();
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor: colorBrand }}>
-      <KeyboardAwareScrollView contentContainerStyle={{ ...styles.centered }}>
-        <View style={{ ...styles.centered, ...styles.inner, paddingTop: "20%" }}>
+    <SafeAreaView style={{ ...ViewVariant.page, backgroundColor: colorBrand }}>
+      <KeyboardAwareScrollView contentContainerStyle={ViewVariant.centered}>
+        <View style={{ ...ViewVariant.centered, ...styles.inner, paddingTop: "20%" }}>
           <Image style={styles.logo} source={logoImg} />
           <Text style={{ ...fonts.titleMedium, color: colorWhite }}>Create an Account</Text>
           <TextInput
@@ -110,19 +110,12 @@ export default (): ReactElement => {
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   inner: {
     flex: 1,
     marginHorizontal: 10,
-  },
-  centered: {
-    alignItems: "center",
-    justifyContent: "center",
   },
   logo: {
     width: 160,

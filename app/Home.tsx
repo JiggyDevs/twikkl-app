@@ -1,40 +1,94 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, Badge } from "react-native-paper";
+import { Video, ResizeMode } from "expo-av";
+import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
+import { useColors } from "@twikkl/hooks";
+import { ButtonAddSimple } from "@twikkl/components";
 
-// TODO - homepage
-export default function Page() {
-  const router = useRouter();
+const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
+
+/**
+ * Home screen component
+ *
+ * @constructor
+ */
+export default function ScreenHome() {
+  const { primary: colorPrimary } = useColors();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Home Page</Text>
-        <Text style={styles.subtitle} onPress={router.back}>
-          Go Back
-        </Text>
-      </View>
-    </View>
+    <>
+      <Video
+        source={require("@assets/videos/home-temp.mp4")}
+        shouldPlay
+        isLooping
+        resizeMode={ResizeMode.COVER}
+        style={[StyleSheet.absoluteFill]}
+      />
+      <SafeAreaView style={styles.innerContainer}>
+        <View style={ViewVariant.rowSpaceBetween}>
+          <TwikklIcon name={EIcon.TIMER_24} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+          <View style={ViewVariant.centered}>
+            <Text variant="headlineSmall" style={styles.headActionText}>
+              My Feed
+            </Text>
+            <Badge size={12} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
+          </View>
+          <View>
+            <Text variant="headlineSmall" style={styles.headActionText}>
+              Discover
+            </Text>
+            <Badge size={12} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
+          </View>
+          <View>
+            <TwikklIcon name={EIcon.BELL} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+            <Badge size={12} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
+          </View>
+        </View>
+        <View style={{ justifyContent: "flex-end", flex: 1, marginRight: 10, marginBottom: "20%" }}>
+          <View style={styles.rightActionsContainer}>
+            <TwikklIcon name={EIcon.HEART} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+            <TwikklIcon name={EIcon.THUMB_DOWN} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+            <TwikklIcon name={EIcon.SHARE_NETWORK} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+            <TwikklIcon name={EIcon.PIN} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text variant="headlineSmall" style={styles.headActionText}>@glory.jgy</Text>
+              <ButtonAddSimple />
+          </View>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  innerContainer: {
     flex: 1,
-    alignItems: "center",
-    padding: 24,
+    justifyContent: "space-between",
+    paddingTop: 10,
+    marginHorizontal: 10,
   },
-  main: {
+  headActionText: {
+    color: DEFAULT_CAMERA_ACTION_COLOR,
+  },
+  headActionIndicator: {
     flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
+    alignSelf: "center",
+    marginTop: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
   },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#03d5c3",
+  rightActionsContainer: {
+    flex: 0.3,
+    justifyContent: "space-between",
+    alignSelf: "flex-end",
+    alignItems: "flex-end",
+    marginVertical: 10,
   },
 });

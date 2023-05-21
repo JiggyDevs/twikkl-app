@@ -1,2 +1,3 @@
 export { theme, AppTheme } from "./theme";
-export { TwikklIcon } from "./icon";
+export { TwikklIcon, Icon as EIcon } from "./icon";
+export { ViewVariant } from "./layout";

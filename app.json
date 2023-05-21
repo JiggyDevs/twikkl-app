@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/imgs/logos/logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.twikkl.twikklapp"
