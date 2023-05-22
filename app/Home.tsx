@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
@@ -9,12 +9,13 @@ import { ButtonAddSimple } from "@twikkl/components";
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 /**
- * Home screen component
+ * TODO - Build Home screen component
  *
  * @constructor
  */
 export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
+  const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN]
 
   return (
     <>
@@ -27,39 +28,63 @@ export default function ScreenHome() {
       />
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
-          <TwikklIcon name={EIcon.TIMER_24} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+          <TwikklIcon name={EIcon.TIMER_24} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
           <View style={ViewVariant.centered}>
-            <Text variant="headlineSmall" style={styles.headActionText}>
+            <Text variant="titleMedium" style={styles.headActionText}>
               My Feed
             </Text>
-            <Badge size={12} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
+            <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
           </View>
           <View>
-            <Text variant="headlineSmall" style={styles.headActionText}>
+            <Text variant="titleMedium" style={styles.headActionText}>
               Discover
             </Text>
-            <Badge size={12} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
+            <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
           </View>
           <View>
-            <TwikklIcon name={EIcon.BELL} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
-            <Badge size={12} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
+            <TwikklIcon name={EIcon.BELL} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+            <Badge size={10} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
           </View>
         </View>
-        <View style={{ justifyContent: "flex-end", flex: 1, marginRight: 10, marginBottom: "20%" }}>
+        <View style={{
+          flex: 1,
+          marginRight: 10,
+          marginBottom: "20%",
+          justifyContent: "flex-end",
+        }}>
           <View style={styles.rightActionsContainer}>
-            <TwikklIcon name={EIcon.HEART} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
-            <TwikklIcon name={EIcon.THUMB_DOWN} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
-            <TwikklIcon name={EIcon.SHARE_NETWORK} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
-            <TwikklIcon name={EIcon.PIN} size={35} color={DEFAULT_CAMERA_ACTION_COLOR} />
+            <View style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+              {
+                icons.map((icon, index) =>
+                  <TouchableOpacity key={index}
+                    style={{
+                      paddingVertical: 12,
+                    }}>
+                    <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+                  </TouchableOpacity>
+                )
+              }
+
+            </View>
           </View>
+
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
+              marginTop: 20,
             }}
           >
-            <Text variant="headlineSmall" style={styles.headActionText}>@glory.jgy</Text>
+            <View style={{}}>
+            <Text variant="titleMedium" style={styles.headActionText}>@glory.jgy</Text>
+            </View>
+            <TouchableOpacity style={{
+            }}>
               <ButtonAddSimple />
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
@@ -72,17 +97,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     paddingTop: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 14,
   },
   headActionText: {
     color: DEFAULT_CAMERA_ACTION_COLOR,
+    fontWeight: "700",
   },
   headActionIndicator: {
-    flex: 1,
     alignSelf: "center",
-    marginTop: 5,
+    marginTop: 0,
     paddingHorizontal: 10,
     paddingVertical: 3,
+    height: 5,
   },
   rightActionsContainer: {
     flex: 0.3,
@@ -90,5 +116,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     alignItems: "flex-end",
     marginVertical: 10,
+    paddingRight: 10,
   },
 });
