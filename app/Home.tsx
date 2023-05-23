@@ -5,6 +5,7 @@ import { Video, ResizeMode } from "expo-av";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import { ButtonAddSimple } from "@twikkl/components";
+import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -34,64 +35,7 @@ export default function ScreenHome() {
         // }}
         data={[1, 2, 3, 4]}
         renderItem={({ item, index }) =>
-          <View style={{ flex: 1, height: height + 49.5 }}>
-            <Video
-              source={require("@assets/videos/home-temp.mp4")}
-              shouldPlay
-              isLooping
-              resizeMode={ResizeMode.COVER}
-              style={[StyleSheet.absoluteFill]}
-            />
-            <View style={{
-              flex: 1,
-              marginHorizontal: 10,
-              marginBottom: "20%",
-              justifyContent: "flex-end",
-            }}>
-              <View style={styles.rightActionsContainer}>
-                <View style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}>
-                  {
-                    icons.map((icon, index) =>
-                      <TouchableOpacity key={index}
-                        style={{
-                          paddingVertical: 12,
-                        }}>
-                        <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
-                      </TouchableOpacity>
-                    )
-                  }
-
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 14,
-                }}
-              >
-                <View style={{
-                  flexDirection: "row",
-                }}>
-                  <Image style={styles.profileImg} source={profileImg} />
-                  <Text variant="titleMedium" style={[styles.headActionText, { width: '75%', }]}>
-                    @glory.jgy {'\n'}
-                    <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
-                      My very first podcast, it was really fun and I learnt so much just in one day.
-                    </Text>
-                  </Text>
-                </View>
-                <TouchableOpacity style={{
-                }}>
-                  <ButtonAddSimple />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+          <VideoFeedItem />
         }
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled={true}
