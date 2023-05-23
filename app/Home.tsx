@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, FlatList, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, FlatList, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
@@ -6,6 +6,7 @@ import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import { ButtonAddSimple } from "@twikkl/components";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
+import { useRef, useState } from "react";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -23,25 +24,53 @@ const profileImg = require("@assets/imgs/logos/profile.png") as ImagePropsBase["
 
 export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
-  const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN]
+  const items = [
+    { video: require("@assets/videos/dog.mp4") },
+    { video: require("@assets/videos/girl.mp4") },
+    { video: require("@assets/videos/ballon.mp4") },
+    { video: require("@assets/videos/home-temp.mp4") },
+  ]
+
+  const flatListRef = useRef<FlatList>(null);
+  const [visibleIndex, setVisibleIndex] = useState<number>(0);
+
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const contentOffset = event.nativeEvent.contentOffset.y;
+    const index = Math.floor(contentOffset / (height));
+
+    setVisibleIndex(index);
+  };
+
 
   return (
     <>
+      {/* <FlatList
+        style={[StyleSheet.absoluteFill]}
+        data={[' My Feed', 'Discover']}
+        renderItem={({ item, index }) => */}
       <FlatList
         style={[StyleSheet.absoluteFill]}
         // contentContainerStyle={{
         //   width: width,
         //   height: height,
         // }}
-        data={[1, 2, 3, 4]}
+        data={items}
         renderItem={({ item, index }) =>
-          <VideoFeedItem />
+          <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} />
         }
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled={true}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        onScroll={onScroll}
       />
+      {/* }
+        keyExtractor={(item, index) => index.toString()}
+        pagingEnabled={true}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      /> */}
 
 
       <SafeAreaView style={styles.innerContainer}>
