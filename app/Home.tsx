@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, FlatList, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
@@ -7,6 +7,9 @@ import { useColors } from "@twikkl/hooks";
 import { ButtonAddSimple } from "@twikkl/components";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
+
+//get device width and height
+const { width, height } = Dimensions.get("window");
 
 /**
  * TODO - Build Home screen component
@@ -23,13 +26,80 @@ export default function ScreenHome() {
 
   return (
     <>
-      <Video
-        source={require("@assets/videos/home-temp.mp4")}
-        shouldPlay
-        isLooping
-        resizeMode={ResizeMode.COVER}
+      <FlatList
         style={[StyleSheet.absoluteFill]}
+        // contentContainerStyle={{
+        //   width: width,
+        //   height: height,
+        // }}
+        data={[1, 2, 3, 4]}
+        renderItem={({ item, index }) =>
+          <View style={{ flex: 1, height: height + 49.5 }}>
+            <Video
+              source={require("@assets/videos/home-temp.mp4")}
+              shouldPlay
+              isLooping
+              resizeMode={ResizeMode.COVER}
+              style={[StyleSheet.absoluteFill]}
+            />
+            <View style={{
+              flex: 1,
+              marginHorizontal: 10,
+              marginBottom: "20%",
+              justifyContent: "flex-end",
+            }}>
+              <View style={styles.rightActionsContainer}>
+                <View style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
+                  {
+                    icons.map((icon, index) =>
+                      <TouchableOpacity key={index}
+                        style={{
+                          paddingVertical: 12,
+                        }}>
+                        <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+                      </TouchableOpacity>
+                    )
+                  }
+
+                </View>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 14,
+                }}
+              >
+                <View style={{
+                  flexDirection: "row",
+                }}>
+                  <Image style={styles.profileImg} source={profileImg} />
+                  <Text variant="titleMedium" style={[styles.headActionText, { width: '75%', }]}>
+                    @glory.jgy {'\n'}
+                    <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
+                      My very first podcast, it was really fun and I learnt so much just in one day.
+                    </Text>
+                  </Text>
+                </View>
+                <TouchableOpacity style={{
+                }}>
+                  <ButtonAddSimple />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        }
+        keyExtractor={(item, index) => index.toString()}
+        pagingEnabled={true}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
       />
+
+
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
           <TwikklIcon name={EIcon.TIMER_24} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
@@ -50,55 +120,7 @@ export default function ScreenHome() {
             <Badge size={10} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
           </View>
         </View>
-        <View style={{
-          flex: 1,
-          marginRight: 10,
-          marginBottom: "20%",
-          justifyContent: "flex-end",
-        }}>
-          <View style={styles.rightActionsContainer}>
-            <View style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-              {
-                icons.map((icon, index) =>
-                  <TouchableOpacity key={index}
-                    style={{
-                      paddingVertical: 12,
-                    }}>
-                    <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
-                  </TouchableOpacity>
-                )
-              }
 
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 14,
-            }}
-          >
-            <View style={{
-              flexDirection: "row",
-            }}>
-              <Image style={styles.profileImg} source={profileImg} />
-              <Text variant="titleMedium" style={[styles.headActionText, { width: '75%', }]}>
-                @glory.jgy {'\n'}
-                <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
-                  My very first podcast, it was really fun and I learnt so much just in one day.
-                </Text>
-              </Text>
-            </View>
-            <TouchableOpacity style={{
-            }}>
-              <ButtonAddSimple />
-            </TouchableOpacity>
-          </View>
-        </View>
       </SafeAreaView>
     </>
   );
@@ -106,8 +128,6 @@ export default function ScreenHome() {
 
 const styles = StyleSheet.create({
   innerContainer: {
-    flex: 1,
-    justifyContent: "space-between",
     paddingTop: 10,
     marginHorizontal: 14,
   },
