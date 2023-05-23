@@ -44,10 +44,6 @@ export default function ScreenHome() {
 
   return (
     <>
-      {/* <FlatList
-        style={[StyleSheet.absoluteFill]}
-        data={[' My Feed', 'Discover']}
-        renderItem={({ item, index }) => */}
       <FlatList
         style={[StyleSheet.absoluteFill]}
         // contentContainerStyle={{
@@ -64,13 +60,7 @@ export default function ScreenHome() {
         showsHorizontalScrollIndicator={false}
         onScroll={onScroll}
       />
-      {/* }
-        keyExtractor={(item, index) => index.toString()}
-        pagingEnabled={true}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      /> */}
+
 
 
       <SafeAreaView style={styles.innerContainer}>
