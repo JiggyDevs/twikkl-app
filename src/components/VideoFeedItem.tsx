@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, Dimensions, StatusBar } from "react-native";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
@@ -32,22 +32,17 @@ export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
   const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN]
 
   return (
-    <View style={{ flex: 1, height: height + 41 - (visibleIndex/2) }}>
+    <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 41 )}}>
       <Video
         source={item.video}
-        shouldPlay = {index === visibleIndex}
+        shouldPlay={index === visibleIndex }
         isLooping
         resizeMode={ResizeMode.COVER}
-        style={{ height: '100%', width: width, position: "absolute" }}
+        // style={{ height: '100%', width: width, position: "absolute" }}
 
-      // style={[StyleSheet.absoluteFill]}
+        style={[StyleSheet.absoluteFill]}
       />
-      <View style={{
-        flex: 1,
-        marginHorizontal: 10,
-        marginBottom: "20%",
-        justifyContent: "flex-end",
-      }}>
+      <View style={styles.bottomContainer}>
         <View style={styles.rightActionsContainer}>
           <View style={{
             justifyContent: "center",
@@ -85,8 +80,7 @@ export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
               </Text>
             </Text>
           </View>
-          <TouchableOpacity style={{
-          }}>
+          <TouchableOpacity >
             <ButtonAddSimple />
           </TouchableOpacity>
         </View>
@@ -121,5 +115,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderWidth: 1,
     borderColor: "#FFF",
+  },
+  bottomContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+    marginBottom: "20%",
+    justifyContent: "flex-end",
   },
 });
