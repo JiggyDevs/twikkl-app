@@ -42,10 +42,6 @@ export default function ScreenHome() {
     <>
       <FlatList
         style={[StyleSheet.absoluteFill]}
-        // contentContainerStyle={{
-        //   width: width,
-        //   height: height,
-        // }}
         data={items}
         renderItem={({ item, index }) =>
           <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} />
