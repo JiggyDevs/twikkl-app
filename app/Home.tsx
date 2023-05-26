@@ -7,6 +7,7 @@ import { useColors } from "@twikkl/hooks";
 import { ButtonAddSimple } from "@twikkl/components";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
+import videos from "@twikkl/staticFiles/videos";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -14,22 +15,17 @@ const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 const { width, height } = Dimensions.get("window");
 
 /**
- * TODO - Build Home screen component
+ * TODO - Horizontal pager
  *
  * @constructor
  */
 
-const profileImg = require("@assets/imgs/logos/profile.png") as ImagePropsBase["source"];
-
 
 export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
-  const items = [
-    { video: require("@assets/videos/dog.mp4") },
-    { video: require("@assets/videos/girl.mp4") },
-    { video: require("@assets/videos/ballon.mp4") },
-    { video: require("@assets/videos/home-temp.mp4") },
-  ]
+  
+  // get static videos
+  const items = videos;
 
   const flatListRef = useRef<FlatList>(null);
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
