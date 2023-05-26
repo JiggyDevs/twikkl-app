@@ -8,10 +8,7 @@ import { ButtonAddSimple } from "@twikkl/components";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
 import videos from "@twikkl/staticFiles/videos";
-
-import CommentIcon from "../assets/svg/comment.svg";
-import WalletIcon from "../assets/svg/wallet.svg";
-import ProfileIcon from "../assets/svg/profile.svg";
+import BottomNav from "@twikkl/components/BottomNav";
 
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
@@ -81,29 +78,8 @@ export default function ScreenHome() {
           </View>
         </View>
       </SafeAreaView>
-      <SafeAreaView style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.tabContainer}>
-          <CommentIcon />
-          <Text variant="titleMedium" style={styles.tabText}>
-            Comment
-          </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.tabContainer}>
-          <WalletIcon />
-          <Text variant="titleMedium" style={styles.tabText}>
-            Wallet
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.tabContainer}>
-          <ProfileIcon />
-          <Text variant="titleMedium" style={styles.tabText}>
-            Profile
-          </Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-
+      <BottomNav commentCount={0} />
     </>
   );
 }
