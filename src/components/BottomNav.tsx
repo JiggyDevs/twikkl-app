@@ -19,7 +19,10 @@ function BottomNav({ commentCount = 0 }: BottomNavProps, { }) {
     return (
         <SafeAreaView style={styles.bottomContainer}>
             <TouchableOpacity style={styles.tabContainer}>
-                <CommentIcon />
+                <View style={{ flexDirection: 'row' }}>
+                    <CommentIcon />
+                    <Text style={styles.commentCount}>{commentCount}</Text>
+                </View>
                 <Text variant="titleMedium" style={styles.tabText}>
                     Comment
                 </Text>
@@ -64,6 +67,11 @@ const styles = StyleSheet.create({
     },
     tabContainer: {
         alignItems: "center",
+    },
+    commentCount: {
+        color: "#FFF",
+        fontSize: 12,
+        marginLeft: 6
     },
 
 });
