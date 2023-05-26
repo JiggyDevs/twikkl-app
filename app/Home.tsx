@@ -9,6 +9,11 @@ import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
 import videos from "@twikkl/staticFiles/videos";
 
+import CommentIcon from "../assets/svg/comment.svg";
+import WalletIcon from "../assets/svg/wallet.svg";
+import ProfileIcon from "../assets/svg/profile.svg";
+
+
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 //get device width and height
@@ -23,7 +28,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
-  
+
   // get static videos
   const items = videos;
 
@@ -75,8 +80,30 @@ export default function ScreenHome() {
             <Badge size={10} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
           </View>
         </View>
-
       </SafeAreaView>
+      <SafeAreaView style={styles.bottomContainer}>
+        <TouchableOpacity style={styles.tabContainer}>
+          <CommentIcon />
+          <Text variant="titleMedium" style={styles.tabText}>
+            Comment
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.tabContainer}>
+          <WalletIcon />
+          <Text variant="titleMedium" style={styles.tabText}>
+            Wallet
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.tabContainer}>
+          <ProfileIcon />
+          <Text variant="titleMedium" style={styles.tabText}>
+            Profile
+          </Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+
     </>
   );
 }
@@ -112,4 +139,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#FFF",
   },
+  bottomContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingBottom: 10,
+    paddingHorizontal: 14,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  tabText: {
+    color: "#FFF",
+    fontSize: 12,
+  },
+  tabContainer: {
+    alignItems: "center",
+  },
+
 });
