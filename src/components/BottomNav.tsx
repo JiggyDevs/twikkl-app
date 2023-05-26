@@ -28,14 +28,18 @@ function BottomNav({ commentCount = 0 }: BottomNavProps, { }) {
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.tabContainer}>
+            <TouchableOpacity 
+                onPress={() => router.push("Wallet")}
+            style={styles.tabContainer}>
                 <WalletIcon />
                 <Text variant="titleMedium" style={styles.tabText}>
                     Wallet
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.tabContainer}>
+            <TouchableOpacity 
+                onPress={() => router.push("Profile")}
+            style={styles.tabContainer}>
                 <ProfileIcon />
                 <Text variant="titleMedium" style={styles.tabText}>
                     Profile
