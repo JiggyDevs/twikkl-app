@@ -1,10 +1,11 @@
-import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, Dimensions, StatusBar, TouchableHighlight, TouchableWithoutFeedback } from "react-native";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import { ButtonAddSimple } from "@twikkl/components";
 import { Item } from "react-native-paper/lib/typescript/src/components/Drawer/Drawer";
+import { useEffect, useState } from "react";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -30,62 +31,74 @@ type Props = {
 
 export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
   const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN]
+  const [shouldPlay, setShouldPlay] = useState(false)
+
+  //set play state
+  useEffect(() => {
+    setShouldPlay(index === visibleIndex)
+  }, [visibleIndex])
+
+  const togglePlay = () => {
+    setShouldPlay(!shouldPlay)
+  }
 
   return (
-    <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 41 )}}>
-      <Video
-        source={item.video}
-        shouldPlay={index === visibleIndex }
-        isLooping
-        resizeMode={ResizeMode.COVER}
-        // style={{ height: '100%', width: width, position: "absolute" }}
+    <TouchableWithoutFeedback
+      onPress={togglePlay}
+      style={{ flex: 1 }}>
+      <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 41) }}>
+        <Video
+          source={item.video}
+          shouldPlay={shouldPlay}
+          isLooping
+          resizeMode={ResizeMode.COVER}
+          style={[StyleSheet.absoluteFill]}
+        />
+        <View style={styles.bottomContainer}>
+          <View style={styles.rightActionsContainer}>
+            <View style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+              {
+                icons.map((icon, index) =>
+                  <TouchableOpacity key={index}
+                    style={{
+                      paddingVertical: 12,
+                    }}>
+                    <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+                  </TouchableOpacity>
+                )
+              }
 
-        style={[StyleSheet.absoluteFill]}
-      />
-      <View style={styles.bottomContainer}>
-        <View style={styles.rightActionsContainer}>
-          <View style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-            {
-              icons.map((icon, index) =>
-                <TouchableOpacity key={index}
-                  style={{
-                    paddingVertical: 12,
-                  }}>
-                  <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
-                </TouchableOpacity>
-              )
-            }
-
+            </View>
           </View>
-        </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 14,
-          }}
-        >
-          <View style={{
-            flexDirection: "row",
-          }}>
-            <Image style={styles.profileImg} source={profileImg} />
-            <Text variant="titleMedium" style={[styles.headActionText, { width: '75%', }]}>
-              @glory.jgy {'\n'}
-              <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
-                My very first podcast, it was really fun and I learnt so much just in one day.
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 14,
+            }}
+          >
+            <View style={{
+              flexDirection: "row",
+            }}>
+              <Image style={styles.profileImg} source={profileImg} />
+              <Text variant="titleMedium" style={[styles.headActionText, { width: '75%', }]}>
+                @glory.jgy {'\n'}
+                <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
+                  My very first podcast, it was really fun and I learnt so much just in one day.
+                </Text>
               </Text>
-            </Text>
+            </View>
+            <TouchableOpacity >
+              <ButtonAddSimple />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity >
-            <ButtonAddSimple />
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
