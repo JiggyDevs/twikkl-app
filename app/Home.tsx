@@ -8,6 +8,8 @@ import { ButtonAddSimple } from "@twikkl/components";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
 import videos from "@twikkl/staticFiles/videos";
+import BottomNav from "@twikkl/components/BottomNav";
+
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -23,7 +25,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
-  
+
   // get static videos
   const items = videos;
 
@@ -75,8 +77,9 @@ export default function ScreenHome() {
             <Badge size={10} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
           </View>
         </View>
-
       </SafeAreaView>
+
+      <BottomNav commentCount={0} />
     </>
   );
 }
@@ -112,4 +115,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#FFF",
   },
+  bottomContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingBottom: 10,
+    paddingHorizontal: 14,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  tabText: {
+    color: "#FFF",
+    fontSize: 12,
+  },
+  tabContainer: {
+    alignItems: "center",
+  },
+
 });
