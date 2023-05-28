@@ -9,6 +9,7 @@ import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
 import videos from "@twikkl/staticFiles/videos";
 import BottomNav from "@twikkl/components/BottomNav";
+import { useTranslation } from "react-i18next";
 
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
@@ -29,6 +30,7 @@ export default function ScreenHome() {
   // get static videos
   const items = videos;
 
+  const { t } = useTranslation();
   const flatListRef = useRef<FlatList>(null);
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
 
@@ -38,7 +40,6 @@ export default function ScreenHome() {
 
     setVisibleIndex(index);
   };
-
 
   return (
     <>
@@ -62,13 +63,13 @@ export default function ScreenHome() {
           <TwikklIcon name={EIcon.TIMER_24} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
           <View style={ViewVariant.centered}>
             <Text variant="titleMedium" style={styles.headActionText}>
-              My Feed
+              {t("home.myFeed")}
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
           </View>
           <View>
             <Text variant="titleMedium" style={styles.headActionText}>
-              Discover
+              {t("home.discover")}
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
           </View>

@@ -42,7 +42,7 @@ Before you start make sure that you have at least ~15 minutes ⏱ to set up your
 
 The most important techs used are :
 
-1. [ReactJS](https://react.dev/) 
+1. [ReactJS](https://react.dev/)
 2. [React Native](https://reactnative.dev/) (Without need for RN CLI)
 3. Expo [Managed](https://docs.expo.dev/archive/managed-vs-bare/#managed-workflow)
 4. [React Native Paper](https://callstack.github.io/react-native-paper/) (This is a UI library)
@@ -63,6 +63,7 @@ You can run the app for free, by using [Expo Go App](https://expo.dev/client) (a
 and iOS), it makes you run the app on a physical device.
 
 If you want to use emulator or iOS simulator, we recommend you to visit the following links:
+
 - [Android emulator setup guide](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator setup guide](https://docs.expo.dev/workflow/ios-simulator/)
 
@@ -70,7 +71,9 @@ If you want to run the app on web navigator like Chrome or Mozilla, then you'll 
 to [add few additional dependencies](https://docs.expo.dev/workflow/web/).
 
 ## Deploy locally
+
 Once you're ready with the tools mentioned above, you can import source code using _Git CLI_ with the following command:
+
 ```
 git clone https://github.com/JiggyDevs/twikkl-app.git
 ```
@@ -96,6 +99,7 @@ the navigation (Register and Home).
 We think that navigation business logic can become much better as the app grow and state management is up.
 
 ## Styling
+
 The styling integration must follow the design prototype, which is currently exposed as few examples
 under [/docs](/docs/design-imgs) folder.
 
@@ -110,5 +114,6 @@ Finally, as for the icons, following the [Expo icons guide](https://docs.expo.de
 use [IcoMoon](https://icomoon.io/) tool to generate our own icon-set.
 
 ## Contributing
+
 Please see the [contributing](CONTRIBUTING.md) guide for detailed instructions on how to get started with us. We accept
 any sort of help that can make this project better, even a word like "Good luck!" 😍.

@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 
@@ -10,8 +11,10 @@ import { Text } from "react-native-paper";
  */
 
 export default function Wallet(): ReactElement {
-    return(
-        <View 
+    const { t } = useTranslation();
+
+    return (
+        <View
             style={{
                 flex: 1,
                 justifyContent: 'center',
@@ -22,7 +25,7 @@ export default function Wallet(): ReactElement {
                 fontSize: 30,
                 fontWeight: 'bold',
                 color: 'green'
-            }}>Wallet</Text>    
+            }}>{t('wallet.title')}</Text>
         </View>
     )
 }
