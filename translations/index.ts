@@ -4,7 +4,7 @@ import { initReactI18next } from "react-i18next";
 import * as resources from "./resources";
 
 i18n
-  // detect user language
+  // IMPROVEMENT: detect user language
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
   //   .use(LanguageDetector)
   // pass the i18n instance to react-i18next.
