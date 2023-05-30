@@ -18,6 +18,7 @@ import { useColors } from "@twikkl/hooks";
 import { ButtonAddSimple } from "@twikkl/components";
 import { Item } from "react-native-paper/lib/typescript/src/components/Drawer/Drawer";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -44,6 +45,8 @@ export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
   const router = useRouter();
   const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
   const [shouldPlay, setShouldPlay] = useState(false);
+  const { t } = useTranslation();
+
   //set play state
   useEffect(() => {
     setShouldPlay(index === visibleIndex);

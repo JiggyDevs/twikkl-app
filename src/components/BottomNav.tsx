@@ -17,12 +17,15 @@ import { useColors } from "@twikkl/hooks";
 import CommentIcon from "../../assets/svg/comment.svg";
 import WalletIcon from "../../assets/svg/wallet.svg";
 import ProfileIcon from "../../assets/svg/profile.svg";
+import { useTranslation } from "react-i18next";
 
 type BottomNavProps = {
   commentCount: number | string;
 };
 
 function BottomNav({ commentCount = 0 }: BottomNavProps, {}) {
+  const { t } = useTranslation();
+
   const router = useRouter();
   return (
     <SafeAreaView style={styles.bottomContainer}>
@@ -32,21 +35,21 @@ function BottomNav({ commentCount = 0 }: BottomNavProps, {}) {
           <Text style={styles.commentCount}>{commentCount}</Text>
         </View>
         <Text variant="titleMedium" style={styles.tabText}>
-          Comment
+          {t("bottomNavigation.comment")}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("Wallet")} style={styles.tabContainer}>
         <WalletIcon />
         <Text variant="titleMedium" style={styles.tabText}>
-          Wallet
+          {t("bottomNavigation.wallet")}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("Profile")} style={styles.tabContainer}>
         <ProfileIcon />
         <Text variant="titleMedium" style={styles.tabText}>
-          Profile
+          {t("bottomNavigation.profile")}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
