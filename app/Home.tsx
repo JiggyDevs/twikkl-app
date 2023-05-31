@@ -1,4 +1,14 @@
-import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, FlatList, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ImagePropsBase,
+  Image,
+  FlatList,
+  Dimensions,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
@@ -11,7 +21,6 @@ import videos from "@twikkl/staticFiles/videos";
 import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 
-
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 //get device width and height
@@ -22,7 +31,6 @@ const { width, height } = Dimensions.get("window");
  *
  * @constructor
  */
-
 
 export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
@@ -36,7 +44,7 @@ export default function ScreenHome() {
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffset = event.nativeEvent.contentOffset.y;
-    const index = Math.floor(contentOffset / (height));
+    const index = Math.floor(contentOffset / height);
 
     setVisibleIndex(index);
   };
@@ -46,17 +54,13 @@ export default function ScreenHome() {
       <FlatList
         style={[StyleSheet.absoluteFill]}
         data={items}
-        renderItem={({ item, index }) =>
-          <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} />
-        }
+        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} />}
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled={true}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onScroll={onScroll}
       />
-
-
 
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
@@ -134,5 +138,4 @@ const styles = StyleSheet.create({
   tabContainer: {
     alignItems: "center",
   },
-
 });

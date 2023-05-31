@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/imgs/logos/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.twikkl.twikklapp"
+      "package": "com.twikkl.twikklapp",
+      "permissions": ["CAMERA", "RECORD_AUDIO", "WRITE_EXTERNAL_STORAGE"]
     },
     "web": {
       "bundler": "metro",

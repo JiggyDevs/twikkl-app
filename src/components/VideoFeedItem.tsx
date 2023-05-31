@@ -1,4 +1,16 @@
-import { StyleSheet, TouchableOpacity, View, ImagePropsBase, Image, Dimensions, StatusBar, TouchableHighlight, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ImagePropsBase,
+  Image,
+  Dimensions,
+  StatusBar,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  Pressable,
+} from "react-native";
+import { useRouter } from "expo-router";
 import { Text, Badge } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
@@ -29,25 +41,23 @@ type Props = {
   visibleIndex: number;
 };
 
-
 export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
-  const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN]
-  const [shouldPlay, setShouldPlay] = useState(false)
+  const router = useRouter();
+  const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
+  const [shouldPlay, setShouldPlay] = useState(false);
   const { t } = useTranslation();
 
   //set play state
   useEffect(() => {
-    setShouldPlay(index === visibleIndex)
-  }, [visibleIndex])
+    setShouldPlay(index === visibleIndex);
+  }, [visibleIndex]);
 
   const togglePlay = () => {
-    setShouldPlay(!shouldPlay)
-  }
+    setShouldPlay(!shouldPlay);
+  };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={togglePlay}
-      style={{ flex: 1 }}>
+    <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
       <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 41) }}>
         <Video
           source={item.video}
@@ -58,21 +68,22 @@ export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
         />
         <View style={styles.bottomContainer}>
           <View style={styles.rightActionsContainer}>
-            <View style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-              {
-                icons.map((icon, index) =>
-                  <TouchableOpacity key={index}
-                    style={{
-                      paddingVertical: 12,
-                    }}>
-                    <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
-                  </TouchableOpacity>
-                )
-              }
-
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {icons.map((icon, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    paddingVertical: 12,
+                  }}
+                >
+                  <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
 
@@ -83,18 +94,20 @@ export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
               marginTop: 14,
             }}
           >
-            <View style={{
-              flexDirection: "row",
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
               <Image style={styles.profileImg} source={profileImg} />
-              <Text variant="titleMedium" style={[styles.headActionText, { width: '75%', }]}>
-                @glory.jgy {'\n'}
+              <Text variant="titleMedium" style={[styles.headActionText, { width: "75%" }]}>
+                @glory.jgy {"\n"}
                 <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
                   My very first podcast, it was really fun and I learnt so much just in one day.
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={() => router.push("CreateUploadVideo")}>
               <ButtonAddSimple />
             </TouchableOpacity>
           </View>
