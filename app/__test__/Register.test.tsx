@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
 import { render, fireEvent } from '@testing-library/react-native';
 
 import Register from '../Register';
@@ -11,6 +10,12 @@ jest.mock('expo-router', () => ({
         push: mockPushFn
     })
 }))
+
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+      t: (key: string) => key
+  })
+}));
 
 // There is a bug in the KeyboardAwareScrollView library that causes the test to fail.
 // Simplest workaround is to mock the library.
@@ -31,28 +36,29 @@ describe('Register component', () => {
 
   it('renders correctly', () => {
 
-    const { getByText, getByPlaceholderText } = render(
+    const { getByText, getAllByText, getByPlaceholderText } = render(
         <Register />
     );
 
     // Assert that the required elements are rendered
-    expect(getByText("Create an Account")).toBeTruthy();
+    const createAccountEls = getAllByText("register.createAccount");
+    expect(createAccountEls.length).toBe(2);
     expect(getByPlaceholderText("username")).toBeTruthy();
     expect(getByPlaceholderText("password")).toBeTruthy();
-    expect(getByText("I agree to")).toBeTruthy();
-    expect(getByText("Terms of Service")).toBeTruthy();
-    expect(getByText("and")).toBeTruthy();
-    expect(getByText("Privacy Policy")).toBeTruthy();
-    expect(getByText("Create Account")).toBeTruthy();
-    expect(getByText("Create Account with Google")).toBeTruthy();
-    expect(getByText("Do you have a Crypto Wallet?")).toBeTruthy();
-    expect(getByText("Connect Wallet")).toBeTruthy();
+    expect(getByText("register.agree")).toBeTruthy();
+    expect(getByText("register.terms")).toBeTruthy();
+    expect(getByText("register.and")).toBeTruthy();
+    expect(getByText("register.privacy")).toBeTruthy();
+    expect(getByText("register.createWithGoogle")).toBeTruthy();
+    expect(getByText("register.doYouHaveAWallet")).toBeTruthy();
+    expect(getByText("register.connectWallet")).toBeTruthy();
 
   });
 
   it("navigates to '/Home' when the 'Create Account' button is pressed", () => {
-    const { getByText } = render(<Register />);
-    const createAccountButton = getByText("Create Account");
+    const { getByRole } = render(<Register />);
+
+    const createAccountButton = getByRole("button", { name: "register.createAccount" });
 
     fireEvent.press(createAccountButton);
 
