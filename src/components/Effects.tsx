@@ -1,34 +1,8 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import React, { useState } from "react";
-import styled from "styled-components/native";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Effect2 from "@assets/svg/Effect2";
 import Effect1 from "@assets/svg/Effect1";
-
-const EffectHeader = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  padding-horizontal: ${wp(5)}px;
-`;
-const EffectContent = styled.View`
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: rgba(255, 255, 255, 0.45);
-  gap: 20px;
-  padding-horizontal: ${wp(6)}px;
-  padding-vertical: ${hp(2)}px;
-`;
-const Boxes = styled.View`
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  margin-bottom: ${hp(0.5)}px;
-  border-color: #a10000;
-`;
-const Center = styled.View`
-  align-items: center;
-`;
 
 const effectArr = ["Skin Tone", "Appearance", "Editing"];
 const effectContentArr = [
@@ -64,38 +38,70 @@ const Effects = () => {
   const [tone, setTone] = useState<ITone>();
   return (
     <View>
-      <EffectHeader>
+      <View style={styles.effectHeader}>
         <Effect2 />
         <Effect1 />
         {effectArr.map((item) => (
           <Pressable key={item} onPress={() => setEffectItems(item)}>
-            <Center
+            <View
               style={
-                effectItems === item && {
-                  borderBottomColor: "#F1FCF2",
-                  borderBottomWidth: "3px",
-                  borderRadius: "0.5px",
-                  paddingBottom: 12,
-                }
+                effectItems === item
+                  ? {
+                      borderBottomColor: "#F1FCF2",
+                      borderBottomWidth: 3,
+                      borderRadius: 0.5,
+                      paddingBottom: 12,
+                      alignItems: "center",
+                    }
+                  : {
+                      alignItems: "center",
+                    }
               }
             >
               <Text style={{ color: effectItems === item ? "#fff" : "rgba(255, 255, 255, 0.45)" }}>{item}</Text>
-            </Center>
+            </View>
           </Pressable>
         ))}
-      </EffectHeader>
-      <EffectContent>
+      </View>
+      <View style={styles.effectContent}>
         {effectContentArr.map((item) => (
           <Pressable onPress={() => setTone(item)} key={item.text}>
-            <Center style={{ width: wp(18) }}>
-              <Boxes style={{ backgroundColor: item.color, borderWidth: tone === item ? 1.5 : 0 }} />
+            <View style={{ ...styles.center, width: wp(18) }}>
+              <View style={{ ...styles.boxes, backgroundColor: item.color, borderWidth: tone === item ? 1.5 : 0 }} />
               <Text style={{ color: "#fff" }}>{item.text}</Text>
-            </Center>
+            </View>
           </Pressable>
         ))}
-      </EffectContent>
+      </View>
     </View>
   );
 };
 
 export default Effects;
+
+const styles = StyleSheet.create({
+  effectHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: "5%",
+  },
+  effectContent: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    backgroundColor: "rgba(255, 255, 255, 0.45)",
+    gap: 20,
+    paddingHorizontal: "6%",
+    paddingVertical: "2%",
+  },
+  boxes: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    marginBottom: "0.5%",
+    borderColor: "#a10000",
+  },
+  center: {
+    alignItems: "center",
+  },
+});

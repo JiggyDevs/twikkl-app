@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { ResizeMode, Video } from "expo-av";
-import styled from "styled-components/native";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Speed from "@assets/svg/Speed";
 import Timer from "@assets/svg/Timer";
 import Effect from "@assets/svg/Effect";
@@ -16,71 +14,6 @@ import * as Permissions from "expo-permissions";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { Bar } from "react-native-progress";
 import Effects from "@twikkl/components/Effects";
-
-const Wrapper = styled.View`
-  flex: 1;
-`;
-export const Flex = styled.View`
-  flex-direction: row;
-`;
-const TopSelect = styled(Flex)`
-  justify-content: space-between;
-`;
-const JustifyCenter = styled(Flex)`
-  justify-content: center;
-  gap: 45px;
-`;
-export const Center = styled.View`
-  align-items: center;
-`;
-const Container = styled.View`
-  flex: 1;
-  justify-content: space-between;
-  padding-top: ${hp(5)}px;
-  padding-bottom: ${hp(3)}px;
-  padding-horizontal: ${wp(5)}px;
-`;
-const ViewContainer = styled(Container)`
-  padding-bottom: ${hp(15)}px;
-  padding-horizontal: ${wp(17)}px;
-`;
-const TextCenter = styled.Text`
-  color: rgba(255, 255, 255, 0.45);
-`;
-const TextLight = styled.Text`
-  color: #f1fcf2;
-`;
-const AddSound = styled.Pressable`
-  margin-vertical: 15px;
-  padding: 9px 12px;
-  border-radius: 16px;
-  background-color: #f1fcf2;
-  align-self: center;
-`;
-const Record = styled.Pressable`
-  width: 70px;
-  height: 70px;
-  border-radius: 99px;
-`;
-const RecordWrapper = styled.View`
-  border: 8px solid rgba(255, 255, 255, 0.45);
-  border-radius: 99px;
-`;
-const ModeBorder = styled.View`
-  width: 5px;
-  height: 5px;
-  border-radius: 99px;
-  margin-top: ${hp(0.5)}px;
-  background-color: #f1fcf2;
-`;
-const ModeBorderLive = styled(ModeBorder)`
-  background-color: #a10000;
-`;
-const RecordLine = styled(JustifyCenter)`
-  align-items: center;
-  margin-top: ${hp(4)}px;
-  gap: 20px;
-`;
 
 const actionArr = [
   { icon: <Speed />, text: "Speed", focused: <Speed focused={1} /> },
@@ -177,7 +110,7 @@ const CreateUploadvideo = () => {
 
   return (
     <>
-      <Wrapper>
+      <View style={styles.wrapper}>
         {videoUri ? (
           <Pressable onPress={() => setShouldPlay(!shouldPlay)} style={{ flex: 1 }}>
             <Video
@@ -187,54 +120,54 @@ const CreateUploadvideo = () => {
               style={[StyleSheet.absoluteFill]}
               isLooping
             />
-            <ViewContainer>
-              <Center>
-                <TextLight>Live Video</TextLight>
-                <ModeBorderLive />
-              </Center>
-              <TopSelect>
+            <View style={styles.viewContainer}>
+              <View style={styles.center}>
+                <Text style={styles.textLight}>Live Video</Text>
+                <View style={styles.modeBorderLive} />
+              </View>
+              <View style={styles.topSelect}>
                 <Pressable onPress={() => setVideoUri(null)}>
                   <Cancel />
                 </Pressable>
                 <Pressable>
                   <Send />
                 </Pressable>
-              </TopSelect>
-            </ViewContainer>
+              </View>
+            </View>
           </Pressable>
         ) : (
           <>
             <Camera style={[StyleSheet.absoluteFill]} ref={(ref) => setCameraRef(ref)} />
-            <Container>
+            <View style={styles.container}>
               <View>
                 {isRecording ? (
-                  <Center>
-                    <TextLight>Live Video</TextLight>
-                    <ModeBorderLive />
-                  </Center>
+                  <View style={styles.center}>
+                    <Text style={styles.textLight}>Live Video</Text>
+                    <View style={styles.modeBorderLive} />
+                  </View>
                 ) : (
-                  <TopSelect>
+                  <View style={styles.topSelect}>
                     <Pressable onPress={() => router.push("Home")}>
                       <Back />
                     </Pressable>
-                    <Flex style={{ gap: 20 }}>
-                      <Center>
-                        <TextLight>Live Video</TextLight>
-                        <ModeBorder />
-                      </Center>
-                      <Center>
+                    <View style={styles.flex}>
+                      <View style={styles.center}>
+                        <Text style={styles.textLight}>Live Video</Text>
+                        <View style={styles.modeBorder} />
+                      </View>
+                      <View style={styles.center}>
                         <Pressable onPress={pickImage}>
-                          <TextCenter>Upload Video</TextCenter>
+                          <Text style={styles.textCenter}>Upload Video</Text>
                         </Pressable>
-                      </Center>
-                    </Flex>
+                      </View>
+                    </View>
                     <View />
-                  </TopSelect>
+                  </View>
                 )}
                 {!isRecording && (
-                  <AddSound>
+                  <Pressable style={styles.addSound}>
                     <Text>Add Sound</Text>
-                  </AddSound>
+                  </Pressable>
                 )}
               </View>
               <View>
@@ -251,72 +184,71 @@ const CreateUploadvideo = () => {
                 ) : (
                   <>
                     {actions === "Speed" && (
-                      <JustifyCenter>
+                      <View style={styles.justifyCenter}>
                         {speedArr.map((item) => (
                           <Pressable key={item} onPress={() => setSpeed(item)}>
-                            <Center>
+                            <View style={styles.center}>
                               <Text style={{ color: speed === item ? "#fff" : "rgba(255, 255, 255, 0.45)" }}>
                                 {item}
                               </Text>
-                              {speed === item && <ModeBorder />}
-                            </Center>
+                              {speed === item && <View style={styles.modeBorder} />}
+                            </View>
                           </Pressable>
                         ))}
-                      </JustifyCenter>
+                      </View>
                     )}
                     {actions === "Timer" && (
-                      <JustifyCenter>
+                      <View style={styles.justifyCenter}>
                         {timerArr.map((item) => (
                           <Pressable key={item} onPress={() => setTimer(item)}>
-                            <Center>
+                            <View style={styles.center}>
                               <Text style={{ color: timer === item ? "#fff" : "rgba(255, 255, 255, 0.45)" }}>
                                 {item}
                               </Text>
-                              {timer === item && <ModeBorder />}
-                            </Center>
+                              {timer === item && <View style={styles.modeBorder} />}
+                            </View>
                           </Pressable>
                         ))}
-                      </JustifyCenter>
+                      </View>
                     )}
                   </>
                 )}
                 {actions !== "Effect" && (
-                  <RecordLine>
+                  <View style={styles.recordLine}>
                     {!isRecording && <Image source={require("../assets/imgs/left.png")} />}
-                    <RecordWrapper
-                      style={{
-                        marginBottom: isRecording ? 70 : 0,
-                      }}
-                    >
-                      <Record
+                    <View style={{ ...styles.recordWrapper, marginBottom: isRecording ? 70 : 0 }}>
+                      <Pressable
                         onPress={isRecording ? stopRecording : startRecording}
-                        style={{
-                          backgroundColor: isRecording ? "#A10000" : "#fff",
-                        }}
+                        style={{ ...styles.record, backgroundColor: isRecording ? "#A10000" : "#fff" }}
                       />
-                    </RecordWrapper>
+                    </View>
                     {!isRecording && <Image source={require("../assets/imgs/right.png")} />}
-                  </RecordLine>
+                  </View>
                 )}
                 {actions !== "Effect" && !isRecording && (
-                  <TopSelect style={{ gap: 20, marginTop: 25 }}>
+                  <View style={{ ...styles.topSelect, gap: 20, marginTop: 25 }}>
                     {actionArr.map(({ text, icon, focused }) => (
                       <Pressable key={text} onPress={() => setActions(text)}>
-                        <Center>
+                        <View style={styles.center}>
                           {actions === text ? focused : icon}
-                          <TextCenter style={{ color: actions === text ? "#fff" : "rgba(255, 255, 255, 0.45)" }}>
+                          <Text
+                            style={{
+                              ...styles.textCenter,
+                              color: actions === text ? "#fff" : "rgba(255, 255, 255, 0.45)",
+                            }}
+                          >
                             {text}
-                          </TextCenter>
-                        </Center>
+                          </Text>
+                        </View>
                       </Pressable>
                     ))}
-                  </TopSelect>
+                  </View>
                 )}
               </View>
-            </Container>
+            </View>
           </>
         )}
-      </Wrapper>
+      </View>
       {actions === "Effect" && (
         <AppBottomSheet closeModal={() => setActions(null)}>
           <Effects />
@@ -327,3 +259,83 @@ const CreateUploadvideo = () => {
 };
 
 export default CreateUploadvideo;
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  flex: {
+    flexDirection: "row",
+    gap: 20,
+  },
+  center: {
+    alignItems: "center",
+  },
+  justifyCenter: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 45,
+  },
+  topSelect: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingTop: "5%",
+    paddingBottom: "3%",
+    paddingHorizontal: "5%",
+  },
+  viewContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingTop: "5%",
+    paddingBottom: "15%",
+    paddingHorizontal: "17%",
+  },
+  textCenter: {
+    color: "rgba(255, 255, 255, 0.45)",
+  },
+  textLight: {
+    color: "#f1fcf2",
+  },
+  addSound: {
+    marginVertical: 15,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    backgroundColor: "#f1fcf2",
+    alignSelf: "center",
+  },
+  record: {
+    width: 70,
+    height: 70,
+    borderRadius: 99,
+  },
+  recordWrapper: {
+    border: "8px solid rgba(255, 255, 255, 0.45)",
+    borderRadius: 99,
+  },
+  modeBorder: {
+    width: 5,
+    height: 5,
+    borderRadius: 99,
+    marginTop: "0.5%",
+    backgroundColor: "#f1fcf2",
+  },
+  modeBorderLive: {
+    width: 5,
+    height: 5,
+    borderRadius: 99,
+    marginTop: "0.5%",
+    backgroundColor: "#a10000",
+  },
+  recordLine: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 20,
+    alignItems: "center",
+    marginTop: "4%",
+  },
+});
