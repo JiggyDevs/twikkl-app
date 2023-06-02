@@ -16,18 +16,18 @@ const detailsArr = [
 ];
 const iconsArr = [<Play />, <PinIcon />, <LiveIcon />, <LabelIcon />];
 const imgArr = [
-  "../assets/imgs/prof1.png",
-  "../assets/imgs/prof1.png",
-  "../assets/imgs/prof1.png",
-  "../assets/imgs/prof1.png",
-  "../assets/imgs/prof1.png",
-  "../assets/imgs/prof1.png",
+  require("../assets/imgs/prof1.png"),
+  require("../assets/imgs/prof2.png"),
+  require("../assets/imgs/prof3.png"),
+  require("../assets/imgs/prof4.png"),
+  require("../assets/imgs/prof5.png"),
+  require("../assets/imgs/prof6.png"),
 ];
 
 const Profile = () => {
   const [active, setActive] = useState(0);
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.topHeader}>
         <Back dark="#041105" />
         <Text style={styles.boldText}>Profile</Text>
@@ -57,8 +57,9 @@ const Profile = () => {
       <View style={styles.wrapper}>
         {iconsArr.map((item, index) => (
           <Pressable
+            key={index}
             onPress={() => setActive(index)}
-            style={active === index ? styles.bgGreen : { backgroundColor: "transparent" }}
+            style={[active === index ? styles.bgGreen : { backgroundColor: "transparent" }, { paddingHorizontal: 40 }]}
           >
             {item}
           </Pressable>
@@ -79,6 +80,8 @@ const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "#fff",
     borderRadius: 16,
+    justifyContent: "space-between",
+    alignItems: "center",
     flexDirection: "row",
     // gap: 20,
   },
@@ -103,6 +106,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   container: {
+    paddingTop: 60,
+    paddingHorizontal: 10,
+    backgroundColor: "#F1FCF2",
     flex: 1,
   },
   boldText: {
@@ -136,8 +142,10 @@ const styles = StyleSheet.create({
   },
   img: {
     flexDirection: "row",
+    justifyContent: "space-between",
     flexWrap: "wrap",
     gap: 14,
+    marginTop: 30,
   },
   // modeBorder: {
   //   borderRadius: 16,

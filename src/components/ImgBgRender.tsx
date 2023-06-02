@@ -3,9 +3,9 @@ import React from "react";
 import LikeIcon from "@assets/svg/LikeIcon";
 import EyeIcon from "@assets/svg/EyeIcon";
 
-const ImgBgRender = ({ img }: { img: string }) => {
+const ImgBgRender = ({ img }: { img?: any }) => {
   return (
-    <ImageBackground style={styles.container} source={{ uri: img }}>
+    <ImageBackground resizeMode="contain" style={styles.container} source={img}>
       <View style={styles.flexRow}>
         <LikeIcon />
         <Text>2K</Text>
@@ -26,6 +26,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
+    width: 115,
+    height: 127,
   },
   flexRow: {
     flexDirection: "row",
