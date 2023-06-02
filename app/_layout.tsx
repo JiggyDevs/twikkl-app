@@ -37,6 +37,7 @@ function RootLayoutNav() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="Home" />
+        <Stack.Screen name="discover" />
       </Stack>
     </PaperProvider>
   );

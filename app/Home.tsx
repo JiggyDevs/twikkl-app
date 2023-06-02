@@ -9,6 +9,7 @@ import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
 import videos from "@twikkl/staticFiles/videos";
 import BottomNav from "@twikkl/components/BottomNav";
+import { useRouter } from "expo-router";
 
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
@@ -39,7 +40,7 @@ export default function ScreenHome() {
     setVisibleIndex(index);
   };
 
-
+const router = useRouter()
   return (
     <>
       <FlatList
@@ -67,7 +68,10 @@ export default function ScreenHome() {
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
           </View>
           <View>
-            <Text variant="titleMedium" style={styles.headActionText}>
+
+            <Text onPress={()=>router.push({
+              pathname: 'discover'
+            })} variant="titleMedium" style={styles.headActionText}>
               Discover
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
