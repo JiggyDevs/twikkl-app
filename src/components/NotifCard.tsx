@@ -18,17 +18,18 @@ const NotifCard = ({ avatar, text, desc, time, like, img, action }: IProps) => {
       <View style={styles.flex}>
         <Text style={styles.textBold}>{text}</Text>
         <Text style={{ fontSize: 12 }}>
-          {desc}
-          <Text style={{ color: "#50A040" }}>{time}</Text>
+          {desc} <Text style={{ color: "#50A040" }}>{time}</Text>
         </Text>
       </View>
-      {like ? (
-        <Image source={img} />
-      ) : (
-        <View style={styles.bgGreen}>
-          <Text style={styles.textWhite}>{action}</Text>
-        </View>
-      )}
+      <View style={{ marginLeft: 20 }}>
+        {like ? (
+          <Image source={img} />
+        ) : (
+          <View style={styles.bgGreen}>
+            <Text style={styles.textWhite}>{action}</Text>
+          </View>
+        )}
+      </View>
     </View>
   );
 };
@@ -39,9 +40,11 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
     marginBottom: 10,
+    alignItems: "center",
   },
   bgGreen: {
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     backgroundColor: "#50A040",
     borderRadius: 16,
   },
@@ -53,8 +56,10 @@ const styles = StyleSheet.create({
   textBold: {
     fontWeight: "700",
     fontSize: 14,
+    marginBottom: 2,
   },
   flex: {
     flex: 1,
+    marginLeft: 8,
   },
 });

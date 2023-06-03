@@ -8,11 +8,11 @@ const ImgBgRender = ({ img }: { img?: any }) => {
     <ImageBackground resizeMode="contain" style={styles.container} source={img}>
       <View style={styles.flexRow}>
         <LikeIcon />
-        <Text>2K</Text>
+        <Text style={{ color: "#fff" }}>2K</Text>
       </View>
       <View style={styles.flexRow}>
         <EyeIcon />
-        <Text>5K</Text>
+        <Text style={{ color: "#fff" }}>5K</Text>
       </View>
     </ImageBackground>
   );
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 3,
   },
 });

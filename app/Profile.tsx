@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, ScrollView } from "react-native";
 import React, { useState } from "react";
 import Back from "@assets/svg/Back";
 import MoreIcon from "@assets/svg/More";
@@ -8,13 +8,14 @@ import Play from "@assets/svg/Play";
 import PinIcon from "@assets/svg/PinIcon";
 import LabelIcon from "@assets/svg/LabelIcon";
 import ImgBgRender from "@twikkl/components/ImgBgRender";
+import { useRouter } from "expo-router";
 
 const detailsArr = [
   { num: "4.5K", text: "Followers" },
   { num: "2K", text: "Following" },
   { num: "240K", text: "Total Twikks" },
 ];
-const iconsArr = [<Play />, <PinIcon />, <LiveIcon />, <LabelIcon />];
+const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 const imgArr = [
   require("../assets/imgs/prof1.png"),
   require("../assets/imgs/prof2.png"),
@@ -25,51 +26,59 @@ const imgArr = [
 ];
 
 const Profile = () => {
+  const router = useRouter();
   const [active, setActive] = useState(0);
   return (
     <View style={styles.container}>
       <View style={styles.topHeader}>
-        <Back dark="#041105" />
+        <Pressable onPress={() => router.push("Home")}>
+          <Back dark="#041105" />
+        </Pressable>
         <Text style={styles.boldText}>Profile</Text>
         <MoreIcon />
       </View>
-      <View style={styles.center}>
-        <Image source={require("../assets/imgs/profile.png")} />
-        <Text style={styles.boldTextSpace}>jerry.jgy</Text>
-        <View style={styles.justifyCenter}>
-          {detailsArr.map((item) => (
-            <View style={styles.textCenter}>
-              <Text>{item.num}</Text>
-              <Text>{item.text}</Text>
-            </View>
+      <ScrollView>
+        <View style={styles.center}>
+          <Image source={require("../assets/imgs/profile.png")} />
+          <Text style={styles.boldTextSpace}>jerry.jgy</Text>
+          <View style={styles.justifyCenter}>
+            {detailsArr.map((item) => (
+              <View style={styles.textCenter}>
+                <Text>{item.num}</Text>
+                <Text style={{ fontWeight: "700", marginTop: 3 }}>{item.text}</Text>
+              </View>
+            ))}
+          </View>
+          <Text style={styles.textLight}>UX Design Enthusiat currently working as a chef in Lagos</Text>
+          <View style={styles.flex}>
+            <Pressable style={styles.bgGreen}>
+              <Text style={styles.textWhite}>Edit Profile</Text>
+            </Pressable>
+            <Pressable style={styles.bgGreen}>
+              <Twitter />
+            </Pressable>
+          </View>
+        </View>
+        <View style={styles.wrapper}>
+          {iconsArr.map(({ Icon }, index) => (
+            <Pressable
+              key={index}
+              onPress={() => setActive(index)}
+              style={[
+                active === index ? styles.bgGreen : { backgroundColor: "transparent" },
+                { paddingHorizontal: 40 },
+              ]}
+            >
+              <Icon dark={active === index ? "#fff" : "#50A040"} />
+            </Pressable>
           ))}
         </View>
-        <Text style={styles.textLight}>UX Design Enthusiat currently working as a chef in Lagos</Text>
-        <View style={styles.flex}>
-          <Pressable style={styles.bgGreen}>
-            <Text style={styles.textWhite}>Edit Profile</Text>
-          </Pressable>
-          <Pressable style={styles.bgGreen}>
-            <Twitter />
-          </Pressable>
+        <View style={styles.img}>
+          {imgArr.map((item) => (
+            <ImgBgRender key={item} img={item} />
+          ))}
         </View>
-      </View>
-      <View style={styles.wrapper}>
-        {iconsArr.map((item, index) => (
-          <Pressable
-            key={index}
-            onPress={() => setActive(index)}
-            style={[active === index ? styles.bgGreen : { backgroundColor: "transparent" }, { paddingHorizontal: 40 }]}
-          >
-            {item}
-          </Pressable>
-        ))}
-      </View>
-      <View style={styles.img}>
-        {imgArr.map((item) => (
-          <ImgBgRender img={item} />
-        ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -80,25 +89,22 @@ const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "#fff",
     borderRadius: 16,
-    justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    // gap: 20,
   },
   flex: {
     flexDirection: "row",
-    gap: 20,
+    gap: 8,
   },
   center: {
     alignItems: "center",
-    marginTop: 30,
-    marginBottom: 20,
+    marginVertical: 32,
     paddingHorizontal: 20,
   },
   justifyCenter: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 23,
+    gap: 25,
   },
   topHeader: {
     flexDirection: "row",
@@ -130,13 +136,15 @@ const styles = StyleSheet.create({
     color: "#F1FCF2",
   },
   textLight: {
-    marginBottom: 5,
-    marginTop: 10,
+    marginBottom: 8,
+    marginTop: 16,
     textAlign: "center",
     fontSize: 12,
   },
   bgGreen: {
-    padding: 10,
+    paddingVertical: 10,
+    height: 38,
+    paddingHorizontal: 20,
     backgroundColor: "#50A040",
     borderRadius: 16,
   },
@@ -145,10 +153,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexWrap: "wrap",
     gap: 14,
-    marginTop: 30,
+    marginTop: 38,
   },
-  // modeBorder: {
-  //   borderRadius: 16,
-  //   padding,
-  // },
 });
