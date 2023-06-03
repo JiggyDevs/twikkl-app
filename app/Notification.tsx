@@ -1,7 +1,6 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import React, { useState } from "react";
 import Back from "@assets/svg/Back";
-import Scroll from "@twikkl/components/Scrollable";
 import NotifCard from "@twikkl/components/NotifCard";
 
 const arr = ["All", "Likes", "Comments", "Mentions", "Following"];
@@ -15,6 +14,7 @@ const cardArr = [
     avatar: require("../assets/imgs/avatar1.png"),
     desc: "is live streaming: I guess this is a goodbye.",
     like: false,
+    img: null,
   },
   {
     text: "sonia.jgy",
@@ -24,11 +24,13 @@ const cardArr = [
     avatar: require("../assets/imgs/avatar2.png"),
     desc: "started following you.",
     like: false,
+    img: null,
   },
   {
     text: "lacy.lens",
     day: "today",
     time: "5mins ago",
+    action: "",
     img: require("../assets/imgs/notif1.png"),
     desc: "liked your video.",
     avatar: require("../assets/imgs/avatar3.png"),
@@ -42,11 +44,13 @@ const cardArr = [
     avatar: require("../assets/imgs/avatar4.png"),
     desc: "started following you.",
     like: false,
+    img: null,
   },
   {
     text: "maxwell.jgy",
     day: "yesterday",
     time: "1 day ago",
+    action: "",
     avatar: require("../assets/imgs/avatar5.png"),
     img: require("../assets/imgs/notif1.png"),
     desc: "liked your video.",
@@ -56,6 +60,7 @@ const cardArr = [
     text: "block_buddy.jgy and spooky.jgy",
     day: "week",
     time: "5 day ago",
+    action: "",
     avatar: require("../assets/imgs/avatar6.png"),
     img: require("../assets/imgs/notif2.png"),
     desc: "liked your video.",
@@ -65,6 +70,7 @@ const cardArr = [
     text: "stella.jgy",
     day: "month",
     time: "2 weeks ago",
+    action: "",
     avatar: require("../assets/imgs/avatar8.png"),
     img: require("../assets/imgs/notif3.png"),
     desc: "liked your video.",
@@ -75,6 +81,7 @@ const likes = cardArr.filter((item) => item.desc.includes("liked"));
 const comments = cardArr.filter((item) => item.desc.includes("comment"));
 const mentions = cardArr.filter((item) => item.desc.includes("mention"));
 const following = cardArr.filter((item) => item.desc.includes("following"));
+
 const today = cardArr.filter((item) => item.day === "today");
 const yesterday = cardArr.filter((item) => item.day === "yesterday");
 const week = cardArr.filter((item) => item.day === "week");
@@ -92,9 +99,12 @@ const mentionsYesterday = mentions.filter((item) => item.day === "yesterday");
 const mentionsWeek = mentions.filter((item) => item.day === "week");
 const mentionsMonth = mentions.filter((item) => item.day === "month");
 const followingToday = following.filter((item) => item.day === "today");
+
 const followingYesterday = following.filter((item) => item.day === "yesterday");
 const followingWeek = following.filter((item) => item.day === "week");
 const followingMonth = following.filter((item) => item.day === "month");
+
+console.log({ followingWeek, followingMonth });
 
 const Notification = () => {
   const [active, setActive] = useState("All");
@@ -105,30 +115,30 @@ const Notification = () => {
         <Text style={styles.boldText}>Notifications</Text>
         <View />
       </View>
-      <Scroll horizontal>
-        <View style={styles.wrapper}>
+      <View style={styles.wrapper}>
+        <ScrollView contentContainerStyle={{ alignItems: "center" }} showsHorizontalScrollIndicator={false} horizontal>
           {arr.map((item, index) => (
             <Pressable
               key={index}
               onPress={() => setActive(item)}
               style={[active === item ? styles.bgGreen : { backgroundColor: "transparent" }, { paddingHorizontal: 20 }]}
             >
-              {item}
+              <Text>{item}</Text>
             </Pressable>
           ))}
-        </View>
-      </Scroll>
+        </ScrollView>
+      </View>
       {active === "All" && (
         <>
           {cardArr.length === 0 ? (
-            <View style={styles.textCenter}>You have no notifications yet</View>
+            <Text style={styles.textCenter}>You have no notifications yet</Text>
           ) : (
             <View>
               {today.length && (
                 <View>
                   <Text style={styles.dayText}>Today</Text>
                   {today.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -136,7 +146,7 @@ const Notification = () => {
                 <View>
                   <Text style={styles.dayText}>Yesterday</Text>
                   {yesterday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -144,7 +154,7 @@ const Notification = () => {
                 <View>
                   <Text style={styles.dayText}>This Week</Text>
                   {week.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -152,7 +162,7 @@ const Notification = () => {
                 <View>
                   <Text style={styles.dayText}>This Month</Text>
                   {month.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -161,40 +171,40 @@ const Notification = () => {
         </>
       )}
       {active === "Likes" && (
-        <View>
+        <View style={{ justifyContent: "center" }}>
           {likes.length === 0 ? (
-            <View style={styles.textCenter}>You have no likes yet</View>
+            <Text style={styles.textCenter}>You have no likes yet</Text>
           ) : (
             <View>
-              {likesToday.length && (
+              {Boolean(likesToday.length) && (
                 <View>
                   <Text style={styles.dayText}>Today</Text>
                   {likesToday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {likesYesterday.length && (
+              {Boolean(likesYesterday.length) && (
                 <View>
                   <Text style={styles.dayText}>Yesterday</Text>
                   {likesYesterday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {likesWeek.length && (
+              {Boolean(likesWeek.length) && (
                 <View>
                   <Text style={styles.dayText}>This Week</Text>
                   {likesWeek.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {likesMonth.length && (
+              {Boolean(likesMonth.length) && (
                 <View>
                   <Text style={styles.dayText}>This Month</Text>
                   {likesMonth.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -203,40 +213,40 @@ const Notification = () => {
         </View>
       )}
       {active === "Comments" && (
-        <View>
+        <View style={{ flex: 1 }}>
           {comments.length === 0 ? (
-            <View style={styles.textCenter}>You have no comments yet</View>
+            <Text style={styles.textCenter}>You have no comments yet</Text>
           ) : (
             <View>
-              {commentsToday.length && (
+              {Boolean(commentsToday.length) && (
                 <View>
                   <Text style={styles.dayText}>Today</Text>
                   {commentsToday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {commentsYesterday.length && (
+              {Boolean(commentsYesterday.length) && (
                 <View>
                   <Text style={styles.dayText}>Yesterday</Text>
                   {commentsYesterday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {commentsWeek.length && (
+              {Boolean(commentsWeek.length) && (
                 <View>
                   <Text style={styles.dayText}>This Week</Text>
                   {commentsWeek.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {commentsMonth.length && (
+              {Boolean(commentsMonth.length) && (
                 <View>
                   <Text style={styles.dayText}>This Month</Text>
                   {commentsMonth.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -247,38 +257,38 @@ const Notification = () => {
       {active === "Mentions" && (
         <View>
           {mentions.length === 0 ? (
-            <View style={styles.textCenter}>You have no mentions yet</View>
+            <Text style={styles.textCenter}>You have no mentions yet</Text>
           ) : (
             <View>
-              {mentionsToday.length && (
+              {Boolean(mentionsToday.length) && (
                 <View>
                   <Text style={styles.dayText}>Today</Text>
                   {mentionsToday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {mentionsYesterday.length && (
+              {Boolean(mentionsYesterday.length) && (
                 <View>
                   <Text style={styles.dayText}>Yesterday</Text>
                   {mentionsYesterday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {mentionsWeek.length && (
+              {Boolean(mentionsWeek.length) && (
                 <View>
                   <Text style={styles.dayText}>This Week</Text>
                   {mentionsWeek.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {mentionsMonth.length && (
+              {Boolean(mentionsMonth.length) && (
                 <View>
                   <Text style={styles.dayText}>This Month</Text>
                   {mentionsMonth.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -289,38 +299,38 @@ const Notification = () => {
       {active === "Following" && (
         <View>
           {following.length === 0 ? (
-            <View style={styles.textCenter}>You have no following yet</View>
+            <Text style={styles.textCenter}>You have no following yet</Text>
           ) : (
             <View>
-              {followingToday.length && (
+              {Boolean(followingToday.length) && (
                 <View>
                   <Text style={styles.dayText}>Today</Text>
                   {followingToday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {followingYesterday.length && (
+              {Boolean(followingYesterday.length) && (
                 <View>
                   <Text style={styles.dayText}>Yesterday</Text>
                   {followingYesterday.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {followingWeek.length && (
+              {Boolean(followingWeek.length) && (
                 <View>
                   <Text style={styles.dayText}>This Week</Text>
                   {followingWeek.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
-              {followingMonth.length && (
+              {Boolean(followingMonth.length) && (
                 <View>
                   <Text style={styles.dayText}>This Month</Text>
                   {followingMonth.map((item) => (
-                    <NotifCard {...item} />
+                    <NotifCard key={item.text} {...item} />
                   ))}
                 </View>
               )}
@@ -336,9 +346,6 @@ export default Notification;
 
 const styles = StyleSheet.create({
   wrapper: {
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
     marginTop: 16,
     marginBottom: 23,
   },
@@ -363,8 +370,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   textCenter: {
-    alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
+    textAlign: "center",
     color: "#50A040",
   },
   bgGreen: {

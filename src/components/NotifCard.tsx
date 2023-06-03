@@ -7,8 +7,8 @@ type IProps = {
   desc: string;
   time: string;
   like?: boolean;
-  img: any;
-  action: string;
+  img?: any;
+  action?: string;
 };
 
 const NotifCard = ({ avatar, text, desc, time, like, img, action }: IProps) => {
@@ -38,6 +38,7 @@ export default NotifCard;
 const styles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
+    marginBottom: 10,
   },
   bgGreen: {
     padding: 10,
