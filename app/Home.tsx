@@ -1,9 +1,6 @@
 import {
   StyleSheet,
-  TouchableOpacity,
   View,
-  ImagePropsBase,
-  Image,
   FlatList,
   Dimensions,
   NativeScrollEvent,
@@ -12,10 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Badge } from "react-native-paper";
-import { Video, ResizeMode } from "expo-av";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
-import { ButtonAddSimple } from "@twikkl/components";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
 import { useRef, useState } from "react";
 import videos from "@twikkl/staticFiles/videos";
@@ -26,7 +21,7 @@ import { useRouter } from "expo-router";
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 //get device width and height
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 /**
  * TODO - Horizontal pager
@@ -42,7 +37,6 @@ export default function ScreenHome() {
   const items = videos;
 
   const { t } = useTranslation();
-  const flatListRef = useRef<FlatList>(null);
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -59,7 +53,7 @@ export default function ScreenHome() {
         data={items}
         renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} />}
         keyExtractor={(item, index) => index.toString()}
-        pagingEnabled={true}
+        pagingEnabled
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onScroll={onScroll}
