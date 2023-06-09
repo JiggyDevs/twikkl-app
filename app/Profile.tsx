@@ -18,7 +18,7 @@ const detailsArr = [
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 const imgArr = [
   require("../assets/imgs/prof1.png"),
-  // require("../assets/imgs/prof2.png"),
+  require("../assets/imgs/prof2.png"),
   require("../assets/imgs/prof3.png"),
   require("../assets/imgs/prof4.png"),
   require("../assets/imgs/prof5.png"),
@@ -37,7 +37,7 @@ const Profile = () => {
         <Text style={styles.boldText}>Profile</Text>
         <MoreIcon />
       </View>
-      <ScrollView>
+      <ScrollView style={{ paddingHorizontal: 10 }}>
         <View style={styles.center}>
           <Image source={require("../assets/imgs/profile.png")} />
           <Text style={styles.boldTextSpace}>jerry.jgy</Text>
@@ -66,7 +66,7 @@ const Profile = () => {
               onPress={() => setActive(index)}
               style={[
                 active === index ? styles.bgGreen : { backgroundColor: "transparent" },
-                { paddingHorizontal: 40 },
+                { paddingHorizontal: "9.58%" },
               ]}
             >
               <Icon dark={active === index ? "#fff" : "#50A040"} />
@@ -74,8 +74,8 @@ const Profile = () => {
           ))}
         </View>
         <View style={styles.img}>
-          {imgArr.map((item) => (
-            <ImgBgRender key={item} img={item} />
+          {imgArr.map((item, index) => (
+            <ImgBgRender key={index} img={item} />
           ))}
         </View>
       </ScrollView>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   center: {
     alignItems: "center",
-    marginVertical: 32,
+    marginBottom: 32,
     paddingHorizontal: 20,
   },
   justifyCenter: {
@@ -110,10 +110,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingHorizontal: 10,
+    marginBottom: "5%",
   },
   container: {
     paddingTop: 60,
-    paddingHorizontal: 10,
     backgroundColor: "#F1FCF2",
     flex: 1,
   },
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    gap: 14,
+    gap: 10,
     marginTop: 38,
   },
 });
