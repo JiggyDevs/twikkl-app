@@ -1,8 +1,8 @@
 {
   "expo": {
-    "owner": "twikkl",
+    "owner": "ubyy13",
     "name": "twikkl-app",
-    "slug": "twikkl-app",
+    "slug": "twkl",
     "scheme": "twikkl",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,7 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -30,7 +32,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "95c0ba49-9d63-43af-94f1-39d5e26ea120"
+        "projectId": "58790fa7-d8d3-404f-bc70-da1bd93c0b84"
       }
     }
   }
