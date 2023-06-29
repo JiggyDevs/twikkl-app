@@ -6,17 +6,13 @@ import {
   Image,
   Dimensions,
   StatusBar,
-  TouchableHighlight,
   TouchableWithoutFeedback,
-  Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Text, Badge } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
-import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
-import { useColors } from "@twikkl/hooks";
+import { TwikklIcon, EIcon } from "@twikkl/configs";
 import { ButtonAddSimple } from "@twikkl/components";
-import { Item } from "react-native-paper/lib/typescript/src/components/Drawer/Drawer";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
