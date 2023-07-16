@@ -18,7 +18,7 @@ const detailsArr = [
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 const imgArr = [
   require("../assets/imgs/prof1.png"),
-  require("../assets/imgs/prof2.png"),
+  require("../assets/imgs/Prof2.png"),
   require("../assets/imgs/prof3.png"),
   require("../assets/imgs/prof4.png"),
   require("../assets/imgs/prof5.png"),
