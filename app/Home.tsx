@@ -58,7 +58,6 @@ export default function ScreenHome() {
         showsHorizontalScrollIndicator={false}
         onScroll={onScroll}
       />
-
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
           <TwikklIcon name={EIcon.TIMER_24} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
@@ -68,12 +67,12 @@ export default function ScreenHome() {
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
           </View>
-          <View>
+          <Pressable onPress={() => router.push("Discover")}>
             <Text variant="titleMedium" style={styles.headActionText}>
               {t("home.discover")}
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
-          </View>
+          </Pressable>
           <Pressable onPress={() => router.push("Notification")}>
             <TwikklIcon name={EIcon.BELL} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
             <Badge size={10} style={{ backgroundColor: colorPrimary, position: "absolute" }} />
