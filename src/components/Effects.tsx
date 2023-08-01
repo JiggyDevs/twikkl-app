@@ -37,7 +37,7 @@ const Effects = () => {
   const [effectItems, setEffectItems] = useState("Skin Tone");
   const [tone, setTone] = useState<ITone>();
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.effectHeader}>
         <Effect2 />
         <Effect1 />
@@ -104,4 +104,7 @@ const styles = StyleSheet.create({
   center: {
     alignItems: "center",
   },
+  container: {
+    marginTop: 13,
+  }
 });

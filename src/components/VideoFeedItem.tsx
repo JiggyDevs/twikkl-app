@@ -35,9 +35,10 @@ type Props = {
   };
   index: number;
   visibleIndex: number;
+  onShareClick: any;
 };
 
-export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
+export default function VideoFeedItem({ item, index, visibleIndex, onShareClick }: Props) {
   const router = useRouter();
   const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
   const [shouldPlay, setShouldPlay] = useState(false);
@@ -72,6 +73,7 @@ export default function VideoFeedItem({ item, index, visibleIndex }: Props) {
             >
               {icons.map((icon, index) => (
                 <TouchableOpacity
+                onPress={()=> icon === EIcon.SHARE_NETWORK && onShareClick()}
                   key={index}
                   style={{
                     paddingVertical: 12,

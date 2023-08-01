@@ -17,8 +17,12 @@ import videos from "@twikkl/staticFiles/videos";
 import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
+import AppBottomSheet from "@twikkl/components/BottomSheet";
+import { color } from "react-native-reanimated";
+import Share from "@twikkl/components/Share";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
+const BACKGROUND_COLOR = "#041105";
 
 //get device width and height
 const { height } = Dimensions.get("window");
@@ -32,6 +36,7 @@ const { height } = Dimensions.get("window");
 export default function ScreenHome() {
   const router = useRouter();
   const { primary: colorPrimary } = useColors();
+  const [shareVisible, setShareVisible] = useState(false)
 
   // get static videos
   const items = videos;
@@ -51,7 +56,7 @@ export default function ScreenHome() {
       <FlatList
         style={[StyleSheet.absoluteFill]}
         data={items}
-        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} />}
+        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} onShareClick={() => setShareVisible(true)} />}
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled
         showsVerticalScrollIndicator={false}
@@ -82,6 +87,15 @@ export default function ScreenHome() {
       </SafeAreaView>
 
       <BottomNav commentCount={0} />
+      {
+        shareVisible &&
+        <AppBottomSheet 
+        backgroundColor= {BACKGROUND_COLOR}
+        height="50%"
+        closeModal={() => setShareVisible(false)}>
+          <Share />
+        </AppBottomSheet>
+      }
     </>
   );
 }
