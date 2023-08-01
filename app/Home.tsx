@@ -22,6 +22,7 @@ import { color } from "react-native-reanimated";
 import Share from "@twikkl/components/Share";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
+const BACKGROUND_COLOR = "#041105";
 
 //get device width and height
 const { height } = Dimensions.get("window");
@@ -88,7 +89,10 @@ export default function ScreenHome() {
       <BottomNav commentCount={0} />
       {
         shareVisible &&
-        <AppBottomSheet closeModal={() => setShareVisible(false)}>
+        <AppBottomSheet 
+        backgroundColor= {BACKGROUND_COLOR}
+        height="50%"
+        closeModal={() => setShareVisible(false)}>
           <Share />
         </AppBottomSheet>
       }
