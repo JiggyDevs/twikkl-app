@@ -64,7 +64,7 @@ const AppBottomSheet = ({
           shadowColor: "rgba(0,0,0,0.2)",
           shadowOpacity: 0.7,
           elevation: 10,
-          paddingTop: 13,
+          // paddingTop: 13,
         }}
         backgroundStyle={{ backgroundColor: "rgba(57, 56, 56, 0.45)" }}
         //@ts-ignore

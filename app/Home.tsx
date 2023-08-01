@@ -35,7 +35,7 @@ const { height } = Dimensions.get("window");
 export default function ScreenHome() {
   const router = useRouter();
   const { primary: colorPrimary } = useColors();
-  const [shareVisible, setShareVisible] =useState(false)
+  const [shareVisible, setShareVisible] = useState(false)
 
   // get static videos
   const items = videos;
@@ -55,7 +55,7 @@ export default function ScreenHome() {
       <FlatList
         style={[StyleSheet.absoluteFill]}
         data={items}
-        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} onShareClick={()=>setShareVisible(true)} />}
+        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} onShareClick={() => setShareVisible(true)} />}
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled
         showsVerticalScrollIndicator={false}
@@ -86,11 +86,12 @@ export default function ScreenHome() {
       </SafeAreaView>
 
       <BottomNav commentCount={0} />
-     {
-      shareVisible &&  <AppBottomSheet closeModal={() => setShareVisible(false)}>
-      <Share />
-      </AppBottomSheet>
-     }
+      {
+        shareVisible &&
+        <AppBottomSheet closeModal={() => setShareVisible(false)}>
+          <Share />
+        </AppBottomSheet>
+      }
     </>
   );
 }
