@@ -1,11 +1,13 @@
-import { View, Text, ImageBackground, StyleSheet } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import LikeIcon from "@assets/svg/LikeIcon";
 import EyeIcon from "@assets/svg/EyeIcon";
 
 const ImgBgRender = ({ img }: { img?: any }) => {
+  const { width } = Dimensions.get("window");
+  const cardWidth = (width - 12 - 12 * 3) / 3;
   return (
-    <ImageBackground resizeMode="contain" style={styles.container} source={img}>
+    <ImageBackground resizeMode="contain" style={[styles.container, { width: cardWidth }]} source={img}>
       <View style={styles.flexRow}>
         <LikeIcon />
         <Text style={{ color: "#fff" }}>2K</Text>
@@ -26,7 +28,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    width: 115,
     height: 127,
   },
   flexRow: {

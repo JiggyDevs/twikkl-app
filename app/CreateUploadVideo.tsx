@@ -43,6 +43,12 @@ const CreateUploadvideo = () => {
       console.log("Permission denied!");
     }
   };
+  const getAudioRecordingPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+    if (status !== "granted") {
+      console.log("Audio recording permission denied!");
+    }
+  };
 
   const activateProgress = () => {
     const duration = iDuration;
@@ -105,6 +111,7 @@ const CreateUploadvideo = () => {
   useEffect(() => {
     (async () => {
       await Camera.requestCameraPermissionsAsync();
+      await getAudioRecordingPermission();
     })();
   }, []);
 
@@ -119,6 +126,7 @@ const CreateUploadvideo = () => {
               resizeMode={ResizeMode.COVER}
               style={[StyleSheet.absoluteFill]}
               isLooping
+              onError={(error) => console.log("Video Error:", error)}
             />
             <View style={styles.viewContainer}>
               <View style={styles.center}>
@@ -263,6 +271,7 @@ export default CreateUploadvideo;
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    paddingTop: 40,
   },
   flex: {
     flexDirection: "row",
