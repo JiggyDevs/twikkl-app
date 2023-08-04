@@ -1,56 +1,85 @@
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from "react-native";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
-// import colors from "@twikkl/configs/colors";
-// import Size from "@twikkl/utility/useResponsiveSize";
-// import AppText from "../AppText";
-import { useRouter } from "expo-router";
-import { colors } from "../../../app/Discover";
-// import { colors } from "../../../app/Discover/inde";
+interface ICard {
+  img: any;
+  title: string;
+  forYou?: boolean;
+  members: string;
+  desc: string;
+  followers?: number;
+  onPress: Function;
+  leaveGroup: Function;
+  favPress: Function;
+  fav?: boolean;
+}
 
-const Card = (): JSX.Element => {
-  const router = useRouter();
+export const imgArr = [
+  require("../../../assets/imgs/smallImg1.png"),
+  require("../../../assets/imgs/smallImg2.png"),
+  require("../../../assets/imgs/smallImg3.png"),
+  require("../../../assets/imgs/smallImg4.png"),
+];
 
+const Card = ({
+  img,
+  title,
+  forYou,
+  members,
+  desc,
+  followers,
+  onPress,
+  leaveGroup,
+  favPress,
+  fav,
+}: ICard): JSX.Element => {
   return (
-    <View style={{ paddingHorizontal: 10 }}>
-      <View style={styles.container}>
-        <Image style={styles.image} source={{ uri: "https://picsum.photos/seed/696/3000/2000" }} resizeMode="cover" />
-
-        <View style={styles.content}>
-          <View style={styles.titleContainer}>
-            <Text style={{ fontSize: 16 }}>Open AI</Text>
+    <View style={styles.container}>
+      <ImageBackground style={styles.image} source={img} resizeMode="cover">
+        {forYou ? (
+          <Ionicons name="lock-closed" color="#fff" size={22} />
+        ) : (
+          <Ionicons onPress={() => favPress()} name={fav ? "star" : "star-outline"} color="#fff" size={26} />
+        )}
+      </ImageBackground>
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <Text style={{ fontSize: 16, color: "#fff", fontWeight: "700" }}>{title}</Text>
+          {forYou && (
             <View style={styles.membersContainer}>
-              <FontAwesome5 name="user-friends" size={16} color={colors.white100} />
-              <Text style={styles.members}>550K Members</Text>
+              <FontAwesome5 name="user-friends" size={16} color="#fff" />
+              <Text style={styles.members}>{members} Members</Text>
             </View>
-          </View>
-
-          <Text style={styles.description}>
-            Conducting fundamental, long-term research toward the creation of safe Artificial General Intelligence.
-          </Text>
-
-          <View style={styles.avatarContainer}>
-            {[...Array(4)].map((_, index) => {
-              return (
-                <Image
-                  key={index}
-                  style={[styles.avatar, index > 0 && styles.avatarLeft]}
-                  source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
-                  resizeMode="cover"
-                />
-              );
-            })}
-            <Text style={styles.followers}>20 followers are members</Text>
-          </View>
-
-          <TouchableOpacity onPress={() => router.push("Discover/slug")} style={styles.button}>
-            <Text style={styles.buttonText}>Join Group</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.notInterestedContainer}>
-            <Text style={styles.notInterersted}>Not Interested</Text>
-          </TouchableOpacity>
+          )}
         </View>
+        <Text style={styles.description}>{desc}</Text>
+        <View style={styles.avatarContainer}>
+          {imgArr.map((img, index) => {
+            return (
+              <Image
+                key={index}
+                style={[styles.avatar, index > 0 && styles.avatarLeft]}
+                source={img}
+                resizeMode="cover"
+              />
+            );
+          })}
+          <Text style={styles.followers}>{forYou ? `${followers} followers are members` : `${members} members`}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            if (forYou) onPress();
+            return;
+          }}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>{forYou ? "Join Group" : "View Group Activity"}</Text>
+        </TouchableOpacity>
+        {!forYou && (
+          <TouchableOpacity onPress={() => leaveGroup()} style={styles.notInterestedContainer}>
+            <Text style={styles.notInterersted}>Leave Group</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -58,8 +87,8 @@ const Card = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   avatar: {
-    height: 24,
-    width: 24,
+    height: 28,
+    width: 28,
     borderRadius: 24,
   },
   avatarContainer: {
@@ -72,13 +101,13 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 15,
-    width: "100%",
-    backgroundColor: "#50a040",
+    backgroundColor: "#fff",
     borderRadius: 16,
   },
   buttonText: {
-    color: "#fff",
+    color: "#50A040",
     textAlign: "center",
+    fontWeight: "700",
   },
   container: {
     borderRadius: 16,
@@ -89,22 +118,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     paddingTop: 8,
-    backgroundColor: colors?.green200,
+    backgroundColor: "#50A040",
   },
   description: {
     fontWeight: "400",
     fontSize: 14,
+    color: "#fff",
     marginTop: 4,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   followers: {
     fontWeight: "400",
     marginLeft: 11,
     fontSize: 14,
+    color: "#fff",
   },
   image: {
-    height: 250,
-    width: "100%",
+    padding: 16,
+    alignItems: "flex-end",
+    height: 220,
   },
   titleContainer: {
     flexDirection: "row",
@@ -115,15 +147,15 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 14,
     marginLeft: 9,
+    color: "#fff",
   },
   membersContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   notInterersted: {
-    fontSize: 14,
-    fontWeight: "400",
     textAlign: "center",
+    color: "#fff",
   },
   notInterestedContainer: {
     alignSelf: "center",

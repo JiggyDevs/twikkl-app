@@ -66,7 +66,7 @@ const Profile = () => {
               onPress={() => setActive(index)}
               style={[
                 active === index ? styles.bgGreen : { backgroundColor: "transparent" },
-                { paddingHorizontal: "9.58%" },
+                { width: "25%", justifyContent: "center", alignItems: "center" },
               ]}
             >
               <Icon dark={active === index ? "#fff" : "#50A040"} />

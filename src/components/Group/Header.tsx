@@ -1,101 +1,163 @@
-import { View, TouchableOpacity, Image, StyleSheet, ScrollView, Text } from "react-native";
-import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Text,
+  ImageBackground,
+  Pressable,
+  PixelRatio,
+  Dimensions,
+} from "react-native";
+import { MaterialCommunityIcons, FontAwesome5, Octicons, AntDesign, Ionicons } from "@expo/vector-icons";
+import { colors } from "../../../app/Discover/index1";
+import { IGroup } from "../../../app/Discover/[id]";
+import PlayUpload from "@assets/svg/PlayUpload";
+import { imgArr } from "../Discover/Card";
+import GroupSettings from "@assets/svg/GroupSettings";
+import Grid1 from "@assets/svg/Grid1";
+import { useRouter } from "expo-router";
+import MenuIcon from "@assets/svg/Menu";
+import ArrowDown from "@assets/svg/ArrowDown";
+import { useState } from "react";
+import Grid3 from "@assets/svg/Grid3";
+import Grid2 from "@assets/svg/Grid2";
 
-// import AppText from "@twikkl/components/AppText";
-// import URLS from "@assets/data/discover/URLS";
-// import Size from "@twikkl/utility/useResponsiveSize";
-// import colors from "@twikkl/configs/colors";
+interface Header extends IGroup {
+  select: number;
+  setSelect: Function;
+}
 
-// import UploadIcon from "../../../assets/svg/groups/upload.svg";
-// import GridIcon from "../../../assets/svg/groups/grid.svg";
-// import DropDownIcon from "../../../assets/svg/groups/dropdown.svg";
-import URLS from "@twikkl/data/discover/URLS";
-import { colors } from "../../../app/Discover";
-
-const topics = [
-  "artificial intelligence",
-  "coding",
-  "ui design",
-  "front-end development",
-  "back-end development",
-  "mobile-application development",
-];
-
-const Header = (): JSX.Element => {
+const Header = ({
+  title,
+  desc,
+  members,
+  img,
+  smallImg,
+  status,
+  smallGroup,
+  select,
+  setSelect,
+}: Header): JSX.Element => {
+  const { height } = Dimensions.get("window");
+  const [dropDown, setDropDown] = useState(false);
+  const router = useRouter();
+  const gridArr = [<Grid1 />, <Grid2 />, <Grid3 />];
   return (
-    <>
-      <Image style={styles.bannerImage} source={{ uri: URLS.WEDDING }} />
+    <View>
+      <ImageBackground style={[styles.bannerImage, { height: height * 0.32 }]} source={img}>
+        <TouchableOpacity onPressOut={() => router.back()} style={styles.iconContainer}>
+          <Octicons name="chevron-left" size={24} color="#fff" />
+        </TouchableOpacity>
+        <View style={{ flexDirection: "row", gap: 26 }}>
+          <AntDesign name="search1" size={24} />
+          <MenuIcon />
+        </View>
+      </ImageBackground>
       <View style={styles.container}>
-        <Image style={styles.profilePicture} source={{ uri: URLS.WEDDING }} />
-        <Text style={styles.title}>Open AI</Text>
-        <Text style={styles.description}>
-          Conducting fundamental, long-term research toward the creation of safe Artificial General Intelligence.
-        </Text>
+        <Image style={styles.profilePicture} source={smallImg} />
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{desc}</Text>
         <View style={[styles.horizontal, styles.detailsContainer]}>
           <View style={styles.horizontal}>
-            <MaterialCommunityIcons name="lock" size={20} color={colors.white100} />
-            <Text style={styles.details}>Closed</Text>
+            <View style={styles.horizontal}>
+              <MaterialCommunityIcons name="lock" size={20} color={colors.white100} />
+              <Text style={styles.details}>{status}</Text>
+            </View>
+            <View style={[styles.horizontal, { marginLeft: 10 }]}>
+              <FontAwesome5 name="user-friends" size={17} color={colors.white200} />
+              <Text style={styles.details}>{members} members</Text>
+            </View>
           </View>
-          <View style={[styles.horizontal, { marginLeft: 10 }]}>
-            <FontAwesome5 name="user-friends" size={19} color={colors.white200} />
-            <Text style={styles.details}>550k members</Text>
-          </View>
-
-          <View style={[styles.horizontal, { marginLeft: "auto" }]}>
-            {Array(3)
-              .fill(0)
-              .map((_, index) => {
-                return (
-                  <Image
-                    key={index}
-                    source={{ uri: URLS.manAvatar }}
-                    style={[styles.avatar, index === 0 && { marginLeft: 0 }]}
-                  />
-                );
+          <View style={[styles.horizontal, { gap: 10 }]}>
+            <View style={[styles.horizontal]}>
+              {imgArr.map((img, index) => {
+                return <Image key={index} source={img} style={[styles.avatar, index === 0 && { marginLeft: 0 }]} />;
               })}
+            </View>
+            <TouchableOpacity style={styles.add}>
+              <Ionicons name="add-outline" size={28} color="#50A040" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.topicsContainer} horizontal>
-        {topics.map((topic, index) => {
+      <ScrollView horizontal>
+        {smallGroup?.map((topic, index) => {
           return (
-            <TouchableOpacity
-              key={index}
-              style={[styles.topicsButton, index === topics.length - 1 && { marginRight: 16 }]}
-            >
-              <Text style={{ color: "#fff" }}> {topic}</Text>
+            <TouchableOpacity key={index} style={[styles.topicsButton]}>
+              <Text>{topic}</Text>
             </TouchableOpacity>
           );
         })}
       </ScrollView>
 
-      <View style={{ backgroundColor: colors.green200, marginBottom: 16 }}>
+      <View style={{ backgroundColor: "#000", marginBottom: 16 }}>
         <View style={styles.actionContainer}>
           <View style={styles.horizontal}>
-            <Image source={{ uri: URLS.woman2 }} style={styles.actionAvatar} />
-            {/* <UploadIcon /> */}
+            <Image source={require("../../../assets/imgs/smallImg1.png")} style={styles.actionAvatar} />
+            <PlayUpload />
           </View>
-          <View style={styles.horizontal}>
-            {/* <DropDownIcon style={{ marginRight: 19 }} />
-            <GridIcon /> */}
+          <View style={[styles.horizontal, { gap: 20 }]}>
+            <Pressable onPress={() => setDropDown(!dropDown)} style={[styles.horizontal, { gap: 7 }]}>
+              <GroupSettings />
+              <ArrowDown />
+            </Pressable>
+            <View style={styles.gridWrapper}>{gridArr[select]}</View>
           </View>
+          {dropDown && (
+            <View style={styles.dropdown}>
+              {gridArr.map((grid, index) => (
+                <Pressable
+                  onPress={() => {
+                    setDropDown(false);
+                    setSelect(index);
+                  }}
+                >
+                  {grid}
+                </Pressable>
+              ))}
+            </View>
+          )}
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  add: {
+    backgroundColor: "#fff",
+    height: 30,
+    width: 30,
+    borderRadius: 20,
+    alignItems: "center",
+  },
+  gridWrapper: {
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#50A040",
+    padding: 3,
+  },
   actionAvatar: {
-    borderRadius: 17,
-    height: 34,
-    width: 34,
+    height: 36,
+    width: 36,
     marginRight: 16,
   },
+  dropdown: {
+    backgroundColor: "lightgrey",
+    padding: 10,
+    borderRadius: 10,
+    gap: 13,
+    position: "absolute",
+    bottom: -80,
+    width: 50,
+    right: 50,
+  },
   actionContainer: {
-    backgroundColor: colors.green100,
-    marginVertical: 5,
+    backgroundColor: "#fff",
+    marginVertical: 4,
     paddingVertical: 8,
     flexDirection: "row",
     paddingHorizontal: 16,
@@ -108,26 +170,27 @@ const styles = StyleSheet.create({
     marginLeft: -15,
   },
   bannerImage: {
-    height: 250,
-    width: "100%",
+    paddingTop: 60,
+    paddingHorizontal: 17,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   container: {
-    backgroundColor: colors.green200,
-    flex: 1,
+    backgroundColor: "#50A040",
     paddingHorizontal: 16,
   },
   description: {
-    fontWeight: "400",
     fontSize: 13,
+    color: "#fff",
   },
   details: {
     marginLeft: 5,
-    fontWeight: "400",
-    fontSize: 14,
+    color: "#fff",
   },
   detailsContainer: {
     marginTop: 8,
     marginBottom: 16,
+    justifyContent: "space-between",
   },
   horizontal: {
     flexDirection: "row",
@@ -135,27 +198,33 @@ const styles = StyleSheet.create({
   },
   profilePicture: {
     borderRadius: 35,
-    height: 70,
-    width: 70,
-    marginTop: -45,
+    height: 100,
+    width: 100,
+    marginTop: -50,
   },
   title: {
     fontSize: 20,
-    marginTop: 18,
+    fontWeight: "700",
+    lineHeight: 33,
     marginBottom: 4,
+    color: "#fff",
   },
   topicsButton: {
     paddingVertical: 6,
     marginVertical: 8,
-    paddingHorizontal: 14.5,
+    paddingHorizontal: 15,
     marginLeft: 16,
     borderColor: colors.green300,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderRadius: 100,
   },
-  topicsContainer: {
-    backgroundColor: colors.green100,
+  iconContainer: {
+    backgroundColor: "#000",
+    height: 30,
+    width: 30,
     alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
   },
 });
 export default Header;

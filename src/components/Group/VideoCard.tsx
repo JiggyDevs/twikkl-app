@@ -1,30 +1,26 @@
-import { View, Image, StyleSheet } from "react-native";
-
-// import Size from "@twikkl/utility/useResponsiveSize";
+import { Image, Dimensions } from "react-native";
 
 interface Props {
-  videoLink: string;
+  videoLink: any;
+  numCol: number;
 }
 
-const VideoCard = ({ videoLink }: Props): JSX.Element => {
+const VideoCard = ({ videoLink, numCol }: Props): JSX.Element => {
+  const { width, height } = Dimensions.get("window");
+  const cardWidth = (width - 10 * numCol) / numCol;
+  const separator = width * 0.012;
   return (
-    <View style={styles.container}>
-      <Image resizeMode="cover" source={{ uri: videoLink }} style={styles.image} />
-    </View>
+    <Image
+      resizeMode="cover"
+      source={videoLink}
+      style={{
+        height: height * 0.15,
+        width: cardWidth,
+        margin: separator,
+        alignSelf: "center",
+      }}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    overflow: "hidden",
-    marginBottom: 16,
-  },
-  image: {
-    height: 245,
-    width: 450 / 4,
-  },
-});
 
 export default VideoCard;
