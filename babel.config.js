@@ -4,6 +4,18 @@ module.exports = function(api) {
     presets: ["babel-preset-expo"],
     plugins: [
       [
+        'module:react-native-dotenv',
+        {
+          moduleName: '@env',
+          path: '.env',
+          blocklist: null,
+          allowlist: null,
+          safe: false,
+          allowUndefined: true,
+          verbose: false,
+        },
+      ],
+      [
         "module-resolver",
         {
           "root": ["./src"],
@@ -20,9 +32,13 @@ module.exports = function(api) {
           },
         },
       ],
-      "react-native-paper/babel",
       require.resolve("expo-router/babel"),
       'react-native-reanimated/plugin',
     ],
+    env: {
+      production: {
+        plugins: ['react-native-paper/babel', "transform-remove-console"],
+      },
+    }
   };
 };

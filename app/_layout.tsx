@@ -5,6 +5,10 @@ import { SplashScreen, Stack } from "expo-router";
 import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@twikkl/configs";
+import { useTwikklEntity } from "@twikkl/entities";
+import Toast from "react-native-toast-message";
+import AppLoader from "@twikkl/components/AppLoader";
+import { toastConfig } from "@twikkl/components/ToastWidget";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -31,13 +35,16 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { loading } = useTwikklEntity();
   return (
     <PaperProvider theme={theme}>
-      <StatusBar />
+      <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="Home" />
+        {/* <Stack.Screen name="index" /> */}
+        {/* <Stack.Screen name="Home" /> */}
       </Stack>
+      {loading && <AppLoader />}
+      <Toast config={toastConfig} />
     </PaperProvider>
   );
 }

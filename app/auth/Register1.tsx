@@ -6,6 +6,7 @@ import { TwikklIcon, ViewVariant } from "@twikkl/configs";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import InputField from "@twikkl/components/InputField";
 
 const logoImg = require("@assets/imgs/logos/logo.png") as ImagePropsBase["source"];
 const logoGoogle = require("@assets/imgs/logos/google.png") as ImagePropsBase["source"];
@@ -28,15 +29,16 @@ export default function ScreenRegister(): ReactElement {
   return (
     <SafeAreaView style={{ ...ViewVariant.page, backgroundColor: colorBrand }}>
       <KeyboardAwareScrollView contentContainerStyle={ViewVariant.centered}>
-        <View style={{ ...ViewVariant.centered, ...styles.inner, paddingTop: "20%" }}>
+        <View style={{ ...styles.inner, paddingTop: "20%" }}>
           <Image style={styles.logo} source={logoImg} />
-          <Text style={{ ...fonts.titleMedium, color: colorWhite }}>{t('register.createAccount')}</Text>
+          <Text style={{ ...fonts.titleMedium, color: colorWhite }}>{t("register.createAccount")}</Text>
           <TextInput
             value="john.doe@test.com"
             style={{ ...styles.input, backgroundColor: colorTertiary }}
             placeholder="username"
             placeholderTextColor={colorInactive}
           />
+          <InputField placeholder="email" />
           <View style={{ width: 343, flexDirection: "row", alignItems: "center" }}>
             <TextInput
               value="123456"
@@ -51,15 +53,15 @@ export default function ScreenRegister(): ReactElement {
             <TwikklIcon name="eye-fill" size={25} color={colorPrimary} style={{ position: "absolute", left: "88%" }} />
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Checkbox uncheckedColor={colorPrimary} color={colorPrimary} onPress={() => { }} status="unchecked" />
+            <Checkbox uncheckedColor={colorPrimary} color={colorPrimary} onPress={() => {}} status="unchecked" />
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ ...fonts.bodySmall, color: colorWhite }}>{t('register.agree')} </Text>
+              <Text style={{ ...fonts.bodySmall, color: colorWhite }}>{t("register.agree")} </Text>
               <Text style={{ ...fonts.bodySmall, color: colorPrimary, textDecorationLine: "underline" }}>
-                {t('register.terms')}
+                {t("register.terms")}
               </Text>
-              <Text style={{ ...fonts.bodySmall, color: colorWhite }}> {t('register.and')} </Text>
+              <Text style={{ ...fonts.bodySmall, color: colorWhite }}> {t("register.and")} </Text>
               <Text style={{ ...fonts.bodySmall, color: colorPrimary, textDecorationLine: "underline" }}>
-                {t('register.privacy')}
+                {t("register.privacy")}
               </Text>
             </View>
           </View>
@@ -74,9 +76,9 @@ export default function ScreenRegister(): ReactElement {
             }}
             onPress={() => router.push("/Home")}
           >
-            <Text style={{ ...fonts.labelLarge, color: colorWhite }}>{t('register.createAccount')}</Text>
+            <Text style={{ ...fonts.labelLarge, color: colorWhite }}>{t("register.createAccount")}</Text>
           </Button>
-          <Text style={{ ...fonts.bodySmall, color: colorWhite }}>{t('register.or')}</Text>
+          <Text style={{ ...fonts.bodySmall, color: colorWhite }}>{t("register.or")}</Text>
 
           <Button
             textColor={colorWhite}
@@ -97,15 +99,15 @@ export default function ScreenRegister(): ReactElement {
                 width: 24,
               }}
             />
-            <Text style={{ ...fonts.labelLarge, color: colorWhite }}> {t('register.createWithGoogle')}</Text>
+            <Text style={{ ...fonts.labelLarge, color: colorWhite }}> {t("register.createWithGoogle")}</Text>
           </Button>
 
           <View>
-            <Text style={{ ...fonts.bodyMedium, color: colorWhite }}>{t('register.doYouHaveAWallet')}</Text>
+            <Text style={{ ...fonts.bodyMedium, color: colorWhite }}>{t("register.doYouHaveAWallet")}</Text>
             <Text
               style={{ ...fonts.bodyMedium, color: colorPrimary, textAlign: "center", textDecorationLine: "underline" }}
             >
-              {t('register.connectWallet')}
+              {t("register.connectWallet")}
             </Text>
           </View>
         </View>
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
     height: 160,
   },
   input: {
-    width: 343,
+    // width: 343,
     height: 44,
     flexDirection: "row",
     alignItems: "center",

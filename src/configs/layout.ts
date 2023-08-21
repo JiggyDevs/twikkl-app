@@ -12,4 +12,15 @@ export const ViewVariant = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  buttonText: {
+    color: "#F1FCF2",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  wrapper: {
+    flex: 1,
+    paddingHorizontal: 16,
+    backgroundColor: "#F1FCF2",
+    paddingTop: 60,
+  },
 });

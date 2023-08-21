@@ -1,3 +1,3 @@
-import RegisterScreen from "./Register";
+import AuthScreen from "./auth";
 
-export default RegisterScreen;
+export default AuthScreen;
