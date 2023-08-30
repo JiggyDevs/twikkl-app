@@ -13,10 +13,17 @@ export interface Login {
   password: string;
 }
 
-export const signup = async (formData: Signup) => {
+export interface ForgotPassword {
+  email: string;
+  // password: string;
+  // confirmPassword: string;
+  // token: string;
+}
+
+export const doSignup = async (formData: Signup) => {
   try {
     const { data } = await fetchFromApi({
-      path: "/auth/m-signup",
+      path: "auth/register",
       method: "post",
       body: formData,
     });
@@ -30,9 +37,23 @@ export const signup = async (formData: Signup) => {
 export const doLogin = async (formData: Login) => {
   try {
     const { data } = await fetchFromApi({
-      path: "/auth/m-login",
+      path: "auth/login",
       method: "post",
       body: formData,
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+    throw error;
+  }
+};
+
+export const doForgotPassword = async (email: ForgotPassword) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: "auth/recover-password",
+      method: "post",
+      body: email,
     });
     return data;
   } catch (error) {

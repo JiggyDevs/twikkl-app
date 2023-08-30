@@ -13,7 +13,7 @@ const defaultSignUpData = {
   email: "",
   password: "",
   confirmPassword: "",
-  username: "",
+  username: "zartig",
   token: "",
 };
 // router.push({ pathname: "/", params: { post: "random", id, other } });

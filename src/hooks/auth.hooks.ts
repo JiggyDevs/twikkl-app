@@ -1,6 +1,6 @@
 import { hideLoader, requestEnded, requestStarted, showLoader, useTwikklEntity } from "@twikkl/entities";
 import { setAuth, useAuth } from "@twikkl/entities/auth.entity";
-import { doLogin, Login } from "@twikkl/services";
+import { doForgotPassword, doLogin, doSignup, Login } from "@twikkl/services";
 import { isValidFormSubmit, toastSuccess } from "@twikkl/utils/common";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -10,7 +10,7 @@ export type TRegStage = "signup" | "verify" | "username";
 
 export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone: boolean) => {
   const { form, updateField } = useFormField(defaultForm);
-  const { email, password, first_name, last_name, token } = form;
+  const { email, password, username, confirmPassword, token } = form;
   const { isRequesting } = useTwikklEntity();
   const { email: authEmail } = useAuth();
   const startStage = signupDone ? "verify" : "signup";
@@ -23,26 +23,26 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
   };
 
   const _signup = async () => {
-    // requestStarted("signUp");
-    // showLoader();
-    // const formDataToUse = {
-    //   first_name,
-    //   last_name,
-    //   email,
-    //   password,
-    //   role: "user",
-    // };
-    // try {
-    //   const data = await doSignup(formDataToUse);
-    //   console.log({ signData: data });
-    //   toastSuccess(data.message);
-    setCurrentStage("verify");
-    // } catch (error) {
-    //   console.log({ signupError: error });
-    // } finally {
-    //   requestEnded();
-    //   hideLoader();
-    // }
+    requestStarted("signUp");
+    showLoader();
+    const formDataToUse = {
+      username,
+      token,
+      email,
+      password,
+      confirmPassword,
+    };
+    try {
+      const data = await doSignup(formDataToUse);
+      console.log({ signData: data });
+      toastSuccess(data.message);
+      setCurrentStage("verify");
+    } catch (error) {
+      console.log({ signupError: error });
+    } finally {
+      requestEnded();
+      hideLoader();
+    }
   };
 
   const _verifyOtp = async () => {
@@ -67,16 +67,16 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
   };
 
   const _resendOtp = async () => {
-    showLoader();
-    const emailToUse = {
-      email: email || authEmail,
-    };
-    try {
-      await resendOtp(emailToUse);
-    } catch (error) {
-    } finally {
-      hideLoader();
-    }
+    // showLoader();
+    // const emailToUse = {
+    //   email: email || authEmail,
+    // };
+    // try {
+    //   await resendOtp(emailToUse);
+    // } catch (error) {
+    // } finally {
+    //   hideLoader();
+    // }
   };
 
   return {
@@ -94,6 +94,7 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
 export const useLogin = <T extends Login>(defaultForm: T) => {
   const { isRequesting } = useTwikklEntity();
   const { form, updateField } = useFormField(defaultForm);
+  const router = useRouter();
   const canLogin = isValidFormSubmit(form);
   const requesting = isRequesting("login");
   // const { email } = form;
@@ -105,6 +106,7 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
       const data = await doLogin(form);
       console.log("loginData", data);
       setAuth(data.data.user, data.data.token);
+      router.push("Home");
       toastSuccess(data.message);
       // if (data.message === 'Please verify your email before you can continue') {
       //   setEmail(email);
@@ -118,7 +120,6 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
       hideLoader();
     }
   };
-
   return {
     login,
     requesting,
@@ -142,26 +143,26 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
   };
 
   const forgotPassword = async () => {
-    // requestStarted("forgot-password");
-    // showLoader();
-    // try {
-    //   const data = await doForgotPassword({ email });
-    //   console.log({ forgotData: data });
-    //   toastSuccess(data.message);
-    setStage("verify");
-    // } catch (error) {
-    //   console.log({ forgotPasswordError: error });
-    // } finally {
-    //   requestEnded();
-    //   hideLoader();
-    // }
+    requestStarted("forgot-password");
+    showLoader();
+    try {
+      const data = await doForgotPassword({ email });
+      console.log({ forgotData: data });
+      toastSuccess(data.message);
+      setStage("verify");
+    } catch (error) {
+      console.log({ forgotPasswordError: error });
+    } finally {
+      requestEnded();
+      hideLoader();
+    }
   };
 
   const _resendOtp = async () => {
     showLoader();
     try {
-      const data = await doForgotPassword({ email });
-      console.log({ resendOtpData: data });
+      // const data = await doForgotPassword({ email });
+      // console.log({ resendOtpData: data });
       toastSuccess("OTP resent, check your phone");
     } catch (error) {
       console.log({ resendOtpError: error });
@@ -195,9 +196,9 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
       new_password,
     };
     try {
-      const data = await resetPassword(resetPasswordData);
-      console.log({ resetPasswordData: data });
-      toastSuccess(data.message);
+      // const data = await resetPassword(resetPasswordData);
+      // console.log({ resetPasswordData: data });
+      // toastSuccess(data.message);
       router.push("auth/Login");
     } catch (error) {
       console.log({ resendOtpError: error });
