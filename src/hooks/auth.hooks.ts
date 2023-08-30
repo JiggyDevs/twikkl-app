@@ -94,6 +94,7 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
 export const useLogin = <T extends Login>(defaultForm: T) => {
   const { isRequesting } = useTwikklEntity();
   const { form, updateField } = useFormField(defaultForm);
+  const router = useRouter();
   const canLogin = isValidFormSubmit(form);
   const requesting = isRequesting("login");
   // const { email } = form;
@@ -105,6 +106,7 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
       const data = await doLogin(form);
       console.log("loginData", data);
       setAuth(data.data.user, data.data.token);
+      router.push("Home");
       toastSuccess(data.message);
       // if (data.message === 'Please verify your email before you can continue') {
       //   setEmail(email);
