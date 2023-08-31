@@ -1,7 +1,6 @@
 import data from "@twikkl/data/discover/instaStory";
 import { View, Text, StyleSheet } from "react-native";
 import InstaStory from "react-native-insta-story";
-import { colors } from "../../../app/Discover/index1";
 
 const Highlights = (): JSX.Element => {
   return (
@@ -22,14 +21,14 @@ const Highlights = (): JSX.Element => {
         }}
         pressedBorderColor="lightgray"
         unPressedBorderColor="#fff"
-        unPressedAvatarTextColor={colors.white200}
-        pressedAvatarTextColor={colors.white200}
+        unPressedAvatarTextColor="#fff"
+        pressedAvatarTextColor="#fff"
         style={{ backgroundColor: "#50A040", marginBottom: 15, position: "relative" }}
       />
     </View>
   );
 };
-
+// hultopepse@gufum.com
 const styles = StyleSheet.create({
   container: {
     marginBottom: 25,

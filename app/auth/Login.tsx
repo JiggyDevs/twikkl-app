@@ -23,7 +23,7 @@ const Login = () => {
         btnText="Sign In"
         desc="Just jump back in."
         title="Sign In"
-        onPress={() => login()}
+        onPress={() => router.push("Home")}
         loading={requesting}
         disabled={!canLogin || requesting}
       >

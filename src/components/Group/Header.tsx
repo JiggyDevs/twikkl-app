@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from "react-native";
 import { MaterialCommunityIcons, FontAwesome5, Octicons, AntDesign, Ionicons } from "@expo/vector-icons";
-import { colors } from "../../../app/Discover/index1";
+import { colors } from "../../../app/Discover/index";
 import { IGroup } from "../../../app/Discover/[id]";
 import PlayUpload from "@assets/svg/PlayUpload";
 import { imgArr } from "../Discover/Card";
