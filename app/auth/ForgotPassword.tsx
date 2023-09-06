@@ -11,8 +11,8 @@ import { ViewVariant } from "@twikkl/configs";
 const defaultForm = {
   email: "",
   token: "",
-  new_password: "",
-  confirm_new_password: "",
+  password: "",
+  confirm_password: "",
 };
 
 const ForgotPassword = () => {
@@ -20,8 +20,7 @@ const ForgotPassword = () => {
   const { stage, setStage, updateField, form, forgotPassword, _verifyOtp, _resendOtp, _resetPassword, loading } =
     useForgotPassword(defaultForm);
 
-  const handleClick = () =>
-    stage === "forgot" ? forgotPassword() : stage === "verify" ? _verifyOtp() : _resetPassword();
+  const handleClick = () => (stage === "reset" ? _resetPassword() : forgotPassword());
 
   const backClick = () =>
     stage === "forgot" ? router.push("auth/Login") : stage === "verify" ? setStage("forgot") : null;
@@ -30,8 +29,8 @@ const ForgotPassword = () => {
     stage === "forgot"
       ? !form.email || loading.forgotPassword
       : stage === "verify"
-      ? form.token.length < 4 || loading.verifyOtp
-      : !form.new_password || !form.confirm_new_password || loading.resetPassword;
+      ? form.token.length < 6 || loading.verifyOtp
+      : !form.password || !form.confirm_password || loading.resetPassword;
 
   const loadingButton =
     stage === "forgot" ? loading.forgotPassword : stage === "verify" ? loading.verifyOtp : loading.resetPassword;
@@ -62,16 +61,16 @@ const ForgotPassword = () => {
             <LabelInput
               label="Create Password"
               placeholder="password"
-              value={form.new_password}
-              onChangeText={(val) => updateField("new_password", val)}
+              value={form.password}
+              onChangeText={(val) => updateField("password", val)}
               type="password"
             />
             <LabelInput
               label="Re-enter Password"
               placeholder="password"
-              value={form.confirm_new_password}
+              value={form.confirm_password}
               type="password"
-              onChangeText={(val) => updateField("confirm_new_password", val)}
+              onChangeText={(val) => updateField("confirm_password", val)}
             />
           </View>
         )}

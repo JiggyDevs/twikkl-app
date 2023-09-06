@@ -35,21 +35,21 @@ function BottomNav({ commentCount = 0 }: BottomNavProps, {}) {
           <Text style={styles.commentCount}>{commentCount}</Text>
         </View>
         <Text variant="titleMedium" style={styles.tabText}>
-          {t("bottomNavigation.comment")}
+          {t("comment")}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("Wallet")} style={styles.tabContainer}>
         <WalletIcon />
         <Text variant="titleMedium" style={styles.tabText}>
-          {t("bottomNavigation.wallet")}
+          {t("wallet")}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("Profile")} style={styles.tabContainer}>
         <ProfileIcon />
         <Text variant="titleMedium" style={styles.tabText}>
-          {t("bottomNavigation.profile")}
+          {t("profile")}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

@@ -1,6 +1,14 @@
 import { entity } from "simpler-state";
 
-type TCaller = "login" | "signUp" | "forgot-password" | "verify-otp" | "reset-password" | "username" | null;
+type TCaller =
+  | "login"
+  | "signUp"
+  | "forgot-password"
+  | "verify-otp"
+  | "reset-password"
+  | "username"
+  | "create-username"
+  | null;
 
 type IState = {
   isRequesting: {

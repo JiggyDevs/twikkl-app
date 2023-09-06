@@ -7,16 +7,18 @@ import { signupButtonText, signupDesc, signupHeader } from "../data";
 import ConfirmationField from "@twikkl/components/ConfirmationField";
 import Signup, { SubSignup } from "./Signup";
 import { ViewVariant } from "@twikkl/configs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchFromApi, handleFetchError } from "@twikkl/utils/fetch";
+import { useAuth } from "@twikkl/entities/auth.entity";
+import { getOTP } from "@twikkl/services";
 
 const defaultSignUpData = {
   email: "",
   password: "",
   confirmPassword: "",
-  username: "zartig",
+  username: "",
   token: "",
 };
-// router.push({ pathname: "/", params: { post: "random", id, other } });
 
 const Register = () => {
   const router = useRouter();
@@ -24,12 +26,20 @@ const Register = () => {
   const [suffix, setSuffix] = useState(".jgy");
   const [dropDown, setDropDown] = useState(false);
   const [tc, setTc] = useState(false);
-  const { form, updateField, _signup, _resendOtp, _verifyOtp, currentStage, setCurrentStage, loading } = useSignup(
-    defaultSignUpData,
-    Boolean(signupDone),
-  );
+  const {
+    form,
+    updateField,
+    _signup,
+    _resendOtp,
+    _verifyOtp,
+    currentStage,
+    setCurrentStage,
+    loading,
+    _createUsername,
+  } = useSignup(defaultSignUpData, Boolean(signupDone));
 
-  const handleClick = () => (currentStage === "signup" ? _signup() : currentStage === "verify" ? _verifyOtp() : null);
+  const handleClick = () =>
+    currentStage === "signup" ? _signup() : currentStage === "verify" ? _verifyOtp() : _createUsername();
 
   const backClick = () =>
     currentStage === "signup" ? router.push("auth") : currentStage === "verify" ? setCurrentStage("signup") : null;
@@ -38,13 +48,17 @@ const Register = () => {
     currentStage === "signup"
       ? !form.email || !form.password || !form.confirmPassword || !tc || loading.signup
       : currentStage === "verify"
-      ? form.token.length < 4 || loading.verifyOtp
+      ? form.token.length < 6 || loading.verifyOtp
       : !form.username || loading.username;
 
   const loadingButton =
     currentStage === "signup" ? loading.signup : currentStage === "verify" ? loading.verifyOtp : loading.username;
 
   const nameArr = [".jgy", ".eth", ".avax", ".lens"];
+
+  useEffect(() => {
+    currentStage === "verify" && getOTP();
+  }, [currentStage]);
 
   return (
     <View style={ViewVariant.wrapper}>
@@ -95,7 +109,7 @@ const Register = () => {
       {currentStage === "verify" && (
         <View style={styles.select}>
           <Text>You didn’t receive a code?</Text>
-          <Pressable>
+          <Pressable onPress={() => getOTP()}>
             <Text style={styles.resendText}>Resend Code</Text>
           </Pressable>
         </View>

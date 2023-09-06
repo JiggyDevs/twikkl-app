@@ -1,6 +1,14 @@
 import { hideLoader, requestEnded, requestStarted, showLoader, useTwikklEntity } from "@twikkl/entities";
-import { setAuth, useAuth } from "@twikkl/entities/auth.entity";
-import { doForgotPassword, doLogin, doSignup, Login } from "@twikkl/services";
+import { clearAuth, setAuth, setToken } from "@twikkl/entities/auth.entity";
+import {
+  createUsername,
+  doForgotPassword,
+  doLogin,
+  doResetPassword,
+  doSignup,
+  Login,
+  verifyOtp,
+} from "@twikkl/services";
 import { isValidFormSubmit, toastSuccess } from "@twikkl/utils/common";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -12,7 +20,7 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
   const { form, updateField } = useFormField(defaultForm);
   const { email, password, username, confirmPassword, token } = form;
   const { isRequesting } = useTwikklEntity();
-  const { email: authEmail } = useAuth();
+  const router = useRouter();
   const startStage = signupDone ? "verify" : "signup";
   const [currentStage, setCurrentStage] = useState<TRegStage>(startStage);
 
@@ -26,8 +34,6 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
     requestStarted("signUp");
     showLoader();
     const formDataToUse = {
-      username,
-      token,
       email,
       password,
       confirmPassword,
@@ -36,6 +42,7 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
       const data = await doSignup(formDataToUse);
       console.log({ signData: data });
       toastSuccess(data.message);
+      setToken(data.token);
       setCurrentStage("verify");
     } catch (error) {
       console.log({ signupError: error });
@@ -46,24 +53,36 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
   };
 
   const _verifyOtp = async () => {
-    // requestStarted("verify-otp");
-    // showLoader();
-    // const dataToUse = {
-    //   token,
-    //   email: email || authEmail,
-    // };
-    // try {
-    //   const data = await verifyOtp(dataToUse);
-    //   console.log({ verifyOtpData: data });
-    //   toastSuccess(data.message);
-    setCurrentStage("username");
-    // setAuth(data.data.user, data.data.token);
-    // } catch (error) {
-    //   console.log({ verifyOtpError: error });
-    // } finally {
-    //   requestEnded();
-    //   hideLoader();
-    // }
+    requestStarted("verify-otp");
+    showLoader();
+    try {
+      const data = await verifyOtp(token);
+      console.log({ verifyOtpData: data });
+      toastSuccess(data.message);
+      setCurrentStage("username");
+      setAuth(data.data, data.token);
+    } catch (error) {
+      console.log({ verifyOtpError: error });
+    } finally {
+      requestEnded();
+      hideLoader();
+    }
+  };
+
+  const _createUsername = async () => {
+    requestStarted("create-username");
+    showLoader();
+    try {
+      const data = await createUsername(username);
+      console.log({ createUsername: data });
+      toastSuccess(data.message);
+      router.push("Home");
+    } catch (error) {
+      console.log({ verifyOtpError: error });
+    } finally {
+      requestEnded();
+      hideLoader();
+    }
   };
 
   const _resendOtp = async () => {
@@ -88,6 +107,7 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
     loading,
     currentStage,
     setCurrentStage,
+    _createUsername,
   };
 };
 
@@ -99,20 +119,22 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
   const requesting = isRequesting("login");
   // const { email } = form;
 
+  // router.push({ pathname: "/", params: { post: "random", id, other } });
+
   const login = async () => {
     showLoader();
     requestStarted("login");
     try {
       const data = await doLogin(form);
       console.log("loginData", data);
-      setAuth(data.data.user, data.data.token);
-      router.push("Home");
+      setAuth(data.data, data.token);
       toastSuccess(data.message);
-      // if (data.message === 'Please verify your email before you can continue') {
-      //   setEmail(email);
-      //   resendOtp({ email });
-      //   navigation.navigate('Register', { signupDone: true });
-      // }
+      router.push("Home");
+      if (data.message === "email is not verified ") {
+        // setEmail(email);
+        // resendOtp({ email });
+        // navigation.navigate('Register', { signupDone: true });
+      }
     } catch (error: any) {
       console.log("loginError", error);
     } finally {
@@ -134,7 +156,7 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
   const router = useRouter();
   const { form, updateField } = useFormField(defaultForm);
   const { isRequesting } = useTwikklEntity();
-  const { token, email, new_password } = form;
+  const { token, email, password, confirm_password } = form;
 
   const loading = {
     forgotPassword: isRequesting("forgot-password"),
@@ -145,11 +167,15 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
   const forgotPassword = async () => {
     requestStarted("forgot-password");
     showLoader();
+    const formData = {
+      email,
+      code: token,
+    };
     try {
-      const data = await doForgotPassword({ email });
+      const data = await doForgotPassword(formData);
       console.log({ forgotData: data });
       toastSuccess(data.message);
-      setStage("verify");
+      stage === "forgot" ? setStage("verify") : setStage("reset");
     } catch (error) {
       console.log({ forgotPasswordError: error });
     } finally {
@@ -178,7 +204,7 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
     //   const data = await forgotPasswordOTP({ token, email });
     //   console.log({ verifyOtpData: data });
     //   toastSuccess(data.message);
-    setStage("reset");
+    //   setStage("reset");
     // } catch (error) {
     //   console.log({ verifyOtpError: error });
     // } finally {
@@ -192,13 +218,14 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
     showLoader();
     const resetPasswordData = {
       email,
-      token,
-      new_password,
+      // token: "4312eca6cfd1924a1af2f10eb51aa67f45ee44af7ea0019938c37583cc85ff16",
+      password,
+      confirm_password,
     };
     try {
-      // const data = await resetPassword(resetPasswordData);
-      // console.log({ resetPasswordData: data });
-      // toastSuccess(data.message);
+      const data = await doResetPassword(resetPasswordData);
+      console.log({ resetPasswordData: data });
+      toastSuccess(data.message);
       router.push("auth/Login");
     } catch (error) {
       console.log({ resendOtpError: error });
