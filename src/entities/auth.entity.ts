@@ -73,5 +73,6 @@ export const useAuth = () => {
     isLoggedIn: Boolean(auth?.token && auth?.user),
     user: auth?.user,
     email: auth?.userEmail,
+    token: auth?.token,
   };
 };

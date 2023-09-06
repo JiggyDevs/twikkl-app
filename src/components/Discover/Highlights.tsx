@@ -28,7 +28,7 @@ const Highlights = (): JSX.Element => {
     </View>
   );
 };
-// hultopepse@gufum.com
+// zomlazimle@gufum.com
 const styles = StyleSheet.create({
   container: {
     marginBottom: 25,
