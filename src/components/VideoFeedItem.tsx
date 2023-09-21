@@ -73,7 +73,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
             >
               {icons.map((icon, index) => (
                 <TouchableOpacity
-                onPress={()=> icon === EIcon.SHARE_NETWORK && onShareClick()}
+                  onPress={() => icon === EIcon.SHARE_NETWORK && onShareClick()}
                   key={index}
                   style={{
                     paddingVertical: 12,
@@ -105,7 +105,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity onPress={() => router.push("CreateUploadVideo")}>
+            <TouchableOpacity onPress={() => router.push("video/CreateUploadVideo")}>
               <ButtonAddSimple />
             </TouchableOpacity>
           </View>

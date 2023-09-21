@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { ResizeMode, Video } from "expo-av";
@@ -14,6 +14,7 @@ import * as Permissions from "expo-permissions";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { Bar } from "react-native-progress";
 import Effects from "@twikkl/components/Effects";
+import CaptionVideo from "./CaptionVideo";
 
 const actionArr = [
   { icon: <Speed />, text: "Speed", focused: <Speed focused={1} /> },
@@ -25,14 +26,15 @@ const timerArr = ["15s", "30s", "60s", "3m", "5m"];
 
 const CreateUploadvideo = () => {
   const router = useRouter();
+  const cameraRef = useRef<any>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [videoUri, setVideoUri] = useState<string | null>(null);
-  const [cameraRef, setCameraRef] = useState<any>(null);
   const [actions, setActions] = useState<"Speed" | "Effect" | "Timer" | string | null>(null);
   const [speed, setSpeed] = useState("1x");
   const [timer, setTimer] = useState("60s");
   const [progress, setProgress] = useState(0);
   const [shouldPlay, setShouldPlay] = useState(false);
+  const [caption, setCaption] = useState(false);
 
   const iDuration =
     timer === "15s" ? 15000 : timer === "30s" ? 30000 : timer === "60s" ? 60000 : timer === "3m" ? 180000 : 300000;
@@ -86,13 +88,13 @@ const CreateUploadvideo = () => {
   const startRecording = async () => {
     setProgress(0);
     activateProgress();
-    setIsRecording(true);
     setVideoUri(null);
-
-    if (cameraRef) {
+    if (cameraRef.current) {
+      setIsRecording(true);
       try {
         setTimeout(stopRecording, iDuration);
-        const { uri } = await cameraRef.recordAsync();
+        const { uri } = await cameraRef.current.recordAsync();
+        console.log("heree");
         setVideoUri(uri);
       } catch (error) {
         console.log("Error recording video:", error);
@@ -102,8 +104,8 @@ const CreateUploadvideo = () => {
   };
 
   const stopRecording = () => {
-    if (cameraRef) {
-      cameraRef.stopRecording();
+    if (cameraRef.current) {
+      cameraRef.current.stopRecording();
       setIsRecording(false);
     }
   };
@@ -118,34 +120,43 @@ const CreateUploadvideo = () => {
   return (
     <>
       <View style={styles.wrapper}>
-        {videoUri ? (
-          <Pressable onPress={() => setShouldPlay(!shouldPlay)} style={{ flex: 1 }}>
-            <Video
-              shouldPlay={shouldPlay}
-              source={{ uri: videoUri }}
-              resizeMode={ResizeMode.COVER}
-              style={[StyleSheet.absoluteFill]}
-              isLooping
-              onError={(error) => console.log("Video Error:", error)}
-            />
-            <View style={styles.viewContainer}>
-              <View style={styles.center}>
-                <Text style={styles.textLight}>Live Video</Text>
-                <View style={styles.modeBorderLive} />
+        {videoUri && !isRecording ? (
+          caption ? (
+            <CaptionVideo videoUri={videoUri} setCaption={setCaption} />
+          ) : (
+            <Pressable onPress={() => setShouldPlay(!shouldPlay)} style={{ flex: 1 }}>
+              <Video
+                shouldPlay={shouldPlay}
+                source={{ uri: videoUri }}
+                resizeMode={ResizeMode.COVER}
+                style={[StyleSheet.absoluteFill]}
+                isLooping
+                onError={(error) => console.log("Video Error:", error)}
+              />
+              <View style={styles.viewContainer}>
+                <View style={styles.center}>
+                  <Text style={styles.textLight}>Live Video</Text>
+                  <View style={styles.modeBorderLive} />
+                </View>
+                <View style={styles.topSelect}>
+                  <Pressable onPress={() => setVideoUri(null)}>
+                    <Cancel />
+                  </Pressable>
+                  <Pressable onPress={() => setCaption(true)}>
+                    <Send />
+                  </Pressable>
+                </View>
               </View>
-              <View style={styles.topSelect}>
-                <Pressable onPress={() => setVideoUri(null)}>
-                  <Cancel />
-                </Pressable>
-                <Pressable>
-                  <Send />
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
+            </Pressable>
+          )
         ) : (
           <>
-            <Camera style={[StyleSheet.absoluteFill]} ref={(ref) => setCameraRef(ref)} />
+            <Camera
+              style={[StyleSheet.absoluteFill]}
+              ref={cameraRef}
+              onCameraReady={() => console.log("ready")}
+              onMountError={(error) => console.log("mountError", error)}
+            />
             <View style={styles.container}>
               <View>
                 {isRecording ? (
@@ -223,14 +234,14 @@ const CreateUploadvideo = () => {
                 )}
                 {actions !== "Effect" && (
                   <View style={styles.recordLine}>
-                    {!isRecording && <Image source={require("../assets/imgs/left.png")} />}
+                    {!isRecording && <Image source={require("../../assets/imgs/left.png")} />}
                     <View style={{ ...styles.recordWrapper, marginBottom: isRecording ? 70 : 0 }}>
                       <Pressable
                         onPress={isRecording ? stopRecording : startRecording}
                         style={{ ...styles.record, backgroundColor: isRecording ? "#A10000" : "#fff" }}
                       />
                     </View>
-                    {!isRecording && <Image source={require("../assets/imgs/right.png")} />}
+                    {!isRecording && <Image source={require("../../assets/imgs/right.png")} />}
                   </View>
                 )}
                 {actions !== "Effect" && !isRecording && (
