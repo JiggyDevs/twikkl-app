@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { Camera } from "expo-camera";
+import * as FileSystem from "expo-file-system";
+// import File from 'expo-file-system'
 import { ResizeMode, Video } from "expo-av";
 import Speed from "@assets/svg/Speed";
 import Timer from "@assets/svg/Timer";
@@ -29,6 +31,7 @@ const CreateUploadvideo = () => {
   const cameraRef = useRef<any>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [videoUri, setVideoUri] = useState<string | null>(null);
+  // const [cameraRef, setCameraRef] = useState<any>(null);
   const [actions, setActions] = useState<"Speed" | "Effect" | "Timer" | string | null>(null);
   const [speed, setSpeed] = useState("1x");
   const [timer, setTimer] = useState("60s");
@@ -45,12 +48,12 @@ const CreateUploadvideo = () => {
       console.log("Permission denied!");
     }
   };
-  const getAudioRecordingPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    if (status !== "granted") {
-      console.log("Audio recording permission denied!");
-    }
-  };
+  // const getAudioRecordingPermission = async () => {
+  //   const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+  //   if (status !== "granted") {
+  //     console.log("Audio recording permission denied!");
+  //   }
+  // };
 
   const activateProgress = () => {
     const duration = iDuration;
@@ -89,12 +92,16 @@ const CreateUploadvideo = () => {
     setProgress(0);
     activateProgress();
     setVideoUri(null);
+
+    // console.log("!cameraRef", videoUri);
+
     if (cameraRef.current) {
       setIsRecording(true);
+      // console.log("cameraRef", cameraRef);
       try {
         setTimeout(stopRecording, iDuration);
         const { uri } = await cameraRef.current.recordAsync();
-        console.log("heree");
+        console.log("hereeeeeee");
         setVideoUri(uri);
       } catch (error) {
         console.log("Error recording video:", error);
@@ -102,6 +109,8 @@ const CreateUploadvideo = () => {
       }
     }
   };
+
+  // console.log("uri", videoUri);
 
   const stopRecording = () => {
     if (cameraRef.current) {
@@ -113,7 +122,7 @@ const CreateUploadvideo = () => {
   useEffect(() => {
     (async () => {
       await Camera.requestCameraPermissionsAsync();
-      await getAudioRecordingPermission();
+      // await getAudioRecordingPermission();
     })();
   }, []);
 
