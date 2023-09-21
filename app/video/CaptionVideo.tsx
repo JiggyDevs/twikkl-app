@@ -9,39 +9,49 @@ import styled from "styled-components/native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import ArrowDown from "@assets/svg/ArrowDown";
 import People from "@assets/svg/People";
+import Key from "@assets/svg/Key";
+import Globe from "@assets/svg/Globe";
 
 const SubscribeOption = styled.View`
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  background-color: #1f1f1f;
   padding: ${hp(1.6)}px ${wp(2.3)}px;
-  border-radius: 15px;
 `;
-const Option = styled.View`
+const OptionWrapper = styled.View`
   border: 2px solid #fff;
   border-radius: 99px;
-  width: ${wp(4.65)}px;
-  height: ${hp(2.14)}px;
+  width: ${wp(6)}px;
+  height: ${hp(2.8)}px;
+  align-items: center;
+  justify-content: center;
+`;
+const Option = styled.View`
+  border-radius: 99px;
+  width: ${wp(3.5)}px;
+  height: ${hp(1.6)}px;
 `;
 
 const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: Function }) => {
   const [data, setData] = useState({
-    events: true,
-    marketPlace: true,
-    postFeed: true,
+    device: true,
+    duet: true,
+    stitch: true,
   });
   const updateData = (field: string, value: boolean) => {
     setData((prev) => ({ ...prev, [field]: value }));
   };
   const [shouldPlay, setShouldPlay] = useState(false);
-  const [subData, setSubData] = useState<{ name: string; price: string }>();
+  const [subData, setSubData] = useState("Followers");
   const [captionText, setCaptionText] = useState("");
   const [options, setOptions] = useState(false);
   const optionsArray = [
-    { icon: "", title: "Followers", desc: "Only those who follow you or those you follow will see this post." },
-    { icon: "", title: "Public", desc: "This post will be visible to everyone on the network." },
-    { icon: "", title: "Private", desc: "This post will only be seen by you." },
+    {
+      icon: <People color="#fff" />,
+      title: "Followers",
+      desc: "Only those who follow you or those you follow will see this post.",
+    },
+    { icon: <Globe />, title: "Public", desc: "This post will be visible to everyone on the network." },
+    { icon: <Key />, title: "Private", desc: "This post will only be seen by you." },
   ];
   const tagArr = ["# Hashtags", "@ Tag Friends"];
   return (
@@ -58,9 +68,9 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
           <Avatar.Image size={34} source={require("../../assets/imgs/avatar1.png")} />
           <View>
             <Text style={{ fontWeight: "600", fontSize: 15 }}>@glorypraise.eth</Text>
-            <Pressable style={styles.select} onPress={() => setOptions(true)}>
+            <Pressable style={styles.select} onPress={() => setOptions(!options)}>
               <People />
-              <Text style={{ fontSize: 12 }}>Followers</Text>
+              <Text style={{ fontSize: 12 }}>{subData}</Text>
               <ArrowDown color="#000" />
             </Pressable>
           </View>
@@ -69,26 +79,31 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
           <Text style={styles.textWhite}>Post</Text>
         </View>
       </View>
-      {/* {options && (
-          <View>
-            {optionsArray.map(({ icon, title }) => (
-              <Pressable
-                key={title}
-                // onPress={() => setSubData(title)}
-              >
+      <View style={{ zIndex: 1 }}>
+        {options && (
+          <View style={styles.optionsWrapper}>
+            {optionsArray.map(({ icon, title, desc }) => (
+              <Pressable key={title} onPress={() => setSubData(title)}>
                 <SubscribeOption>
-                  <Option
-                  // style={{
-                  //   backgroundColor: title === subData.title ? "#fff" : "transparent",
-                  // }}
-                  />
-                  <Text>{icon}</Text>
-                  <Text>{title}</Text>
+                  <Text style={{ width: 23 }}>{icon}</Text>
+                  <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                    <Text style={styles.optionText}>{title}</Text>
+                    <Text style={{ color: "#50A040", fontSize: 12 }}>{desc}</Text>
+                  </View>
+                  <OptionWrapper>
+                    <Option
+                      style={{
+                        backgroundColor: title === subData ? "#fff" : "transparent",
+                        padding: 5,
+                      }}
+                    />
+                  </OptionWrapper>
                 </SubscribeOption>
               </Pressable>
             ))}
           </View>
-        )} */}
+        )}
+      </View>
       <TextInput
         multiline
         value={captionText}
@@ -114,17 +129,15 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
       </View>
       <ListItem
         title="Save post to device"
-        action={<ToggleButton checked={data.postFeed} onToggle={() => updateData("postFeed", !data.postFeed)} />}
+        action={<ToggleButton checked={data.device} onToggle={() => updateData("postFeed", !data.device)} />}
       />
       <ListItem
         title="Allow Duet"
-        action={<ToggleButton checked={data.events} onToggle={() => updateData("events", !data.events)} />}
+        action={<ToggleButton checked={data.duet} onToggle={() => updateData("events", !data.duet)} />}
       />
       <ListItem
         title="Allow Stitch"
-        action={
-          <ToggleButton checked={data.marketPlace} onToggle={() => updateData("marketPlace", !data.marketPlace)} />
-        }
+        action={<ToggleButton checked={data.stitch} onToggle={() => updateData("marketPlace", !data.stitch)} />}
       />
     </View>
   );
@@ -183,5 +196,11 @@ const styles = StyleSheet.create({
   nameAvatar: {
     flexDirection: "row",
     gap: 16,
+  },
+  optionsWrapper: { position: "absolute", backgroundColor: "#143615", width: "100%", borderRadius: 8 },
+  optionText: {
+    fontWeight: "600",
+    fontSize: 15,
+    color: "#fff",
   },
 });
