@@ -105,7 +105,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity onPress={() => router.push("CreateUploadVideo")}>
+            <TouchableOpacity onPress={() => router.push("video/CreateUploadVideo")}>
               <ButtonAddSimple />
             </TouchableOpacity>
           </View>

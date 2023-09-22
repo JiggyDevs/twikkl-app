@@ -33,6 +33,15 @@
     },
     "updates": {
       "url": "https://u.expo.dev/95c0ba49-9d63-43af-94f1-39d5e26ea120"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow twikkl to access your camera.",
+          "microphonePermission": "Allow twikkl to access your microphone"
+        }
+      ]
+    ]
   }
 }
