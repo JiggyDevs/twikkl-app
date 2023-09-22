@@ -55,7 +55,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
 
   return (
     <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
-      <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 41) }}>
+      <View style={{ flex: 1, height }}>
         <Video
           source={item.video}
           shouldPlay={shouldPlay}
@@ -73,7 +73,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
             >
               {icons.map((icon, index) => (
                 <TouchableOpacity
-                onPress={()=> icon === EIcon.SHARE_NETWORK && onShareClick()}
+                  onPress={() => icon === EIcon.SHARE_NETWORK && onShareClick()}
                   key={index}
                   style={{
                     paddingVertical: 12,

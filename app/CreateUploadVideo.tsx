@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { Bar } from "react-native-progress";
+import { useUploadVideo } from "@twikkl/hooks/upload-video";
 import Effects from "@twikkl/components/Effects";
 
 const actionArr = [
@@ -82,6 +83,7 @@ const CreateUploadvideo = () => {
     if (!result.canceled) {
     }
   };
+  const { _uploadVideo } = useUploadVideo();
 
   const startRecording = async () => {
     setProgress(0);
@@ -92,8 +94,11 @@ const CreateUploadvideo = () => {
     if (cameraRef) {
       try {
         setTimeout(stopRecording, iDuration);
-        const { uri } = await cameraRef.recordAsync();
-        setVideoUri(uri);
+        const record = await cameraRef.recordAsync();
+
+        setVideoUri(record.uri);
+        _uploadVideo(record.uri);
+        console.log(record);
       } catch (error) {
         console.log("Error recording video:", error);
         setIsRecording(false);

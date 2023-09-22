@@ -26,9 +26,7 @@
       "permissions": ["CAMERA", "RECORD_AUDIO", "WRITE_EXTERNAL_STORAGE"]
     },
     "extra": {
-      "eas": {
-        "projectId": "95c0ba49-9d63-43af-94f1-39d5e26ea120"
-      }
+     
     },
     "runtimeVersion": {
       "policy": "sdkVersion"

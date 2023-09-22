@@ -18,6 +18,8 @@ import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUserFeeds } from "@twikkl/services/feed.services";
 import { color } from "react-native-reanimated";
 import Share from "@twikkl/components/Share";
 
@@ -36,8 +38,11 @@ const { height } = Dimensions.get("window");
 export default function ScreenHome() {
   const router = useRouter();
   const { primary: colorPrimary } = useColors();
-  const [shareVisible, setShareVisible] = useState(false)
+  const [shareVisible, setShareVisible] = useState(false);
 
+  const { data } = useQuery(["user-feed"], () => fetchUserFeeds());
+
+  console.log(data);
   // get static videos
   const items = videos;
 
@@ -56,7 +61,14 @@ export default function ScreenHome() {
       <FlatList
         style={[StyleSheet.absoluteFill]}
         data={items}
-        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} onShareClick={() => setShareVisible(true)} />}
+        renderItem={({ item, index }) => (
+          <VideoFeedItem
+            item={item}
+            index={index}
+            visibleIndex={visibleIndex}
+            onShareClick={() => setShareVisible(true)}
+          />
+        )}
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled
         showsVerticalScrollIndicator={false}
@@ -86,15 +98,11 @@ export default function ScreenHome() {
       </SafeAreaView>
 
       <BottomNav commentCount={0} />
-      {
-        shareVisible &&
-        <AppBottomSheet 
-        backgroundColor= {BACKGROUND_COLOR}
-        height="50%"
-        closeModal={() => setShareVisible(false)}>
+      {shareVisible && (
+        <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
         </AppBottomSheet>
-      }
+      )}
     </>
   );
 }
