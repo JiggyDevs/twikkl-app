@@ -11,6 +11,7 @@ import ButtonEl from "@twikkl/components/ButtonEl";
 import Scroll from "@twikkl/components/Scrollable";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import CreateGroup from "@twikkl/components/Discover/CreateGroup";
 
 export const colors = {
   green100: "#041105",
@@ -42,6 +43,7 @@ const Discover = () => {
   const [, setYourGroups] = useState<Group[]>(cardDataYou);
   const [favoriteGroups, setFavoriteGroups] = useState<Group[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [createGroup, setCreateGroup] = useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
   const router = useRouter();
 
@@ -146,7 +148,9 @@ const Discover = () => {
 
   const titleText = activeTabIndex === 0 ? "For You" : activeTabIndex === 1 ? "Your Groups" : "Favorite Groups";
 
-  return (
+  return createGroup ? (
+    <CreateGroup setCreateGroup={setCreateGroup} />
+  ) : (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
         <View style={styles.top}>
@@ -162,7 +166,7 @@ const Discover = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity onPress={() => setCreateGroup(true)} style={styles.addButton}>
               <Ionicons name="add-outline" size={30} color="#fff" />
             </TouchableOpacity>
             {discoverTabs.map(({ icon, title, activeIcon }, index) => (

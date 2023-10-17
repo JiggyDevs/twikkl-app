@@ -4,6 +4,7 @@ import { Signup as ISignup } from "@twikkl/services";
 import Checkbox from "expo-checkbox";
 import OAuthButton from "@twikkl/components/OAuthButton";
 import { useRouter } from "expo-router";
+import TermsAndPrivacy from "@twikkl/components/TermsAndPrivacy";
 
 export function SubSignup() {
   const router = useRouter();
@@ -55,7 +56,8 @@ const Signup = ({
           onChangeText={(val) => updateField("confirmPassword", val)}
         />
       </View>
-      <View style={styles.selectWrapper}>
+      <TermsAndPrivacy setTc={setTc} tc={tc} />
+      {/* <View style={styles.selectWrapper}>
         <Checkbox color="#50A040" value={tc} onValueChange={() => setTc(!tc)} />
         <View style={styles.select}>
           <Text>I agree to</Text>
@@ -67,7 +69,7 @@ const Signup = ({
             <Text style={styles.greenText}>Privacy Policy</Text>
           </Pressable>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -85,10 +87,10 @@ const styles = StyleSheet.create({
     gap: 4,
     alignSelf: "center",
   },
-  selectWrapper: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-    marginTop: 16,
-  },
+  // selectWrapper: {
+  //   flexDirection: "row",
+  //   gap: 12,
+  //   alignItems: "center",
+  //   marginTop: 16,
+  // },
 });
