@@ -12,15 +12,13 @@ import { Text, Badge } from "react-native-paper";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
-import { useRef, useState } from "react";
-import videos from "@twikkl/staticFiles/videos";
+import { useState } from "react";
 import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
-import { useQuery } from "@tanstack/react-query";
-import { fetchUserFeeds } from "@twikkl/services/feed.services";
-import { color } from "react-native-reanimated";
+import { useFeedHook } from "@twikkl/hooks/feed.hooks";
+import AppLoader from "@twikkl/components/AppLoader";
 import Share from "@twikkl/components/Share";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
@@ -40,11 +38,7 @@ export default function ScreenHome() {
   const { primary: colorPrimary } = useColors();
   const [shareVisible, setShareVisible] = useState(false);
 
-  const { data } = useQuery(["user-feed"], () => fetchUserFeeds());
-
-  console.log(data);
-  // get static videos
-  const items = videos;
+  const { isLoading, posts } = useFeedHook();
 
   const { t } = useTranslation();
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
@@ -56,11 +50,15 @@ export default function ScreenHome() {
     setVisibleIndex(index);
   };
 
+  if (isLoading) {
+    return <AppLoader />;
+  }
+
   return (
     <>
       <FlatList
         style={[StyleSheet.absoluteFill]}
-        data={items}
+        data={posts}
         renderItem={({ item, index }) => (
           <VideoFeedItem
             item={item}

@@ -5,9 +5,12 @@ import Highlights from "@twikkl/components/Discover/Highlights";
 import Card from "@twikkl/components/Discover/Card";
 import { cardDataGroup, cardDataYou } from "@twikkl/data/discover/cardData";
 import ModalEl from "@twikkl/components/ModalEl";
+import { fetchGroups } from "@twikkl/services";
+import { useGroupHook, useYourGroupsHook } from "@twikkl/hooks/groups.hooks";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import Scroll from "@twikkl/components/Scrollable";
 import { useRouter } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 
 export const colors = {
   green100: "#041105",
@@ -35,13 +38,17 @@ type ModalType = "access" | "leave" | null;
 
 const Discover = () => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-  const [groups, setGroups] = useState<Group[]>(cardDataGroup);
-  const [yourGroups, setYourGroups] = useState<Group[]>(cardDataYou);
+  const [, setGroups] = useState<Group[]>(cardDataGroup);
+  const [, setYourGroups] = useState<Group[]>(cardDataYou);
   const [favoriteGroups, setFavoriteGroups] = useState<Group[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [modalType, setModalType] = useState<ModalType>(null);
   const router = useRouter();
 
+  const { groups } = useGroupHook();
+  const { yourGroups } = useYourGroupsHook();
+
+  console.log(yourGroups);
   const discoverTabs = [
     {
       title: "For you",
@@ -68,18 +75,18 @@ const Discover = () => {
   const pressButton = (item: Group) => {
     setModalType(null);
     if (modalType === "access") {
-      const filteredGroups = yourGroups.filter((group) => group?.title !== item?.title);
+      const filteredGroups = yourGroups.filter((group) => group?.name !== item?.title);
       setYourGroups(filteredGroups);
       setGroups((prevGroups) => [item, ...prevGroups]);
     } else if (modalType === "leave") {
-      const filteredGroups = groups.filter((group) => group.title !== item.title);
+      const filteredGroups = groups.filter((group) => group.name !== item.title);
       setGroups(filteredGroups);
       setYourGroups((prevGroups) => [item, ...prevGroups]);
     }
   };
 
   const favPress = (item: Group) => {
-    const updated = groups.map((group) => (group.title === item.title ? { ...group, fav: !group.fav } : group));
+    const updated = groups.map((group) => (group.name === item.title ? { ...group, fav: !group.fav } : group));
     setGroups(updated);
     setFavoriteGroups(updated.filter((item) => item.fav === true));
   };
@@ -131,8 +138,8 @@ const Discover = () => {
   );
 
   const renderDisplay = () => {
-    if (activeTabIndex === 0) return yourGroups;
-    if (activeTabIndex === 1) return groups;
+    if (activeTabIndex === 0) return groups;
+    if (activeTabIndex === 1) return yourGroups;
     if (activeTabIndex === 2) return favoriteGroups;
     return [];
   };
@@ -176,7 +183,7 @@ const Discover = () => {
         <Text style={styles.text}>{titleText}</Text>
         <Scroll>
           {renderDisplay().map((item) => (
-            <Pressable key={item.id} onPress={() => router.push(`/Discover/${item.id}`)}>
+            <Pressable key={item._id} onPress={() => router.push(`/Discover/${item._id}`)}>
               <Card
                 onPress={() => {
                   setModalType("access");

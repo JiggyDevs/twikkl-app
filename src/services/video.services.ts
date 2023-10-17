@@ -1,8 +1,26 @@
 import axios from "axios";
+import { handleFetchError } from "@twikkl/utils/fetch";
 import { s5ClientAuthToken, s5ClientBaseUrl } from "@twikkl/utils/config";
 
 type UploadVideoProps = {
   uri: string;
+};
+
+const uploadToStorage = async (videoUri: string) => {
+  try {
+    const response = await fetch(videoUri);
+    console.log(response);
+
+    const blob = await response.blob();
+
+    const filename = `SampleVideo.mp4`;
+    return {
+      blob,
+      filename,
+    };
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export const UploadVideoToS5Client = async ({ uri }: UploadVideoProps) => {
@@ -11,6 +29,9 @@ export const UploadVideoToS5Client = async ({ uri }: UploadVideoProps) => {
   formData.append("file", {
     name: "SampleVideo.mp4",
     uri,
+    sourceUris: [uri],
+    // extraMetadata :
+    viewTypes: ["video"],
     type: "video/mp4",
   });
 
@@ -22,18 +43,7 @@ export const UploadVideoToS5Client = async ({ uri }: UploadVideoProps) => {
       },
     });
   } catch (error: any) {
-    if (error.response) {
-      // The server responded with an error status code (e.g., 4xx or 5xx)
-      console.log("Response data:", error.response.data);
-      console.log("Response status:", error.response.status);
-      console.log("Response headers:", error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.log("Request:", error.request);
-    } else {
-      // Something else happened while setting up the request
-      console.log("Error:", error.message);
-    }
+    handleFetchError(error);
     return error;
   }
 };

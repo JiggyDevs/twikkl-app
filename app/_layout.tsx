@@ -37,6 +37,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { loading } = useTwikklEntity();
+
   return (
     <PaperProvider theme={theme}>
       <QueryClientProvider client={queryClient}>

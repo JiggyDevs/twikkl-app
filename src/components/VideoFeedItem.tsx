@@ -15,7 +15,7 @@ import { TwikklIcon, EIcon } from "@twikkl/configs";
 import { ButtonAddSimple } from "@twikkl/components";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
+import { authEntity } from "@twikkl/entities/auth.entity";
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 //get device width and height
@@ -32,6 +32,7 @@ const profileImg = require("@assets/imgs/logos/profile.png") as ImagePropsBase["
 type Props = {
   item: {
     video: any;
+    description: string;
   };
   index: number;
   visibleIndex: number;
@@ -43,10 +44,11 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
   const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
   const [shouldPlay, setShouldPlay] = useState(false);
   const { t } = useTranslation();
-
+  const { user } = authEntity.get();
   //set play state
   useEffect(() => {
     setShouldPlay(index === visibleIndex);
+    // router.push("video/CreateUploadVideo");
   }, [visibleIndex]);
 
   const togglePlay = () => {
@@ -54,15 +56,24 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
   };
 
   return (
-    <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
+    <TouchableWithoutFeedback onPress={() => router.push("video/CreateUploadVideo")} style={{ flex: 1 }}>
       <View style={{ flex: 1, height }}>
-        <Video
-          source={item.video}
+        {/* <Video
+          source={{
+            uri: "https://pixeldrain.com/api/file/xnHggvdb",
+
+            //  async   downloadAsync() {
+            //       return fe
+            //     },
+            // downloadAsync() {
+            //   return `https://s5.cx/s5/blob/uJh9dvBupLgWG3p8CGJ1VR8PLnZvJQedolo8ktb027PrlTT5LvAY?mediaType=video%2Fmp4`;
+            // },
+          }}
           shouldPlay={shouldPlay}
           isLooping
           resizeMode={ResizeMode.COVER}
           style={[StyleSheet.absoluteFill]}
-        />
+        /> */}
         <View style={styles.bottomContainer}>
           <View style={styles.rightActionsContainer}>
             <View
@@ -99,9 +110,9 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
             >
               <Image style={styles.profileImg} source={profileImg} />
               <Text variant="titleMedium" style={[styles.headActionText, { width: "75%" }]}>
-                @glory.jgy {"\n"}
+                @{user?.username} {"\n"}
                 <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
-                  My very first podcast, it was really fun and I learnt so much just in one day.
+                  {item.description}
                 </Text>
               </Text>
             </View>

@@ -1,5 +1,5 @@
 import { UploadVideoToS5Client } from "@twikkl/services/video.services";
-import { s5ClientBaseUrl } from "@twikkl/utils/config";
+import { s5ClientStorage } from "@twikkl/utils/config";
 
 export const useUploadVideo = () => {
   const _uploadVideo = async (uri: string) => {
@@ -7,7 +7,7 @@ export const useUploadVideo = () => {
 
     if (response.data) {
       return {
-        url: `${s5ClientBaseUrl}/s5/blob/${response?.data?.cid}`,
+        url: `${s5ClientStorage}/${response?.data?.cid}`,
         id: response?.data?.cid ?? "",
       };
     }

@@ -3,7 +3,7 @@ import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
 interface ICard {
   img: any;
-  title: string;
+  name: string;
   forYou?: boolean;
   members: string;
   desc: string;
@@ -23,7 +23,7 @@ export const imgArr = [
 
 const Card = ({
   img,
-  title,
+  name,
   forYou,
   members,
   desc,
@@ -44,11 +44,11 @@ const Card = ({
       </ImageBackground>
       <View style={styles.content}>
         <View style={styles.titleContainer}>
-          <Text style={{ fontSize: 16, color: "#fff", fontWeight: "700" }}>{title}</Text>
+          <Text style={{ fontSize: 16, color: "#fff", fontWeight: "700" }}>{name}</Text>
           {forYou && (
             <View style={styles.membersContainer}>
               <FontAwesome5 name="user-friends" size={16} color="#fff" />
-              <Text style={styles.members}>{members} Members</Text>
+              <Text style={styles.members}>{members.length} Members</Text>
             </View>
           )}
         </View>

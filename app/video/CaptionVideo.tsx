@@ -8,6 +8,8 @@ import { ResizeMode, Video } from "expo-av";
 import styled from "styled-components/native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import ArrowDown from "@assets/svg/ArrowDown";
+import { authEntity } from "@twikkl/entities/auth.entity";
+import { usePostHook } from "@twikkl/hooks/post.hooks";
 import People from "@assets/svg/People";
 import Key from "@assets/svg/Key";
 import Globe from "@assets/svg/Globe";
@@ -37,13 +39,21 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
     duet: true,
     stitch: true,
   });
+
+  const { user } = authEntity.get();
+
+  const { _createPost } = usePostHook();
+
   const updateData = (field: string, value: boolean) => {
     setData((prev) => ({ ...prev, [field]: value }));
   };
+
   const [shouldPlay, setShouldPlay] = useState(false);
   const [subData, setSubData] = useState("Followers");
+
   const [captionText, setCaptionText] = useState("");
   const [options, setOptions] = useState(false);
+
   const optionsArray = [
     {
       icon: <People color="#fff" />,
@@ -53,7 +63,9 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
     { icon: <Globe />, title: "Public", desc: "This post will be visible to everyone on the network." },
     { icon: <Key />, title: "Private", desc: "This post will only be seen by you." },
   ];
+
   const tagArr = ["# Hashtags", "@ Tag Friends"];
+
   return (
     <View style={{ paddingHorizontal: 16 }}>
       <View style={styles.topHeader}>
@@ -67,7 +79,7 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
         <View style={styles.nameAvatar}>
           <Avatar.Image size={34} source={require("../../assets/imgs/avatar1.png")} />
           <View>
-            <Text style={{ fontWeight: "600", fontSize: 15 }}>@glorypraise.eth</Text>
+            <Text style={{ fontWeight: "600", fontSize: 15 }}>@{user?.username}</Text>
             <Pressable style={styles.select} onPress={() => setOptions(!options)}>
               <People />
               <Text style={{ fontSize: 12 }}>{subData}</Text>
@@ -75,9 +87,20 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
             </Pressable>
           </View>
         </View>
-        <View style={styles.bgGreen}>
-          <Text style={styles.textWhite}>Post</Text>
-        </View>
+        <Pressable
+          disabled={!captionText}
+          onPress={() =>
+            _createPost({
+              contentUrl: videoUri,
+              description: captionText,
+              tags: [],
+            })
+          }
+        >
+          <View style={styles.bgGreen}>
+            <Text style={styles.textWhite}>Post</Text>
+          </View>
+        </Pressable>
       </View>
       <View style={{ zIndex: 1 }}>
         {options && (

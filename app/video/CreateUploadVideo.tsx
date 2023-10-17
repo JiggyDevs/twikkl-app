@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { Camera } from "expo-camera";
-import * as FileSystem from "expo-file-system";
+// import * as FileSystem from "expo-file-system";
 // import File from 'expo-file-system'
 import { ResizeMode, Video } from "expo-av";
 import Speed from "@assets/svg/Speed";
@@ -88,7 +88,7 @@ const CreateUploadvideo = () => {
     if (!result.canceled) {
     }
   };
-  const { _uploadVideo } = useUploadVideo();
+ 
 
   const startRecording = async () => {
     setProgress(0);
@@ -103,9 +103,10 @@ const CreateUploadvideo = () => {
       try {
         setTimeout(stopRecording, iDuration);
         const record = await cameraRef.current.recordAsync();
+        console.log(record);
 
         setVideoUri(record.uri);
-        _uploadVideo(record.uri);
+       
       } catch (error) {
         console.log("Error recording video:", error);
         setIsRecording(false);
