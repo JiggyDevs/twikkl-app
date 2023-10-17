@@ -11,6 +11,7 @@ const LabelInput = ({
   username,
   onNamePress,
   NameText,
+  multiline,
 }: {
   placeholder: string;
   value: string;
@@ -20,6 +21,7 @@ const LabelInput = ({
   username?: boolean;
   onNamePress?: () => void;
   NameText?: string;
+  multiline?: boolean;
 }) => {
   return (
     <View>
@@ -32,6 +34,7 @@ const LabelInput = ({
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
+        multiline={multiline}
       />
     </View>
   );
