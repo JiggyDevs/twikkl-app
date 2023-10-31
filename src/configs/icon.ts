@@ -9,9 +9,10 @@ export const TwikklIcon = createIconSetFromIcoMoon(
 export enum Icon {
   TIMER_24 = "fluentui-timer-24",
   BELL = "bell",
+  COMMENT = "comment",
   HEART = "heart",
   THUMB_DOWN = "hand-thumbs-down",
   SHARE_NETWORK = "share-network",
   PIN = "pin",
-  PLUS = "plus"
+  PLUS = "plus",
 }

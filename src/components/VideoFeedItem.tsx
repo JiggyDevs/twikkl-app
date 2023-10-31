@@ -36,11 +36,12 @@ type Props = {
   index: number;
   visibleIndex: number;
   onShareClick: any;
+  bigView?: boolean;
 };
 
-export default function VideoFeedItem({ item, index, visibleIndex, onShareClick }: Props) {
+export default function VideoFeedItem({ item, index, visibleIndex, onShareClick, bigView }: Props) {
   const router = useRouter();
-  const icons = [EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
+  const icons = [bigView ? EIcon.COMMENT : "", EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
   const [shouldPlay, setShouldPlay] = useState(false);
   const { t } = useTranslation();
 
@@ -105,9 +106,11 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity onPress={() => router.push("video/CreateUploadVideo")}>
-              <ButtonAddSimple />
-            </TouchableOpacity>
+            {!bigView && (
+              <TouchableOpacity onPress={() => router.push("video/CreateUploadVideo")}>
+                <ButtonAddSimple />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

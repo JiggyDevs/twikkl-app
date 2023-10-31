@@ -1,5 +1,4 @@
 import React, { ReactElement, RefObject, useCallback, useEffect, useMemo, useRef } from "react";
-import { StyleSheet } from "react-native";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -22,7 +21,7 @@ const AppBottomSheet = ({
   disablebackDrop?: boolean;
   height?: string;
   modalRef?: BottomSheetModal;
-  backgroundColor?: string ;
+  backgroundColor?: string;
 }) => {
   const snapPoints = useMemo(() => ["1%", height], []);
 
@@ -56,8 +55,8 @@ const AppBottomSheet = ({
           closeModal?.();
         }}
         style={{
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
+          // borderTopLeftRadius: 30,
+          // borderTopRightRadius: 30,
           shadowOffset: {
             width: 0,
             height: -1,
@@ -66,7 +65,7 @@ const AppBottomSheet = ({
           shadowColor: "rgba(0,0,0,0.2)",
           shadowOpacity: 0.7,
           elevation: 10,
-          // paddingTop: 13,
+          flex: 1,
         }}
         backgroundStyle={{ backgroundColor: backgroundColor }}
         //@ts-ignore
@@ -84,16 +83,10 @@ const AppBottomSheet = ({
         android_keyboardInputMode="adjustPan"
         handleComponent={() => null}
       >
-        <BottomSheetScrollView style={styles.contentContainer}>{children}</BottomSheetScrollView>
+        <BottomSheetScrollView contentContainerStyle={{ flex: 1 }}>{children}</BottomSheetScrollView>
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-});
 
 export default AppBottomSheet;

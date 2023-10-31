@@ -13,7 +13,7 @@ const LabelInput = ({
   NameText,
   multiline,
 }: {
-  placeholder: string;
+  placeholder?: string;
   value: string;
   onChangeText: (text: string) => void;
   label: string;

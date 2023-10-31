@@ -20,6 +20,7 @@ import { useRouter } from "expo-router";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { color } from "react-native-reanimated";
 import Share from "@twikkl/components/Share";
+import Comment from "@twikkl/components/Comment";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 const BACKGROUND_COLOR = "#041105";
@@ -36,7 +37,8 @@ const { height } = Dimensions.get("window");
 export default function ScreenHome() {
   const router = useRouter();
   const { primary: colorPrimary } = useColors();
-  const [shareVisible, setShareVisible] = useState(false)
+  const [shareVisible, setShareVisible] = useState(false);
+  const [comment, setComment] = useState(false);
 
   // get static videos
   const items = videos;
@@ -50,13 +52,19 @@ export default function ScreenHome() {
 
     setVisibleIndex(index);
   };
-
   return (
     <>
       <FlatList
         style={[StyleSheet.absoluteFill]}
         data={items}
-        renderItem={({ item, index }) => <VideoFeedItem item={item} index={index} visibleIndex={visibleIndex} onShareClick={() => setShareVisible(true)} />}
+        renderItem={({ item, index }) => (
+          <VideoFeedItem
+            item={item}
+            index={index}
+            visibleIndex={visibleIndex}
+            onShareClick={() => setShareVisible(true)}
+          />
+        )}
         keyExtractor={(item, index) => index.toString()}
         pagingEnabled
         showsVerticalScrollIndicator={false}
@@ -84,17 +92,17 @@ export default function ScreenHome() {
           </Pressable>
         </View>
       </SafeAreaView>
-
-      <BottomNav commentCount={0} />
-      {
-        shareVisible &&
-        <AppBottomSheet 
-        backgroundColor= {BACKGROUND_COLOR}
-        height="50%"
-        closeModal={() => setShareVisible(false)}>
+      <BottomNav setComment={setComment} commentCount={0} />
+      {shareVisible && (
+        <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
         </AppBottomSheet>
-      }
+      )}
+      {comment && (
+        <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
+          <Comment setComment={setComment} />
+        </AppBottomSheet>
+      )}
     </>
   );
 }

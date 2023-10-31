@@ -4,8 +4,8 @@ import React from "react";
 type IProps = {
   avatar: any;
   text: string;
-  desc: string;
-  time: string;
+  desc?: string;
+  time?: string;
   like?: boolean;
   img?: any;
   action?: string;
@@ -17,9 +17,11 @@ const NotifCard = ({ avatar, text, desc, time, like, img, action }: IProps) => {
       <Image source={avatar} />
       <View style={styles.flex}>
         <Text style={styles.textBold}>{text}</Text>
-        <Text style={{ fontSize: 12 }}>
-          {desc} <Text style={{ color: "#50A040" }}>{time}</Text>
-        </Text>
+        {desc && (
+          <Text style={{ fontSize: 12 }}>
+            {desc} <Text style={{ color: "#50A040" }}>{time}</Text>
+          </Text>
+        )}
       </View>
       <View style={{ marginLeft: 20 }}>
         {like ? (
