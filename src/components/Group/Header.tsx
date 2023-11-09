@@ -27,6 +27,8 @@ import Grid2 from "@assets/svg/Grid2";
 interface Header extends IGroup {
   select: number;
   setSelect: Function;
+  setShowSearch: Function;
+  setPostVideo: Function;
 }
 
 const Header = ({
@@ -39,6 +41,8 @@ const Header = ({
   smallGroup,
   select,
   setSelect,
+  setShowSearch,
+  setPostVideo,
 }: Header): JSX.Element => {
   const { height } = Dimensions.get("window");
   const [dropDown, setDropDown] = useState(false);
@@ -51,7 +55,7 @@ const Header = ({
           <Octicons name="chevron-left" size={24} color="#fff" />
         </TouchableOpacity>
         <View style={{ flexDirection: "row", gap: 26 }}>
-          <AntDesign name="search1" size={24} />
+          <AntDesign onPress={() => setShowSearch(true)} name="search1" size={24} />
           <MenuIcon />
         </View>
       </ImageBackground>
@@ -97,7 +101,7 @@ const Header = ({
         <View style={styles.actionContainer}>
           <View style={styles.horizontal}>
             <Image source={require("../../../assets/imgs/smallImg1.png")} style={styles.actionAvatar} />
-            <PlayUpload />
+            <PlayUpload onPress={() => setPostVideo(true)} />
           </View>
           <View style={[styles.horizontal, { gap: 20 }]}>
             <Pressable onPress={() => setDropDown(!dropDown)} style={[styles.horizontal, { gap: 7 }]}>

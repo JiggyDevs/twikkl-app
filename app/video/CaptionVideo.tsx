@@ -14,6 +14,8 @@ import People from "@assets/svg/People";
 import Key from "@assets/svg/Key";
 import Globe from "@assets/svg/Globe";
 import Dropdown from "@twikkl/components/Dropdown";
+import { ViewVariant } from "@twikkl/configs";
+import BackHeader from "@twikkl/components/BackHeader";
 
 // const SubscribeOption = styled.View`
 //   flex-direction: row;
@@ -34,7 +36,7 @@ import Dropdown from "@twikkl/components/Dropdown";
 //   height: ${hp(1.6)}px;
 // `;
 
-const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: Function }) => {
+const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCaption: Function; group?: boolean }) => {
   const [data, setData] = useState({
     device: true,
     duet: true,
@@ -50,6 +52,7 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
   };
 
   const [shouldPlay, setShouldPlay] = useState(false);
+  const [category, setCategory] = useState(false);
   const [subData, setSubData] = useState("Followers");
 
   const [captionText, setCaptionText] = useState("");
@@ -66,26 +69,23 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
   ];
 
   const tagArr = ["# Hashtags", "@ Tag Friends"];
+  const categories = ["breed & size", "exercise", "vaccination", "grooming"];
 
   return (
     <View style={{ paddingHorizontal: 16 }}>
-      <View style={styles.topHeader}>
-        <Pressable onPress={() => setCaption(false)}>
-          <Back dark="#041105" />
-        </Pressable>
-        <Text style={styles.boldText}>Post</Text>
-        <View style={{ width: 20 }} />
-      </View>
+      <BackHeader title="Post" onPress={() => setCaption(false)} />
       <View style={styles.post}>
         <View style={styles.nameAvatar}>
           <Avatar.Image size={34} source={require("../../assets/imgs/avatar1.png")} />
           <View>
-            <Text style={{ fontWeight: "600", fontSize: 15 }}>@{user?.username}</Text>
-            <Pressable style={styles.select} onPress={() => setOptions(!options)}>
-              <People />
-              <Text style={{ fontSize: 12 }}>{subData}</Text>
-              <ArrowDown color="#000" />
-            </Pressable>
+            <Text style={{ fontWeight: "600", fontSize: 15 }}>@glorypraise.eth</Text>
+            <View>
+              <Pressable style={styles.select} onPress={() => setOptions(!options)}>
+                <People />
+                <Text style={{ fontSize: 12 }}>{group ? "Group" : subData}</Text>
+                {!group && <ArrowDown color="#000" />}
+              </Pressable>
+            </View>
           </View>
         </View>
         <Pressable
@@ -103,7 +103,7 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
           </View>
         </Pressable>
       </View>
-      <Dropdown options={options} optionsArray={optionsArray} setSubData={setSubData} subData={subData} />
+      {!group && <Dropdown options={options} optionsArray={optionsArray} setSubData={setSubData} subData={subData} />}
       {/* <View style={{ zIndex: 1 }}>
         {options && (
           <View style={styles.optionsWrapper}>
@@ -152,18 +152,43 @@ const CaptionVideo = ({ videoUri, setCaption }: { videoUri: string; setCaption: 
           </View>
         ))}
       </View>
+      {group && (
+        <View style={{ marginBottom: 15 }}>
+          {category && (
+            <View style={styles.optionsWrapper}>
+              <Text style={{ fontSize: 18, color: "#fff" }}>Category</Text>
+              {categories.map((item) => (
+                <Pressable onPress={() => setCategory(false)} key={item}>
+                  <Text style={styles.optionText}>{item}</Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
+          <Pressable onPress={() => setCategory(!category)} style={ViewVariant.rowSpaceBetween}>
+            <View>
+              <Text>Category</Text>
+              <Text style={{ color: "#50A040", fontSize: 10 }}>Select a category in which your video fits.</Text>
+            </View>
+            <ArrowDown />
+          </Pressable>
+        </View>
+      )}
       <ListItem
         title="Save post to device"
         action={<ToggleButton checked={data.device} onToggle={() => updateData("postFeed", !data.device)} />}
       />
-      <ListItem
-        title="Allow Duet"
-        action={<ToggleButton checked={data.duet} onToggle={() => updateData("events", !data.duet)} />}
-      />
-      <ListItem
-        title="Allow Stitch"
-        action={<ToggleButton checked={data.stitch} onToggle={() => updateData("marketPlace", !data.stitch)} />}
-      />
+      {!group && (
+        <>
+          <ListItem
+            title="Allow Duet"
+            action={<ToggleButton checked={data.duet} onToggle={() => updateData("events", !data.duet)} />}
+          />
+          <ListItem
+            title="Allow Stitch"
+            action={<ToggleButton checked={data.stitch} onToggle={() => updateData("marketPlace", !data.stitch)} />}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -188,11 +213,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   videoWrapper: { height: 250, marginVertical: 10 },
-  topHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   tags: {
     flexDirection: "row",
     gap: 15,
@@ -200,10 +220,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderBottomColor: "#000",
     borderBottomWidth: 1,
-  },
-  boldText: {
-    fontSize: 20,
-    fontWeight: "bold",
   },
   video: { borderRadius: 16, width: "100%", height: "100%" },
   bgGreen: {
@@ -222,10 +238,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 16,
   },
-  // optionsWrapper: { position: "absolute", backgroundColor: "#143615", width: "100%", borderRadius: 8 },
-  // optionText: {
-  //   fontWeight: "600",
-  //   fontSize: 15,
-  //   color: "#fff",
-  // },
+  optionsWrapper: {
+    position: "absolute",
+    backgroundColor: "#143615",
+    width: "100%",
+    gap: 20,
+    borderRadius: 8,
+    bottom: 40,
+    padding: 15,
+  },
+  optionText: {
+    fontSize: 15,
+    color: "#fff",
+  },
 });

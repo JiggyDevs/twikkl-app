@@ -20,6 +20,7 @@ import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { useFeedHook } from "@twikkl/hooks/feed.hooks";
 import AppLoader from "@twikkl/components/AppLoader";
 import Share from "@twikkl/components/Share";
+import Comment from "@twikkl/components/Comment";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 const BACKGROUND_COLOR = "#041105";
@@ -37,6 +38,10 @@ export default function ScreenHome() {
   const router = useRouter();
   const { primary: colorPrimary } = useColors();
   const [shareVisible, setShareVisible] = useState(false);
+  const [comment, setComment] = useState(false);
+
+  // get static videos
+  // const items = videos;
 
   const { isLoading, posts } = useFeedHook();
   console.log(posts);
@@ -94,11 +99,15 @@ export default function ScreenHome() {
           </Pressable>
         </View>
       </SafeAreaView>
-
-      <BottomNav commentCount={0} />
+      <BottomNav setComment={setComment} commentCount={0} />
       {shareVisible && (
         <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
+        </AppBottomSheet>
+      )}
+      {comment && (
+        <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
+          <Comment setComment={setComment} />
         </AppBottomSheet>
       )}
     </>

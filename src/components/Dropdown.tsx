@@ -71,7 +71,12 @@ const Dropdown = ({
 export default Dropdown;
 
 const styles = StyleSheet.create({
-  optionsWrapper: { position: "absolute", backgroundColor: "#143615", width: "100%", borderRadius: 8 },
+  optionsWrapper: {
+    position: "absolute",
+    backgroundColor: "#143615",
+    width: "100%",
+    borderRadius: 8,
+  },
   optionText: {
     fontWeight: "600",
     fontSize: 15,

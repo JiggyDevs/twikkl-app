@@ -11,6 +11,7 @@ export const ViewVariant = StyleSheet.create({
   rowSpaceBetween: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   buttonText: {
     color: "#F1FCF2",

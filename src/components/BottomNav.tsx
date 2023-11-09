@@ -21,15 +21,16 @@ import { useTranslation } from "react-i18next";
 
 type BottomNavProps = {
   commentCount: number | string;
+  setComment: Function;
 };
 
-function BottomNav({ commentCount = 0 }: BottomNavProps, {}) {
+function BottomNav({ commentCount = 0, setComment }: BottomNavProps, {}) {
   const { t } = useTranslation();
 
   const router = useRouter();
   return (
     <SafeAreaView style={styles.bottomContainer}>
-      <TouchableOpacity style={styles.tabContainer}>
+      <TouchableOpacity onPress={() => setComment(true)} style={styles.tabContainer}>
         <View style={{ flexDirection: "row" }}>
           <CommentIcon />
           <Text style={styles.commentCount}>{commentCount}</Text>
