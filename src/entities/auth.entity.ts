@@ -2,7 +2,7 @@ import { entity, persistence } from "simpler-state";
 import { remoteStorage } from "./entityHelpers";
 
 export type TUser = {
-  id: string;
+  _id: string;
   email: string;
   username: string;
   phone: string;

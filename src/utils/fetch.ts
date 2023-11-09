@@ -58,7 +58,7 @@ export const fetchFromApi = async ({ method = "get", path, body, headers = {}, p
 
 export const handleFetchError = (err: any, key?: any) => {
   if (err.response?.data) {
-    console.log(err.response.data);
+    console.log(err.response);
     // if (typeof err.response.data.message === "string")
     //   toastError(err.response.data.message);
     // else {

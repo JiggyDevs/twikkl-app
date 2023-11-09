@@ -1,3 +1,4 @@
+import { TUser } from "@twikkl/entities/auth.entity";
 import { handleFetchError, fetchFromApi, isAxiosError } from "@twikkl/utils/fetch";
 import { AxiosError } from "axios";
 
@@ -5,6 +6,9 @@ type Post = {
   contentUrl?: string;
   video: string;
   description: string;
+  creator: TUser;
+  likes: TUser[];
+  _id: string;
 };
 
 interface UserFeedsResponse {
@@ -64,6 +68,54 @@ export const createPost = async (post: ICreatePost) => {
       path: "posts",
       method: "post",
       body: post,
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+export const likePost = async (postId: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `posts/post/like/${postId}`,
+      method: "post",
+      body: {},
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+export const unlikePost = async (postId: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `posts/post/unlike/${postId}`,
+      method: "post",
+      body: {},
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+export const bookmarkPost = async (postId: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `posts/post/bookmarks/${postId}`,
+      method: "post",
+      body: {},
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+export const removeBookmark = async (postId: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `posts/post/bookmarks/${postId}/remove`,
+      method: "post",
+      body: {},
     });
     return data;
   } catch (error) {

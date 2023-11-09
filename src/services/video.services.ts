@@ -6,23 +6,6 @@ type UploadVideoProps = {
   uri: string;
 };
 
-const uploadToStorage = async (videoUri: string) => {
-  try {
-    const response = await fetch(videoUri);
-    console.log(response);
-
-    const blob = await response.blob();
-
-    const filename = `SampleVideo.mp4`;
-    return {
-      blob,
-      filename,
-    };
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 export const UploadVideoToS5Client = async ({ uri }: UploadVideoProps) => {
   const formData = new FormData();
   //@ts-ignore

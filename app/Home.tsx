@@ -44,7 +44,7 @@ export default function ScreenHome() {
   // const items = videos;
 
   const { isLoading, posts } = useFeedHook();
-  console.log(posts);
+
   const { t } = useTranslation();
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
 
