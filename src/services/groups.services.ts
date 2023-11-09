@@ -8,6 +8,8 @@ type Groups = {
   creator: string;
   members: string[];
   isDeleted: boolean;
+  avatar: string;
+  coverImg: string;
   isAdminDeleted: boolean;
 };
 

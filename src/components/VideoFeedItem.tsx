@@ -58,9 +58,9 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
   return (
     <TouchableWithoutFeedback onPress={() => router.push("video/CreateUploadVideo")} style={{ flex: 1 }}>
       <View style={{ flex: 1, height }}>
-        {/* <Video
+        <Video
           source={{
-            uri: "https://pixeldrain.com/api/file/xnHggvdb",
+            uri: "https://f5o5.fra2.idrivee2-56.com/s5-public/1/H2XC_V0-dhsr6dBcXx3Vz0LsfvfoAFkt0qYp7PPb-6vj?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=85HZKc2LAsWxgFucKXHo%2F20231104%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231104T163039Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=079f1a7c4333f2085783eba7c4baa48eeea828c86106acfcb4209d7c96263e1f`",
 
             //  async   downloadAsync() {
             //       return fe
@@ -73,7 +73,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick 
           isLooping
           resizeMode={ResizeMode.COVER}
           style={[StyleSheet.absoluteFill]}
-        /> */}
+        />
         <View style={styles.bottomContainer}>
           <View style={styles.rightActionsContainer}>
             <View

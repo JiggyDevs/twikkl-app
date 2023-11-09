@@ -18,7 +18,7 @@ export const usePostHook = () => {
     showLoader();
 
     const videoResponse = await _uploadVideo(post.contentUrl);
-
+    console.log(videoResponse.url);
     if (videoResponse?.url) {
       const response = await createPost({
         contentUrl: videoResponse.url,

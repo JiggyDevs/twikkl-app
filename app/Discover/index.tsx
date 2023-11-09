@@ -30,6 +30,7 @@ interface Group {
   members: string;
   fav?: boolean;
   status: string;
+
   smallGroup: string[];
   videos: any[];
   followers?: number;
@@ -50,7 +51,7 @@ const Discover = () => {
   const { groups } = useGroupHook();
   const { yourGroups } = useYourGroupsHook();
 
-  console.log(yourGroups);
+
   const discoverTabs = [
     {
       title: "For you",

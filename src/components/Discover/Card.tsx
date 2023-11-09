@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
 interface ICard {
-  img: any;
+  coverImg: string;
   name: string;
   forYou?: boolean;
   members: string;
@@ -22,7 +22,7 @@ export const imgArr = [
 ];
 
 const Card = ({
-  img,
+  coverImg,
   name,
   forYou,
   members,
@@ -35,7 +35,7 @@ const Card = ({
 }: ICard): JSX.Element => {
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.image} source={img} resizeMode="cover">
+      <ImageBackground style={styles.image} source={{ uri: coverImg }} resizeMode="cover">
         {forYou ? (
           <Ionicons name="lock-closed" color="#fff" size={22} />
         ) : (
