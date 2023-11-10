@@ -4,15 +4,15 @@ import { Avatar } from "react-native-paper";
 
 const UserAvatar = ({ pic, name }: { pic?: string; name?: string }) => {
   let fullNameArr = name ? name.split(" ") : [];
-  const initial = !Boolean(fullNameArr.length)
+  const initial = !fullNameArr.length
     ? ""
     : `${fullNameArr[0] ? fullNameArr[0][0] : ""}${fullNameArr[1] ? fullNameArr[1][0] : ""}`;
   console.log(initial);
-
+  console.log(pic);
   return (
     <View>
       {pic ? (
-        <Avatar.Image style={{ backgroundColor: "#B08F6C" }} size={32} source={{ uri: pic }} />
+        <Avatar.Image style={{ backgroundColor: "#B08F6C" }} size={32} source={pic} />
       ) : (
         <Avatar.Text
           style={{ backgroundColor: "#B08F6C" }}

@@ -6,6 +6,7 @@ import UserAvatar from "./UserAvatar";
 import ArrowDown from "@assets/svg/ArrowDown";
 import FilledLike from "@assets/svg/FilledLike";
 import Like from "@assets/svg/Like";
+import { TComment } from "@twikkl/services/feed.services";
 
 export type Replies = {
   id: string;
@@ -39,7 +40,7 @@ const RenderCard = ({
   pic,
   comment,
   handleReply,
-  name = "Temi Jackson",
+  name = "",
   likeCount,
 }: {
   pic?: string;
@@ -73,22 +74,26 @@ const RenderCard = ({
 };
 
 const CommentCard = ({
-  subComment,
-  img,
   comment,
+  likeCount = 0,
+  subComment = [],
   handleReply,
-  likeCount,
 }: {
   subComment: any[];
-  img?: any;
-  comment: string;
+  comment: TComment;
   handleReply?: () => void;
   likeCount: number;
 }) => {
   const [viewReplies, setViewReplies] = useState(false);
   return (
     <View>
-      <RenderCard likeCount={likeCount} pic={img} handleReply={handleReply} comment={comment} />
+      <RenderCard
+        likeCount={likeCount}
+        pic={comment.user?.img || ""}
+        handleReply={handleReply}
+        name={comment.user.username}
+        comment={comment.comment}
+      />
       {Boolean(subComment?.length) && (
         <>
           {viewReplies && (

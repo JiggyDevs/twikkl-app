@@ -13,14 +13,16 @@ import { Video, ResizeMode } from "expo-av";
 import { TwikklIcon, EIcon } from "@twikkl/configs";
 import { ButtonAddSimple } from "@twikkl/components";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { useLikesHook } from "@twikkl/hooks/likes.hooks";
 import { TUser } from "@twikkl/entities/auth.entity";
+import FilledLike from "@assets/svg/FilledLike";
+import Like from "@assets/svg/Like";
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 const video = require("@assets/videos/ballon.mp4");
 
 //get device width and height
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 /**
  * TODO - Build Home screen component
@@ -52,7 +54,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
   const icons = () => {
     const options = [
       {
-        icon: EIcon.HEART,
+        icon: liked ? FilledLike : Like,
         color: liked ? "red" : DEFAULT_CAMERA_ACTION_COLOR,
         action: () => toggleLikePost(),
       },
@@ -83,7 +85,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
 
   const [shouldPlay, setShouldPlay] = useState(false);
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   //set play state
   useEffect(() => {
@@ -121,7 +123,11 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
                     paddingVertical: 12,
                   }}
                 >
-                  <TwikklIcon name={icon.icon} size={24} color={icon.color} />
+                  {typeof icon.icon === "string" ? (
+                    <TwikklIcon name={icon.icon} size={24} color={icon.color} />
+                  ) : (
+                    <icon.icon />
+                  )}
                 </TouchableOpacity>
               ))}
             </View>

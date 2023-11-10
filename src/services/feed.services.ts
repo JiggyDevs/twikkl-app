@@ -2,12 +2,21 @@ import { TUser } from "@twikkl/entities/auth.entity";
 import { handleFetchError, fetchFromApi, isAxiosError } from "@twikkl/utils/fetch";
 import { AxiosError } from "axios";
 
+export type TComment = {
+  _id: string;
+  comment: string;
+  user: TUser;
+  updatedAt: string;
+  post: string;
+};
+
 type Post = {
   contentUrl?: string;
   video: string;
   description: string;
   creator: TUser;
-  likes: TUser[];
+  comments: TComment[];
+  likes: { user: TUser }[];
   _id: string;
 };
 
@@ -80,6 +89,18 @@ export const likePost = async (postId: string) => {
       path: `posts/post/like/${postId}`,
       method: "post",
       body: {},
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+export const createComment = async (postId: string, comment: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `comments/${postId}`,
+      method: "post",
+      body: { comment },
     });
     return data;
   } catch (error) {

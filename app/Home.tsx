@@ -40,10 +40,7 @@ export default function ScreenHome() {
   const [shareVisible, setShareVisible] = useState(false);
   const [comment, setComment] = useState(false);
 
-  // get static videos
-  // const items = videos;
-
-  const { isLoading, posts } = useFeedHook();
+  const { isLoading, posts, refetch } = useFeedHook();
 
   const { t } = useTranslation();
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
@@ -55,6 +52,8 @@ export default function ScreenHome() {
     setVisibleIndex(index);
   };
 
+  const visiblePost = posts[visibleIndex];
+  console.log(visiblePost);
   if (isLoading) {
     return <AppLoader />;
   }
@@ -99,7 +98,7 @@ export default function ScreenHome() {
           </Pressable>
         </View>
       </SafeAreaView>
-      <BottomNav setComment={setComment} commentCount={0} />
+      <BottomNav setComment={setComment} commentCount={visiblePost.comments.length || 0} />
       {shareVisible && (
         <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
@@ -107,7 +106,14 @@ export default function ScreenHome() {
       )}
       {comment && (
         <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
-          <Comment setComment={setComment} />
+          <Comment
+            setComment={setComment}
+            comments={visiblePost.comments}
+            postId={visiblePost._id}
+            newComment={() => {
+              refetch();
+            }}
+          />
         </AppBottomSheet>
       )}
     </>

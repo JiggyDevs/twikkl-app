@@ -1,5 +1,5 @@
-import { View, Text, TextInput } from "react-native";
-import React from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import styled from "styled-components/native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Scroll from "./Scrollable";
@@ -8,6 +8,8 @@ import CommentCard from "./CommentCard";
 import { useFormField } from "@twikkl/hooks/common.hooks";
 import CancelIcon from "@assets/svg/CancelIcon";
 import SendIcon from "@assets/svg/SendIcon";
+import { TComment, createComment } from "@twikkl/services/feed.services";
+import { ActivityIndicator } from "react-native-paper";
 
 const Wrapper = styled.View`
   padding-horizontal: ${hp(2)}px;
@@ -24,56 +26,50 @@ const CancelWrapper = styled.Pressable`
   border-radius: 99px;
 `;
 
-const commentArr = [
-  {
-    comment: "Hi fam",
-    img: require("../../assets/imgs/avatar1.png"),
-    subComment: [],
-    likeCount: 2,
-  },
-  {
-    comment: "Another Comment Another Comment Another Comment Another Comment ",
-    img: require("../../assets/imgs/avatar2.png"),
-    subComment: [],
-    likeCount: 1,
-  },
-  {
-    comment: "comment again",
-    img: require("../../assets/imgs/avatar3.png"),
-    likeCount: 0,
-    subComment: [
-      { id: 1, subComment: "sub comment 1", img: require("../../assets/imgs/avatar5.png"), likeCount: 1 },
-      { id: 2, subComment: "sub comment 2", img: require("../../assets/imgs/avatar6.png"), likeCount: 0 },
-    ],
-  },
-  {
-    comment: "last comment",
-    img: require("../../assets/imgs/avatar4.png"),
-    subComment: [],
-    likeCount: 3,
-  },
-];
-
 const defaultForm = {
   comment: "",
 };
 
-const Comment = ({ setComment }: { setComment: Function }) => {
+type CommentProps = {
+  setComment: Function;
+  postId: string;
+  newComment: () => void;
+  comments: TComment[];
+};
+const Comment = ({ setComment, postId, newComment, comments }: CommentProps) => {
   const { form, updateField, clearForm } = useFormField(defaultForm);
+
+  console.log(comments);
+  const [loader, setLoader] = useState(false);
+
+  const handleSubmit = async () => {
+    setLoader(true);
+
+    const response = await createComment(postId, form.comment);
+
+    if (response) {
+      newComment();
+
+      clearForm();
+    }
+
+    setLoader(false);
+    return response;
+  };
   return (
     <Container>
       <Wrapper>
         <View style={[ViewVariant.rowSpaceBetween]}>
           <View style={{ width: 20 }} />
-          <Text style={{ color: "#fff", fontWeight: "600", fontSize: 16 }}>7.2K Comments</Text>
+          <Text style={{ color: "#fff", fontWeight: "600", fontSize: 16 }}>{comments.length} Comments</Text>
           <CancelWrapper onPress={() => setComment(false)}>
             <CancelIcon />
           </CancelWrapper>
         </View>
         <Scroll>
           <View style={{ gap: 30 }}>
-            {commentArr.map((comment) => (
-              <CommentCard handleReply={() => {}} key={comment.comment} {...comment} />
+            {comments.map((comment) => (
+              <CommentCard subComment={[]} likeCount={0} handleReply={() => {}} key={comment._id} comment={comment} />
             ))}
           </View>
         </Scroll>
@@ -95,7 +91,9 @@ const Comment = ({ setComment }: { setComment: Function }) => {
           multiline
           onChangeText={(val) => updateField("comment", val)}
         />
-        <SendIcon />
+        <TouchableOpacity disabled={!form.comment} onPress={handleSubmit}>
+          {loader ? <ActivityIndicator /> : <SendIcon />}
+        </TouchableOpacity>
       </View>
     </Container>
   );
