@@ -143,3 +143,16 @@ export const removeBookmark = async (postId: string) => {
     handleFetchError(error);
   }
 };
+
+export const fetchBookmarks = async () => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `posts/post/bookmarks`,
+      method: "get",
+      body: {},
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};

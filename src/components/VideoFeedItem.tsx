@@ -18,6 +18,10 @@ import { useLikesHook } from "@twikkl/hooks/likes.hooks";
 import { TUser } from "@twikkl/entities/auth.entity";
 import FilledLike from "@assets/svg/FilledLike";
 import Like from "@assets/svg/Like";
+import { useQuery } from "@tanstack/react-query";
+import { bookmarkPost, fetchBookmarks, removeBookmark } from "@twikkl/services/feed.services";
+import { useDebouncedCallback } from "use-debounce";
+
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 const video = require("@assets/videos/ballon.mp4");
 
@@ -51,6 +55,28 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
 
   const { toggleLikePost, liked } = useLikesHook(item.likes, item._id);
 
+  // TODO: work on getting post bookmarks
+  // const { data } = useQuery(["bookmarks"], () => fetchBookmarks());
+
+  const [bookmarked, setBookMarked] = useState(false);
+
+  const debounceBookmark = useDebouncedCallback(async () => {
+    if (!bookmarked) {
+      const response = await removeBookmark(item._id);
+
+      return response;
+    }
+
+    const response = await bookmarkPost(item._id);
+    return response;
+  }, 1000);
+
+  const toggleBookmark = async () => {
+    setBookMarked(!bookmarked);
+
+    debounceBookmark();
+  };
+
   const icons = () => {
     const options = [
       {
@@ -70,8 +96,10 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
       },
       {
         icon: EIcon.PIN,
-        color: DEFAULT_CAMERA_ACTION_COLOR,
-        action: () => null,
+        color: bookmarked ? "red" : DEFAULT_CAMERA_ACTION_COLOR,
+        action: () => {
+          toggleBookmark();
+        },
       },
     ];
     if (bigView)
