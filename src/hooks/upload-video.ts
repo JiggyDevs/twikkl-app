@@ -7,7 +7,7 @@ export const useUploadVideo = () => {
 
     if (response.data) {
       return {
-        url: `${s5ClientStorage}/${response?.data?.cid}`,
+        url: `${s5ClientStorage}/${response?.data?.cid}.mp4`,
         id: response?.data?.cid ?? "",
       };
     }

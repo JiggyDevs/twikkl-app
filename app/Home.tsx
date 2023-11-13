@@ -98,7 +98,7 @@ export default function ScreenHome() {
           </Pressable>
         </View>
       </SafeAreaView>
-      <BottomNav setComment={setComment} commentCount={visiblePost.comments.length || 0} />
+      <BottomNav setComment={setComment} commentCount={visiblePost?.comments.length || 0} />
       {shareVisible && (
         <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />

@@ -18,7 +18,9 @@ import { useLikesHook } from "@twikkl/hooks/likes.hooks";
 import { TUser } from "@twikkl/entities/auth.entity";
 import FilledLike from "@assets/svg/FilledLike";
 import Like from "@assets/svg/Like";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
+import { s5ClientAuthToken } from "@twikkl/utils/config";
+
 import { bookmarkPost, fetchBookmarks, removeBookmark } from "@twikkl/services/feed.services";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -129,7 +131,9 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
     <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
       <View style={{ flex: 1, height }}>
         <Video
-          source={video}
+          source={{
+            uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
+          }}
           shouldPlay={shouldPlay}
           isLooping
           resizeMode={ResizeMode.COVER}
