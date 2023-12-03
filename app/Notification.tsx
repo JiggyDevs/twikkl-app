@@ -105,8 +105,6 @@ const followingYesterday = following.filter((item) => item.day === "yesterday");
 const followingWeek = following.filter((item) => item.day === "week");
 const followingMonth = following.filter((item) => item.day === "month");
 
-console.log({ followingWeek, followingMonth });
-
 const Notification = () => {
   const router = useRouter();
   const [active, setActive] = useState("All");

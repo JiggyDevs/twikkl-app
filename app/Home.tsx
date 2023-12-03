@@ -12,13 +12,13 @@ import { Text, Badge } from "react-native-paper";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
-import { useRef, useState } from "react";
-import videos from "@twikkl/staticFiles/videos";
+import { useState } from "react";
 import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
-import { color } from "react-native-reanimated";
+import { useFeedHook } from "@twikkl/hooks/feed.hooks";
+import AppLoader from "@twikkl/components/AppLoader";
 import Share from "@twikkl/components/Share";
 import Comment from "@twikkl/components/Comment";
 
@@ -40,8 +40,7 @@ export default function ScreenHome() {
   const [shareVisible, setShareVisible] = useState(false);
   const [comment, setComment] = useState(false);
 
-  // get static videos
-  const items = videos;
+  const { isLoading, posts, refetch } = useFeedHook();
 
   const { t } = useTranslation();
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
@@ -52,11 +51,18 @@ export default function ScreenHome() {
 
     setVisibleIndex(index);
   };
+
+  const visiblePost = posts[visibleIndex];
+  console.log(visiblePost);
+  if (isLoading) {
+    return <AppLoader />;
+  }
+
   return (
     <>
       <FlatList
         style={[StyleSheet.absoluteFill]}
-        data={items}
+        data={posts}
         renderItem={({ item, index }) => (
           <VideoFeedItem
             item={item}
@@ -94,7 +100,7 @@ export default function ScreenHome() {
           </Pressable>
         </View>
       </SafeAreaView>
-      <BottomNav setComment={setComment} commentCount={0} />
+      <BottomNav setComment={setComment} commentCount={visiblePost?.comments.length || 0} />
       {shareVisible && (
         <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
@@ -102,7 +108,14 @@ export default function ScreenHome() {
       )}
       {comment && (
         <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
-          <Comment setComment={setComment} />
+          <Comment
+            setComment={setComment}
+            comments={visiblePost.comments}
+            postId={visiblePost._id}
+            newComment={() => {
+              refetch();
+            }}
+          />
         </AppBottomSheet>
       )}
     </>

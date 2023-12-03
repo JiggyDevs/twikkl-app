@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toastError } from "./common";
 import { clearAuth, getToken } from "../entities/auth.entity";
 import { baseUrl } from "./config";
@@ -14,7 +14,7 @@ interface IRequestApiData {
 }
 
 export const fetchFromApi = async ({ method = "get", path, body, headers = {}, params }: IRequestApiData) => {
-  let token = getToken();
+  const token = getToken();
   console.log("token", token);
 
   const url = `${baseUrl}${path}`;
@@ -57,9 +57,8 @@ export const fetchFromApi = async ({ method = "get", path, body, headers = {}, p
 };
 
 export const handleFetchError = (err: any, key?: any) => {
-  console.log({ error: err.response });
   if (err.response?.data) {
-    console.log(err.response.data);
+    console.log(err.response);
     // if (typeof err.response.data.message === "string")
     //   toastError(err.response.data.message);
     // else {
@@ -73,3 +72,7 @@ export const handleFetchError = (err: any, key?: any) => {
     }
   }
 };
+
+export function isAxiosError(error: any): error is AxiosError {
+  return error.isAxiosError === true;
+}

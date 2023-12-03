@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { Camera } from "expo-camera";
-import * as FileSystem from "expo-file-system";
-// import File from 'expo-file-system'
 import { ResizeMode, Video } from "expo-av";
 import Speed from "@assets/svg/Speed";
 import Timer from "@assets/svg/Timer";
@@ -85,6 +83,7 @@ const CreateUploadvideo = ({ group }: { group?: boolean }) => {
       quality: 1,
     });
     if (!result.canceled) {
+      setVideoUri(result.assets[0].uri);
     }
   };
 
@@ -93,16 +92,17 @@ const CreateUploadvideo = ({ group }: { group?: boolean }) => {
     activateProgress();
     setVideoUri(null);
 
-    // console.log("!cameraRef", videoUri);
+    console.log("!cameraRef", videoUri);
 
     if (cameraRef.current) {
       setIsRecording(true);
-      // console.log("cameraRef", cameraRef);
+      console.log("cameraRef", cameraRef);
       try {
         setTimeout(stopRecording, iDuration);
-        const { uri } = await cameraRef.current.recordAsync();
-        console.log("hereeeeeee");
-        setVideoUri(uri);
+        const record = await cameraRef.current.recordAsync();
+        console.log(record);
+
+        setVideoUri(record.uri);
       } catch (error) {
         console.log("Error recording video:", error);
         setIsRecording(false);

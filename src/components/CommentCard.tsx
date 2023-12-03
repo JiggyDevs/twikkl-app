@@ -6,7 +6,12 @@ import UserAvatar from "./UserAvatar";
 import ArrowDown from "@assets/svg/ArrowDown";
 import FilledLike from "@assets/svg/FilledLike";
 import Like from "@assets/svg/Like";
+import { TComment } from "@twikkl/services/feed.services";
+import dayjs from "dayjs";
 
+const relativeTime = require("dayjs/plugin/relativeTime");
+
+dayjs.extend(relativeTime);
 export type Replies = {
   id: string;
   replier: string;
@@ -38,11 +43,13 @@ const TextWrapper = styled.View`
 const RenderCard = ({
   pic,
   comment,
+  createdAt,
   handleReply,
-  name = "Temi Jackson",
+  name = "",
   likeCount,
 }: {
   pic?: string;
+  createdAt: string;
   comment: string;
   handleReply?: () => void;
   name?: string;
@@ -57,7 +64,7 @@ const RenderCard = ({
           <Text style={{ fontSize: 16 }}>{comment}</Text>
         </TextWrapper>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-          <SmallText>5 min</SmallText>
+          <SmallText>{(dayjs(createdAt) as any).fromNow()}</SmallText>
           <Pressable onPress={handleReply}>
             <SmallText>Reply</SmallText>
           </Pressable>
@@ -73,28 +80,39 @@ const RenderCard = ({
 };
 
 const CommentCard = ({
-  subComment,
-  img,
   comment,
+  likeCount = 0,
+  subComment = [],
   handleReply,
-  likeCount,
 }: {
   subComment: any[];
-  img?: any;
-  comment: string;
+  comment: TComment;
   handleReply?: () => void;
   likeCount: number;
 }) => {
   const [viewReplies, setViewReplies] = useState(false);
   return (
     <View>
-      <RenderCard likeCount={likeCount} pic={img} handleReply={handleReply} comment={comment} />
+      <RenderCard
+        likeCount={likeCount}
+        pic={comment.user?.img || ""}
+        handleReply={handleReply}
+        name={comment.user.username}
+        createdAt={comment.updatedAt}
+        comment={comment.comment}
+      />
       {Boolean(subComment?.length) && (
         <>
           {viewReplies && (
             <View style={{ marginLeft: 30, gap: 20, marginTop: 20 }}>
               {subComment?.map((item) => (
-                <RenderCard likeCount={item.likeCount} pic={item.img} comment={item?.subComment} key={item?.id} />
+                <RenderCard
+                  likeCount={item.likeCount}
+                  pic={item.img}
+                  createdAt={item.updatedAt}
+                  comment={item?.subComment}
+                  key={item?.id}
+                />
               ))}
             </View>
           )}

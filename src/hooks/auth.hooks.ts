@@ -122,25 +122,25 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
   // router.push({ pathname: "/", params: { post: "random", id, other } });
 
   const login = async () => {
-    // showLoader();
-    // requestStarted("login");
-    // try {
-    //   const data = await doLogin(form);
-    //   console.log("loginData", data);
-    //   setAuth(data.data, data.token);
-    //   toastSuccess(data.message);
-    router.push("Home");
-    //   if (data.message === "email is not verified ") {
-    //     // setEmail(email);
-    //     // resendOtp({ email });
-    //     // navigation.navigate('Register', { signupDone: true });
-    //   }
-    // } catch (error: any) {
-    //   console.log("loginError", error);
-    // } finally {
-    //   requestEnded();
-    //   hideLoader();
-    // }
+    showLoader();
+    requestStarted("login");
+    try {
+      const data = await doLogin(form);
+      console.log("loginData", data);
+      setAuth(data.data, data.token);
+      toastSuccess(data.message);
+      router.push("Home");
+      if (data.message === "email is not verified ") {
+        // setEmail(email);
+        // resendOtp({ email });
+        // navigation.navigate('Register', { signupDone: true });
+      }
+    } catch (error: any) {
+      console.log("loginError", error);
+    } finally {
+      requestEnded();
+      hideLoader();
+    }
   };
   return {
     login,

@@ -11,6 +11,7 @@ export enum Icon {
   BELL = "bell",
   COMMENT = "comment",
   HEART = "heart",
+  FILLED_HEART = "heart",
   THUMB_DOWN = "hand-thumbs-down",
   SHARE_NETWORK = "share-network",
   PIN = "pin",

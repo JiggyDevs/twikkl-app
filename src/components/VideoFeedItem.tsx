@@ -1,25 +1,26 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ImagePropsBase,
-  Image,
-  Dimensions,
-  StatusBar,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, Dimensions, TouchableWithoutFeedback } from "react-native";
 import { useRouter } from "expo-router";
 import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { TwikklIcon, EIcon } from "@twikkl/configs";
 import { ButtonAddSimple } from "@twikkl/components";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
+import { useLikesHook } from "@twikkl/hooks/likes.hooks";
+import { TUser } from "@twikkl/entities/auth.entity";
+import FilledLike from "@assets/svg/FilledLike";
+import Like from "@assets/svg/Like";
+// import { useQuery } from "@tanstack/react-query";
+import { s5ClientAuthToken } from "@twikkl/utils/config";
+
+import { bookmarkPost, fetchBookmarks, removeBookmark } from "@twikkl/services/feed.services";
+import { useDebouncedCallback } from "use-debounce";
+import UserAvatar from "./UserAvatar";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 //get device width and height
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 /**
  * TODO - Build Home screen component
@@ -27,11 +28,13 @@ const { width, height } = Dimensions.get("window");
  * @constructor
  */
 
-const profileImg = require("@assets/imgs/logos/profile.png") as ImagePropsBase["source"];
-
 type Props = {
   item: {
-    video: any;
+    video: string;
+    likes: { user: TUser }[];
+    _id: string;
+    description: string;
+    creator: TUser;
   };
   index: number;
   visibleIndex: number;
@@ -41,13 +44,73 @@ type Props = {
 
 export default function VideoFeedItem({ item, index, visibleIndex, onShareClick, bigView }: Props) {
   const router = useRouter();
-  const icons = [bigView ? EIcon.COMMENT : "", EIcon.HEART, EIcon.THUMB_DOWN, EIcon.SHARE_NETWORK, EIcon.PIN];
+
+  const { toggleLikePost, liked } = useLikesHook(item.likes, item._id);
+
+  // TODO: work on getting post bookmarks
+  // const { data } = useQuery(["bookmarks"], () => fetchBookmarks());
+
+  const [bookmarked, setBookMarked] = useState(false);
+
+  const debounceBookmark = useDebouncedCallback(async () => {
+    if (!bookmarked) {
+      const response = await removeBookmark(item._id);
+
+      return response;
+    }
+
+    const response = await bookmarkPost(item._id);
+    return response;
+  }, 1000);
+
+  const toggleBookmark = async () => {
+    setBookMarked(!bookmarked);
+
+    debounceBookmark();
+  };
+
+  const icons = () => {
+    const options = [
+      {
+        icon: liked ? FilledLike : Like,
+        color: liked ? "red" : DEFAULT_CAMERA_ACTION_COLOR,
+        action: () => toggleLikePost(),
+      },
+      {
+        color: DEFAULT_CAMERA_ACTION_COLOR,
+        icon: EIcon.THUMB_DOWN,
+        action: () => null,
+      },
+      {
+        icon: EIcon.SHARE_NETWORK,
+        color: DEFAULT_CAMERA_ACTION_COLOR,
+        action: () => onShareClick(),
+      },
+      {
+        icon: EIcon.PIN,
+        color: bookmarked ? "red" : DEFAULT_CAMERA_ACTION_COLOR,
+        action: () => {
+          toggleBookmark();
+        },
+      },
+    ];
+    if (bigView)
+      options.unshift({
+        color: DEFAULT_CAMERA_ACTION_COLOR,
+        icon: EIcon.COMMENT,
+        action: () => null,
+      });
+    return options;
+  };
+
   const [shouldPlay, setShouldPlay] = useState(false);
-  const { t } = useTranslation();
+
+  // const { t } = useTranslation();
 
   //set play state
   useEffect(() => {
     setShouldPlay(index === visibleIndex);
+    // router.push("video/CreateUploadVideo");
   }, [visibleIndex]);
 
   const togglePlay = () => {
@@ -55,10 +118,15 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
   };
 
   return (
-    <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
-      <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 41) }}>
+    <TouchableWithoutFeedback
+      onPress={togglePlay}
+      style={{ flex: 1, borderWidth: 5, borderColor: "red", borderStyle: "solid" }}
+    >
+      <View style={{ flex: 1, height }}>
         <Video
-          source={item.video}
+          source={{
+            uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
+          }}
           shouldPlay={shouldPlay}
           isLooping
           resizeMode={ResizeMode.COVER}
@@ -72,15 +140,19 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
                 alignItems: "center",
               }}
             >
-              {icons.map((icon, index) => (
+              {icons().map((icon, index) => (
                 <TouchableOpacity
-                  onPress={() => icon === EIcon.SHARE_NETWORK && onShareClick()}
+                  onPress={() => icon.action()}
                   key={index}
                   style={{
                     paddingVertical: 12,
                   }}
                 >
-                  <TwikklIcon name={icon} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+                  {typeof icon.icon === "string" ? (
+                    <TwikklIcon name={icon.icon} size={24} color={icon.color} />
+                  ) : (
+                    <icon.icon />
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
@@ -89,7 +161,8 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              marginTop: 14,
+              marginTop: 5,
+              marginBottom: 10,
             }}
           >
             <View
@@ -97,11 +170,11 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
                 flexDirection: "row",
               }}
             >
-              <Image style={styles.profileImg} source={profileImg} />
-              <Text variant="titleMedium" style={[styles.headActionText, { width: "75%" }]}>
-                @glory.jgy {"\n"}
+              <UserAvatar pic={item.creator?.img || ""} name={item.creator.username} />
+              <Text variant="titleMedium" style={[styles.headActionText, { width: "75%", marginLeft: 8 }]}>
+                @{item.creator.username} {"\n"}
                 <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
-                  My very first podcast, it was really fun and I learnt so much just in one day.
+                  {item.description}
                 </Text>
               </Text>
             </View>

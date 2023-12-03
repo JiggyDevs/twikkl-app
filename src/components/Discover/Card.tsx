@@ -2,8 +2,8 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
 interface ICard {
-  img: any;
-  title: string;
+  coverImg: string;
+  name: string;
   forYou?: boolean;
   members: string;
   desc: string;
@@ -22,8 +22,8 @@ export const imgArr = [
 ];
 
 const Card = ({
-  img,
-  title,
+  coverImg,
+  name,
   forYou,
   members,
   desc,
@@ -35,25 +35,26 @@ const Card = ({
 }: ICard): JSX.Element => {
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.image} source={img} resizeMode="cover">
+      <ImageBackground style={styles.image} source={{ uri: coverImg }} resizeMode="cover">
         {forYou ? (
-          <Ionicons name="lock-closed" color="#fff" size={22} />
+          <></>
         ) : (
+          // <Ionicons name="lock-closed" color="#fff" size={22} />
           <Ionicons onPress={() => favPress()} name={fav ? "star" : "star-outline"} color="#fff" size={26} />
         )}
       </ImageBackground>
       <View style={styles.content}>
         <View style={styles.titleContainer}>
-          <Text style={{ fontSize: 16, color: "#fff", fontWeight: "700" }}>{title}</Text>
+          <Text style={{ fontSize: 16, color: "#fff", fontWeight: "700" }}>{name}</Text>
           {forYou && (
             <View style={styles.membersContainer}>
               <FontAwesome5 name="user-friends" size={16} color="#fff" />
-              <Text style={styles.members}>{members} Members</Text>
+              <Text style={styles.members}>{members.length} Members</Text>
             </View>
           )}
         </View>
         <Text style={styles.description}>{desc}</Text>
-        <View style={styles.avatarContainer}>
+        {/* <View style={styles.avatarContainer}>
           {imgArr.map((img, index) => {
             return (
               <Image
@@ -65,7 +66,7 @@ const Card = ({
             );
           })}
           <Text style={styles.followers}>{forYou ? `${followers} followers are members` : `${members} members`}</Text>
-        </View>
+        </View> */}
         <TouchableOpacity
           onPress={() => {
             if (forYou) onPress();
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
   image: {
     padding: 16,
     alignItems: "flex-end",
+    backgroundColor: "#F1FCF2",
     height: 220,
   },
   titleContainer: {
