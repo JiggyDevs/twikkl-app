@@ -4,6 +4,8 @@ import { useFormField } from "@twikkl/hooks/common.hooks";
 import LabelInput from "@twikkl/components/LabelInput";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import { ViewVariant } from "@twikkl/configs";
+import AccountAvatar from "@assets/svg/AccountAvatar";
+import Camera from "@assets/svg/Camera";
 
 const updateProfile = {
   name: "",
@@ -15,8 +17,22 @@ const Account = () => {
 
   return (
     <View>
-      <View style={{ alignSelf: "center" }}></View>
-      <Text style={{ textAlign: "center" }}>Update profile image</Text>
+      <View style={{ alignSelf: "center" }}>
+        <View
+          style={{
+            backgroundColor: "#fff",
+            width: 110,
+            height: 110,
+            borderRadius: 99,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <AccountAvatar />
+        </View>
+        <Camera style={{ position: "absolute", bottom: -10, right: 0 }} />
+      </View>
+      <Text style={{ textAlign: "center", marginTop: 20 }}>Update profile image</Text>
       <View style={styles.inputs}>
         <LabelInput
           label="Name"
@@ -31,7 +47,7 @@ const Account = () => {
           onChangeText={(val) => updateField("username", val)}
         />
         <View>
-          <Text>Bio</Text>
+          <Text style={styles.label}>Bio</Text>
           <TextInput
             multiline
             value={form.bio}
@@ -42,7 +58,7 @@ const Account = () => {
         </View>
       </View>
       <ButtonEl>
-        <Text style={[ViewVariant.buttonText]}>Create group</Text>
+        <Text style={[ViewVariant.buttonText]}>Update Profile</Text>
       </ButtonEl>
     </View>
   );
@@ -52,8 +68,9 @@ export default Account;
 
 const styles = StyleSheet.create({
   inputs: {
-    marginTop: 24,
-    gap: 14,
+    marginVertical: 24,
+    gap: 20,
+    marginBottom: 70,
   },
   textarea: {
     borderColor: "#C0CCC1",
@@ -62,7 +79,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
-    height: 90,
+    height: 80,
     fontSize: 15,
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: "600",
+    marginBottom: 6,
   },
 });

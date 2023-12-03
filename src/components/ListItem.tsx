@@ -9,10 +9,22 @@ const Wrapper = styled.View`
   padding-bottom: ${hp(2)}px;
 `;
 
-const ListItem = ({ action, onPress, title }: { action: any; onPress?: () => void; title?: string }) => {
+const ListItem = ({
+  action,
+  onPress,
+  title,
+  labelStyle = {},
+  notif,
+}: {
+  action: any;
+  onPress?: () => void;
+  title?: string;
+  labelStyle?: object;
+  notif?: boolean;
+}) => {
   return (
     <Wrapper>
-      <Text>{title}</Text>
+      <Text style={{ color: notif ? "#fff" : "#000" }}>{title}</Text>
       <Pressable onPress={onPress}>{action}</Pressable>
     </Wrapper>
   );

@@ -10,10 +10,10 @@ const Index = () => {
   const [screen, setScreen] = useState("Settings");
   const router = useRouter();
 
-  const handleBackPress = () => (screen === "Settings" ? router.replace("/profile") : setScreen("Settings"));
+  const handleBackPress = () => (screen === "Settings" ? router.replace("/Profile") : setScreen("Settings"));
 
   return (
-    <View style={{ gap: 42 }}>
+    <View style={{ gap: 42, paddingTop: 60, paddingHorizontal: 16 }}>
       <BackHeader title={screen} onPress={handleBackPress} />
       {screen === "Settings" && <Settings setScreen={setScreen} />}
       {screen === "Account" && <Account />}

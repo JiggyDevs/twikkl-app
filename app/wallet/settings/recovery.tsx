@@ -1,6 +1,10 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import React from "react";
-import { recovery } from "@twikkl/data/constant";
+
+export const recovery = [
+  { icon: "", text: "Google drive backup", desc: "Not set" },
+  { icon: "", text: "Manual backup", desc: "Active" },
+];
 
 const Recovery = () => {
   return (
@@ -17,7 +21,6 @@ const Recovery = () => {
     </View>
   );
 };
-
 export default Recovery;
 
 const styles = StyleSheet.create({

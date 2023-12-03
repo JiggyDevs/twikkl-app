@@ -40,7 +40,7 @@ function BottomNav({ commentCount = 0, setComment }: BottomNavProps, {}) {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("Wallet")} style={styles.tabContainer}>
+      <TouchableOpacity onPress={() => router.push("wallet/Wallet")} style={styles.tabContainer}>
         <WalletIcon />
         <Text variant="titleMedium" style={styles.tabText}>
           {t("wallet")}

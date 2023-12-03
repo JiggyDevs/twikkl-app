@@ -1,14 +1,14 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
 
-const NFTCard = ({ name, token, graphic }: { graphic: string; name: string; token: string }) => {
+const NFTCard = ({ name, token, graphic }: { graphic: number; name: string; token: string }) => {
   return (
-    <View style={{ backgroundColor: "red", borderRadius: 20, height: 70, width: "50%" }}>
-      {graphic}
-      <View style={{ padding: 5 }}>
-        <Text>{name}</Text>
-        <View style={{ backgroundColor: "red", borderRadius: 5, padding: 3 }}>
-          <Text>{token}</Text>
+    <View style={{ backgroundColor: "#143615", borderRadius: 20 }}>
+      <Image source={graphic} />
+      <View style={{ padding: 10 }}>
+        <Text style={{ color: "#fff" }}>{name}</Text>
+        <View style={{ backgroundColor: "#C0CCC1", borderRadius: 5, padding: 3, alignSelf: "flex-start" }}>
+          <Text style={{ fontSize: 10 }}>{token}</Text>
         </View>
       </View>
     </View>

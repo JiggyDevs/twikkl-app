@@ -4,6 +4,7 @@ import styled, { css } from "styled-components/native";
 
 const Container = styled.View<{ checked: boolean }>`
   border: 2px solid #000;
+  border-color: ${({ checked }) => (checked ? "#50a040" : "#000")};
   border-radius: 100px;
   width: ${wp(9)}px;
   height: ${hp(2.4)}px;

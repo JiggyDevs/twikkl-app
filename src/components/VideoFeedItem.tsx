@@ -85,7 +85,6 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
               ))}
             </View>
           </View>
-
           <View
             style={{
               flexDirection: "row",

@@ -73,7 +73,9 @@ export default function ScreenHome() {
       />
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
-          <TwikklIcon name={EIcon.TIMER_24} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+          <Pressable onPress={() => router.push("votes")}>
+            <TwikklIcon name={EIcon.TIMER_24} size={24} color={DEFAULT_CAMERA_ACTION_COLOR} />
+          </Pressable>
           <View style={ViewVariant.centered}>
             <Text variant="titleMedium" style={styles.headActionText}>
               {t("home.myFeed")}

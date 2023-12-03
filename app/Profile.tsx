@@ -35,7 +35,9 @@ const Profile = () => {
           <Back dark="#041105" />
         </Pressable>
         <Text style={styles.boldText}>Profile</Text>
-        <MoreIcon />
+        <Pressable onPress={() => router.push("settings")}>
+          <MoreIcon />
+        </Pressable>
       </View>
       <ScrollView style={{ paddingHorizontal: 10 }}>
         <View style={styles.center}>
