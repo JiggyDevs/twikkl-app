@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ImagePropsBase,
-  Image,
-  Dimensions,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, Dimensions, TouchableWithoutFeedback } from "react-native";
 import { useRouter } from "expo-router";
 import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
@@ -23,9 +15,9 @@ import { s5ClientAuthToken } from "@twikkl/utils/config";
 
 import { bookmarkPost, fetchBookmarks, removeBookmark } from "@twikkl/services/feed.services";
 import { useDebouncedCallback } from "use-debounce";
+import UserAvatar from "./UserAvatar";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
-const video = require("@assets/videos/ballon.mp4");
 
 //get device width and height
 const { height } = Dimensions.get("window");
@@ -35,8 +27,6 @@ const { height } = Dimensions.get("window");
  *
  * @constructor
  */
-
-const profileImg = require("@assets/imgs/logos/profile.png") as ImagePropsBase["source"];
 
 type Props = {
   item: {
@@ -128,7 +118,10 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
   };
 
   return (
-    <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
+    <TouchableWithoutFeedback
+      onPress={togglePlay}
+      style={{ flex: 1, borderWidth: 5, borderColor: "red", borderStyle: "solid" }}
+    >
       <View style={{ flex: 1, height }}>
         <Video
           source={{
@@ -169,7 +162,8 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              marginTop: 14,
+              marginTop: 5,
+              marginBottom: 10,
             }}
           >
             <View
@@ -177,8 +171,8 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
                 flexDirection: "row",
               }}
             >
-              <Image style={styles.profileImg} source={profileImg} />
-              <Text variant="titleMedium" style={[styles.headActionText, { width: "75%" }]}>
+              <UserAvatar pic={item.creator?.img || ""} name={item.creator.username} />
+              <Text variant="titleMedium" style={[styles.headActionText, { width: "75%", marginLeft: 8 }]}>
                 @{item.creator.username} {"\n"}
                 <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
                   {item.description}

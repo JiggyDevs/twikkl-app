@@ -1,18 +1,7 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ImagePropsBase,
-  Image,
-  FlatList,
-  Dimensions,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, Badge } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { useRouter } from "expo-router";
-import { useColors } from "@twikkl/hooks";
 
 import CommentIcon from "../../assets/svg/comment.svg";
 import WalletIcon from "../../assets/svg/wallet.svg";
@@ -29,7 +18,7 @@ function BottomNav({ commentCount = 0, setComment }: BottomNavProps, {}) {
 
   const router = useRouter();
   return (
-    <SafeAreaView style={styles.bottomContainer}>
+    <SafeAreaView style={styles.bottomContainer} edges={["right", "bottom", "left"]}>
       <TouchableOpacity onPress={() => setComment(true)} style={styles.tabContainer}>
         <View style={{ flexDirection: "row" }}>
           <CommentIcon />

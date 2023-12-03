@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { Camera } from "expo-camera";
-// import * as FileSystem from "expo-file-system";
-// import File from 'expo-file-system'
 import { ResizeMode, Video } from "expo-av";
 import Speed from "@assets/svg/Speed";
 import Timer from "@assets/svg/Timer";
@@ -15,7 +13,6 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { Bar } from "react-native-progress";
-import { useUploadVideo } from "@twikkl/hooks/upload-video";
 import Effects from "@twikkl/components/Effects";
 import CaptionVideo from "./CaptionVideo";
 

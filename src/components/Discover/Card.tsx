@@ -37,8 +37,9 @@ const Card = ({
     <View style={styles.container}>
       <ImageBackground style={styles.image} source={{ uri: coverImg }} resizeMode="cover">
         {forYou ? (
-          <Ionicons name="lock-closed" color="#fff" size={22} />
+          <></>
         ) : (
+          // <Ionicons name="lock-closed" color="#fff" size={22} />
           <Ionicons onPress={() => favPress()} name={fav ? "star" : "star-outline"} color="#fff" size={26} />
         )}
       </ImageBackground>
@@ -53,7 +54,7 @@ const Card = ({
           )}
         </View>
         <Text style={styles.description}>{desc}</Text>
-        <View style={styles.avatarContainer}>
+        {/* <View style={styles.avatarContainer}>
           {imgArr.map((img, index) => {
             return (
               <Image
@@ -65,7 +66,7 @@ const Card = ({
             );
           })}
           <Text style={styles.followers}>{forYou ? `${followers} followers are members` : `${members} members`}</Text>
-        </View>
+        </View> */}
         <TouchableOpacity
           onPress={() => {
             if (forYou) onPress();
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
   image: {
     padding: 16,
     alignItems: "flex-end",
+    backgroundColor: "#F1FCF2",
     height: 220,
   },
   titleContainer: {

@@ -51,7 +51,6 @@ const Discover = () => {
   const { groups } = useGroupHook();
   const { yourGroups } = useYourGroupsHook();
 
-
   const discoverTabs = [
     {
       title: "For you",
