@@ -6,15 +6,15 @@ import Twitter from "@assets/svg/Twitter";
 import LiveIcon from "@assets/svg/LiveIcon";
 import Play from "@assets/svg/Play";
 import PinIcon from "@assets/svg/PinIcon";
+
 import LabelIcon from "@assets/svg/LabelIcon";
 import ImgBgRender from "@twikkl/components/ImgBgRender";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProfile, userFollowers } from "@twikkl/services/profile.services";
+import { authEntity } from "@twikkl/entities/auth.entity";
+import AppLoader from "@twikkl/components/AppLoader";
 
-const detailsArr = [
-  { num: "4.5K", text: "Followers" },
-  { num: "2K", text: "Following" },
-  { num: "240K", text: "Total Twikks" },
-];
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 const imgArr = [
   require("../assets/imgs/prof1.png"),
@@ -27,7 +27,29 @@ const imgArr = [
 
 const Profile = () => {
   const router = useRouter();
+
   const [active, setActive] = useState(0);
+
+  const { userId } = useLocalSearchParams<{ userId: string }>();
+
+  const { user: loggedInUser } = authEntity.get();
+
+  const user = userId || loggedInUser?._id;
+
+  const { data, isLoading } = useQuery(["user-profile", user], () => fetchProfile(user || ""));
+
+  const { data: followers } = useQuery(["user-followers", user], () => userFollowers(user || ""));
+
+  if (isLoading) return <AppLoader />;
+
+  const detailsArr = [
+    { num: data?.following.length || 0, text: "Followers" },
+    { num: followers?.pagination.total || 0, text: "Following" },
+    { num: "240K", text: "Total Twikks" },
+  ];
+
+  console.log(data);
+
   return (
     <View style={styles.container}>
       <View style={styles.topHeader}>
@@ -40,7 +62,7 @@ const Profile = () => {
       <ScrollView style={{ paddingHorizontal: 10 }}>
         <View style={styles.center}>
           <Image source={require("../assets/imgs/profile.png")} />
-          <Text style={styles.boldTextSpace}>jerry.jgy</Text>
+          <Text style={styles.boldTextSpace}>{data?.username}</Text>
           <View style={styles.justifyCenter}>
             {detailsArr.map((item) => (
               <View style={styles.textCenter}>
@@ -49,7 +71,7 @@ const Profile = () => {
               </View>
             ))}
           </View>
-          <Text style={styles.textLight}>UX Design Enthusiat currently working as a chef in Lagos</Text>
+          <Text style={styles.textLight}>-</Text>
           <View style={styles.flex}>
             <Pressable style={styles.bgGreen}>
               <Text style={styles.textWhite}>Edit Profile</Text>

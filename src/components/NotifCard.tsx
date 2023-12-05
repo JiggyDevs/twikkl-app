@@ -1,5 +1,6 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import React from "react";
+import UserAvatar from "./UserAvatar";
 
 type IProps = {
   avatar: any;
@@ -7,14 +8,15 @@ type IProps = {
   desc?: string;
   time?: string;
   like?: boolean;
+  name?: string;
   img?: any;
   action?: string;
 };
 
-const NotifCard = ({ avatar, text, desc, time, like, img, action }: IProps) => {
+const NotifCard = ({ avatar, name, text, desc, time, like, img, action }: IProps) => {
   return (
     <View style={styles.wrapper}>
-      <Image source={avatar} />
+      <UserAvatar name={name} pic={avatar} />
       <View style={styles.flex}>
         <Text style={styles.textBold}>{text}</Text>
         {desc && (

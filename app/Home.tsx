@@ -53,7 +53,7 @@ export default function ScreenHome() {
   };
 
   const visiblePost = posts[visibleIndex];
-  console.log(visiblePost);
+
   if (isLoading) {
     return <AppLoader />;
   }
