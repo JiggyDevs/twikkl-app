@@ -59,7 +59,7 @@ const Profile = () => {
       </View>
       <ScrollView style={{ paddingHorizontal: 10 }}>
         <View style={styles.center}>
-          <Image source={require("../assets/imgs/profile.png")} />
+          <Image source={{ uri: data?.avatar }} style={styles.profileImg} />
           <Text style={styles.boldTextSpace}>{data?.username}</Text>
           <View style={styles.justifyCenter}>
             {detailsArr.map((item) => (
@@ -115,6 +115,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
     flexDirection: "row",
+  },
+  profileImg: {
+    width: 163,
+    height: 163,
+    borderRadius: 100,
+    backgroundColor: "white",
+    marginBottom: 16,
   },
   flex: {
     flexDirection: "row",
