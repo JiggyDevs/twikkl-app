@@ -9,6 +9,9 @@ type Profile = {
   followersNotification: boolean;
   following: any[];
   groups: any[];
+  avatar?: string;
+  twitter?: string;
+  bio?: string;
   lastLoginDate: string;
   likesNotification: boolean;
   mentionsNotification: boolean;

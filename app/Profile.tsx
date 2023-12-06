@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Linking } from "react-native";
 import React, { useState } from "react";
 import Back from "@assets/svg/Back";
 import MoreIcon from "@assets/svg/More";
@@ -8,7 +8,7 @@ import Play from "@assets/svg/Play";
 import PinIcon from "@assets/svg/PinIcon";
 
 import LabelIcon from "@assets/svg/LabelIcon";
-import ImgBgRender from "@twikkl/components/ImgBgRender";
+// import ImgBgRender from "@twikkl/components/ImgBgRender";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProfile, userFollowers } from "@twikkl/services/profile.services";
@@ -16,14 +16,14 @@ import { authEntity } from "@twikkl/entities/auth.entity";
 import AppLoader from "@twikkl/components/AppLoader";
 
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
-const imgArr = [
-  require("../assets/imgs/prof1.png"),
-  require("../assets/imgs/prof2.png"),
-  require("../assets/imgs/prof3.png"),
-  require("../assets/imgs/prof4.png"),
-  require("../assets/imgs/prof5.png"),
-  require("../assets/imgs/prof6.png"),
-];
+// const imgArr = [
+//   require("../assets/imgs/prof1.png"),
+//   require("../assets/imgs/prof2.png"),
+//   require("../assets/imgs/prof3.png"),
+//   require("../assets/imgs/prof4.png"),
+//   require("../assets/imgs/prof5.png"),
+//   require("../assets/imgs/prof6.png"),
+// ];
 
 const Profile = () => {
   const router = useRouter();
@@ -45,10 +45,8 @@ const Profile = () => {
   const detailsArr = [
     { num: data?.following.length || 0, text: "Followers" },
     { num: followers?.pagination.total || 0, text: "Following" },
-    { num: "240K", text: "Total Twikks" },
+    { num: 0, text: "Total Twikks" },
   ];
-
-  console.log(data);
 
   return (
     <View style={styles.container}>
@@ -71,12 +69,15 @@ const Profile = () => {
               </View>
             ))}
           </View>
-          <Text style={styles.textLight}>-</Text>
+          <Text style={styles.textLight}>{data?.bio || "-"}</Text>
           <View style={styles.flex}>
             <Pressable style={styles.bgGreen}>
               <Text style={styles.textWhite}>Edit Profile</Text>
             </Pressable>
-            <Pressable style={styles.bgGreen}>
+            <Pressable
+              style={styles.bgGreen}
+              onPress={() => (data?.twitter ? Linking.openURL(`https://twitter.com/${data?.twitter}`) : null)}
+            >
               <Twitter />
             </Pressable>
           </View>
@@ -96,9 +97,10 @@ const Profile = () => {
           ))}
         </View>
         <View style={styles.img}>
-          {imgArr.map((item, index) => (
+          {/* To be implemented */}
+          {/* {imgArr.map((item, index) => (
             <ImgBgRender key={index} img={item} />
-          ))}
+          ))} */}
         </View>
       </ScrollView>
     </View>
