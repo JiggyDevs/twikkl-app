@@ -1,7 +1,8 @@
 import { handleFetchError, fetchFromApi, isAxiosError } from "@twikkl/utils/fetch";
 import { AxiosError } from "axios";
+import { FetchUserFeedsResponse } from "./feed.services";
 
-type Groups = {
+export type Groups = {
   _id: string;
   name: string;
   description: string;
@@ -46,6 +47,71 @@ export const fetchGroups = async (): Promise<FetchGroupsResponse> => {
     // throw error;
   }
 };
+export const createGroup = async (data: {
+  name: string;
+  description: string;
+  coverImg: string;
+  avatar: string;
+}): Promise<FetchGroupsResponse | undefined> => {
+  try {
+    const { data: group } = await fetchFromApi({
+      path: "groups",
+      method: "post",
+    });
+    return group;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+
+    // throw error;
+  }
+};
+export const joinGroup = async (groupId: string): Promise<boolean | AxiosError | undefined> => {
+  try {
+    await fetchFromApi({
+      path: "groups/join",
+      method: "post",
+      body: {
+        groupId,
+      },
+    });
+    return true;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+
+    // throw error;
+  }
+};
+export const leaveGroup = async (groupId: string): Promise<boolean | AxiosError | undefined> => {
+  try {
+    await fetchFromApi({
+      path: "groups/leave",
+      method: "post",
+      body: {
+        groupId,
+      },
+    });
+    return true;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+
+    // throw error;
+  }
+};
 export const fetchUserGroups = async (): Promise<FetchGroupsResponse> => {
   try {
     const { data: posts } = await fetchFromApi({
@@ -54,6 +120,60 @@ export const fetchUserGroups = async (): Promise<FetchGroupsResponse> => {
     });
     const computeData = {
       ...posts,
+    };
+
+    return computeData;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+    return {
+      data: [],
+
+      // Other properties as needed
+    };
+
+    // throw error;
+  }
+};
+export const fetchFavouriteGroups = async (): Promise<FetchGroupsResponse> => {
+  try {
+    const { data: groups } = await fetchFromApi({
+      path: "favorite-groups",
+      method: "get",
+    });
+    const computeData = {
+      ...groups,
+    };
+    console.log(computeData);
+    return computeData;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+    return {
+      data: [],
+
+      // Other properties as needed
+    };
+
+    // throw error;
+  }
+};
+export const fetchGroupPosts = async (groupId: string): Promise<FetchUserFeedsResponse> => {
+  try {
+    const { data: groups } = await fetchFromApi({
+      path: `groups/${groupId}/posts`,
+      method: "get",
+    });
+    const computeData = {
+      ...groups,
     };
 
     return computeData;

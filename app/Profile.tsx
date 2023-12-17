@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Linking } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Linking, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Back from "@assets/svg/Back";
 import MoreIcon from "@assets/svg/More";
@@ -14,16 +14,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchProfile, userFollowers } from "@twikkl/services/profile.services";
 import { authEntity } from "@twikkl/entities/auth.entity";
 import AppLoader from "@twikkl/components/AppLoader";
+import { fetchUserPost, isUserFeedsResponse } from "@twikkl/services/feed.services";
+import ImgBgRender from "@twikkl/components/ImgBgRender";
 
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
-// const imgArr = [
-//   require("../assets/imgs/prof1.png"),
-//   require("../assets/imgs/prof2.png"),
-//   require("../assets/imgs/prof3.png"),
-//   require("../assets/imgs/prof4.png"),
-//   require("../assets/imgs/prof5.png"),
-//   require("../assets/imgs/prof6.png"),
-// ];
 
 const Profile = () => {
   const router = useRouter();
@@ -40,12 +34,16 @@ const Profile = () => {
 
   const { data: followers } = useQuery(["user-followers", user], () => userFollowers(user || ""));
 
+  const { data: userPosts } = useQuery(["user-posts", user], () => fetchUserPost(user || ""));
+
+  const posts = isUserFeedsResponse(userPosts) ? userPosts.data : [];
+
   if (isLoading) return <AppLoader />;
 
   const detailsArr = [
     { num: data?.following.length || 0, text: "Followers" },
     { num: followers?.pagination.total || 0, text: "Following" },
-    { num: 0, text: "Total Twikks" },
+    { num: posts.length, text: "Total Twikks" },
   ];
 
   return (
@@ -55,7 +53,9 @@ const Profile = () => {
           <Back dark="#041105" />
         </Pressable>
         <Text style={styles.boldText}>Profile</Text>
-        <MoreIcon />
+        <TouchableOpacity onPress={() => router.push("/settings/Account")}>
+          <MoreIcon />
+        </TouchableOpacity>
       </View>
       <ScrollView style={{ paddingHorizontal: 10 }}>
         <View style={styles.center}>
@@ -63,7 +63,7 @@ const Profile = () => {
           <Text style={styles.boldTextSpace}>{data?.username}</Text>
           <View style={styles.justifyCenter}>
             {detailsArr.map((item) => (
-              <View style={styles.textCenter}>
+              <View style={styles.textCenter} key={item.text}>
                 <Text>{item.num}</Text>
                 <Text style={{ fontWeight: "700", marginTop: 3 }}>{item.text}</Text>
               </View>
@@ -97,10 +97,9 @@ const Profile = () => {
           ))}
         </View>
         <View style={styles.img}>
-          {/* To be implemented */}
-          {/* {imgArr.map((item, index) => (
-            <ImgBgRender key={index} img={item} />
-          ))} */}
+          {active === 0 &&
+            posts &&
+            posts.map((post) => <ImgBgRender key={post._id} img={post.video} likes={post.likes.length} />)}
         </View>
       </ScrollView>
     </View>

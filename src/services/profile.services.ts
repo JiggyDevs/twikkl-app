@@ -37,6 +37,7 @@ export const fetchProfile = async (userId: string): Promise<Profile | undefined>
     handleFetchError(error);
   }
 };
+
 export const userFollowers = async (
   userId: string,
 ): Promise<
@@ -54,6 +55,23 @@ export const userFollowers = async (
       method: "get",
     });
     return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+
+export const updateUserProfile = async (profile: {
+  avatar: string;
+  bio: string;
+  twitter: string;
+}): Promise<Profile | undefined> => {
+  try {
+    const { data } = await fetchFromApi({
+      path: `users/profile`,
+      method: "patch",
+      body: profile,
+    });
+    return data.data;
   } catch (error) {
     handleFetchError(error);
   }

@@ -7,6 +7,7 @@ const LabelInput = ({
   value,
   onChangeText,
   label,
+  disabled,
   type = "text",
   username,
   onNamePress,
@@ -16,6 +17,7 @@ const LabelInput = ({
   placeholder?: string;
   value: string;
   onChangeText: (text: string) => void;
+  disabled?: boolean;
   label: string;
   type?: "text" | "password" | "numeric" | "phone" | "email";
   username?: boolean;
@@ -29,6 +31,7 @@ const LabelInput = ({
       <InputField
         onNamePress={onNamePress}
         nameText={NameText}
+        disabled={disabled}
         username={username}
         type={type}
         placeholder={placeholder}

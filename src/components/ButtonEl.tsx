@@ -26,6 +26,12 @@ const Button = styled(PButton)<{
   background-color: #50a040;
 
   ${(props) =>
+    props.disabled &&
+    css`
+      background-color: #c0ccc1;
+    `}
+
+  ${(props) =>
     props.outline &&
     css`
       background-color: #fff;
@@ -38,11 +44,7 @@ const Button = styled(PButton)<{
       background-color: ${props.bg};
     `}
 
-  ${(props) =>
-    props.disabled &&
-    css`
-      background-color: #c0ccc1;
-    `}
+
 
     ${(props) =>
     props.disabled &&

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchGroups, fetchUserGroups, isGroupResponse } from "@twikkl/services";
+import { fetchFavouriteGroups, fetchGroups, fetchUserGroups, isGroupResponse } from "@twikkl/services";
 
 export const useGroupHook = () => {
   const { data: groups, isLoading, ...rest } = useQuery(["all-groups"], () => fetchGroups());
@@ -17,6 +17,15 @@ export const useYourGroupsHook = () => {
   return {
     ...rest,
     yourGroups: isGroupResponse(groups) ? groups.data : [],
+    isLoading,
+  };
+};
+export const useYourFavouriteGroupsHook = () => {
+  const { data: groups, isLoading, ...rest } = useQuery(["favorite-groups"], () => fetchFavouriteGroups());
+
+  return {
+    ...rest,
+    favouriteGroups: isGroupResponse(groups) ? groups.data : [],
     isLoading,
   };
 };

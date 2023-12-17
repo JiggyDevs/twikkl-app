@@ -2,21 +2,31 @@ import { View, Text, ImageBackground, StyleSheet, Dimensions } from "react-nativ
 import React from "react";
 import LikeIcon from "@assets/svg/LikeIcon";
 import EyeIcon from "@assets/svg/EyeIcon";
+import { s5ClientAuthToken } from "@twikkl/utils/config";
+import { ResizeMode, Video } from "expo-av";
 
-const ImgBgRender = ({ img }: { img?: any }) => {
+const ImgBgRender = ({ img, views = 0, likes = 0 }: { img?: string; views?: number; likes?: number }) => {
   const { width } = Dimensions.get("window");
+  console.log(img);
   const cardWidth = (width - 12 - 12 * 3) / 3;
+
   return (
-    <ImageBackground resizeMode="contain" style={[styles.container, { width: cardWidth }]} source={img}>
+    <Video
+      source={{
+        uri: `${img}?auth_token=${s5ClientAuthToken}`,
+      }}
+      shouldPlay={false}
+      isLooping
+      resizeMode={ResizeMode.COVER}
+      style={[styles.container, { width: cardWidth }]}
+    >
       <View style={styles.flexRow}>
         <LikeIcon />
-        <Text style={{ color: "#fff" }}>2K</Text>
-      </View>
-      <View style={styles.flexRow}>
+        <Text style={{ color: "#fff" }}>{likes}</Text>
         <EyeIcon />
-        <Text style={{ color: "#fff" }}>5K</Text>
+        <Text style={{ color: "#fff" }}>{views}</Text>
       </View>
-    </ImageBackground>
+    </Video>
   );
 };
 
@@ -25,6 +35,9 @@ export default ImgBgRender;
 const styles = StyleSheet.create({
   container: {
     padding: 12,
+    position: "relative",
+    backgroundColor: "black",
+    borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
@@ -33,6 +46,9 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: "row",
     alignItems: "center",
+    position: "absolute",
+    bottom: 4,
+    right: 4,
     gap: 3,
   },
 });

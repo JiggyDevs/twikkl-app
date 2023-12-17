@@ -6,6 +6,9 @@ export type TUser = {
   _id: string;
   email: string;
   username: string;
+  bio: string;
+  avatar: string;
+  twitter: string;
   phone: string;
   name: string;
 };
