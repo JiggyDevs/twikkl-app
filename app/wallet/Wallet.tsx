@@ -68,12 +68,22 @@ export default function Wallet(): ReactElement {
                   alignSelf: "center",
                   alignItems: "center",
                   marginHorizontal: 40,
+                  marginTop: 40,
                 }}
               >
                 <Image source={require("../../assets/imgs/qrCode.png")} />
                 <Text style={{ textAlign: "center" }}>{nft.address}</Text>
               </View>
-              <View style={{ backgroundColor: "#F8CF75", padding: 10, borderRadius: 10, alignItems: "center" }}>
+              <View
+                style={{
+                  backgroundColor: "#F8CF75",
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  marginBottom: 30,
+                  marginTop: 20,
+                }}
+              >
                 <InfoIcon />
                 <Text
                   style={{ textAlign: "center", color: "#000" }}
@@ -137,9 +147,9 @@ export default function Wallet(): ReactElement {
             </Pressable>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "#000" }}>$4950.80</Text>
+            <Text style={{ color: "#000", fontSize: 30 }}>$4950.80</Text>
             <Text style={{ color: "#000" }}>Balance</Text>
-            <View style={{ flexDirection: "row", gap: 20 }}>
+            <View style={{ flexDirection: "row", gap: 20, marginVertical: 20 }}>
               {walletOption.map((option) => (
                 <View style={{ alignItems: "center" }}>
                   <View style={styles.optionBox}>{option.icon}</View>
@@ -232,6 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#50A040",
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
   tabs: {
     borderBottomColor: "lightgrey",
