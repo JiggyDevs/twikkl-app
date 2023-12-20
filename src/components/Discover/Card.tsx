@@ -1,12 +1,12 @@
-import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
 interface ICard {
   coverImg: string;
   name: string;
   forYou?: boolean;
-  members: string;
-  desc: string;
+  members: string[];
+  description: string;
   followers?: number;
   onPress: Function;
   leaveGroup: Function;
@@ -26,7 +26,7 @@ const Card = ({
   name,
   forYou,
   members,
-  desc,
+  description,
   followers,
   onPress,
   leaveGroup,
@@ -53,7 +53,7 @@ const Card = ({
             </View>
           )}
         </View>
-        <Text style={styles.description}>{desc}</Text>
+        <Text style={styles.description}>{description}</Text>
         {/* <View style={styles.avatarContainer}>
           {imgArr.map((img, index) => {
             return (

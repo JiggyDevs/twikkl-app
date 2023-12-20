@@ -10,12 +10,37 @@ export const UploadVideoToS5Client = async ({ uri }: UploadVideoProps) => {
   const formData = new FormData();
   //@ts-ignore
   formData.append("file", {
-    name: "SampleVideo.mp4",
+    name: `${uri}.mp4`,
     uri,
     sourceUris: [uri],
     // extraMetadata :
     viewTypes: ["video"],
     type: "video/mp4",
+  });
+
+  try {
+    return await axios.post(`${s5ClientBaseUrl}?auth_token=${s5ClientAuthToken}`, formData, {
+      headers: {
+        Authorization: `Bearer ${s5ClientAuthToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  } catch (error: any) {
+    handleFetchError(error);
+    return error;
+  }
+};
+
+export const uploadPhotoToS5 = async ({ uri }: UploadVideoProps) => {
+  const formData = new FormData();
+  //@ts-ignore
+  formData.append("file", {
+    name: `${uri}.jpg`,
+    uri,
+    sourceUris: [uri],
+    // extraMetadata :
+    viewTypes: ["image"],
+    type: "image/jpeg",
   });
 
   try {

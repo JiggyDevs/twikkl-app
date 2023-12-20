@@ -7,7 +7,6 @@ import {
   Text,
   ImageBackground,
   Pressable,
-  PixelRatio,
   Dimensions,
 } from "react-native";
 import { MaterialCommunityIcons, FontAwesome5, Octicons, AntDesign, Ionicons } from "@expo/vector-icons";
@@ -33,7 +32,7 @@ interface Header extends IGroup {
 
 const Header = ({
   title,
-  desc,
+  description,
   members,
   img,
   smallImg,
@@ -62,7 +61,7 @@ const Header = ({
       <View style={styles.container}>
         <Image style={styles.profilePicture} source={smallImg} />
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{desc}</Text>
+        <Text style={styles.description}>{description}</Text>
         <View style={[styles.horizontal, styles.detailsContainer]}>
           <View style={styles.horizontal}>
             <View style={styles.horizontal}>
@@ -71,7 +70,7 @@ const Header = ({
             </View>
             <View style={[styles.horizontal, { marginLeft: 10 }]}>
               <FontAwesome5 name="user-friends" size={17} color={colors.white200} />
-              <Text style={styles.details}>{members} members</Text>
+              <Text style={styles.details}>{members.length} members</Text>
             </View>
           </View>
           <View style={[styles.horizontal, { gap: 10 }]}>

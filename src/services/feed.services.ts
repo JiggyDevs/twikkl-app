@@ -24,12 +24,45 @@ interface UserFeedsResponse {
   data: Post[];
 }
 
-type FetchUserFeedsResponse = UserFeedsResponse | AxiosError;
+export type FetchUserFeedsResponse = UserFeedsResponse | AxiosError;
 
 export const fetchUserFeeds = async (): Promise<FetchUserFeedsResponse> => {
   try {
     const { data: posts } = await fetchFromApi({
       path: "posts/feed",
+      method: "get",
+    });
+    const computeData = {
+      ...posts,
+      data: posts.data.map((post: Post) => {
+        return {
+          ...post,
+          video: post.contentUrl,
+        };
+      }),
+    };
+
+    return computeData;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+    return {
+      data: [],
+
+      // Other properties as needed
+    };
+
+    // throw error;
+  }
+};
+export const fetchUserPost = async (userId: string): Promise<FetchUserFeedsResponse> => {
+  try {
+    const { data: posts } = await fetchFromApi({
+      path: `posts/user/${userId}`,
       method: "get",
     });
     const computeData = {

@@ -1,7 +1,7 @@
 import { createPost } from "@twikkl/services/feed.services";
 import { useRouter } from "expo-router";
 import { toastSuccess } from "@twikkl/utils/common";
-import { useUploadVideo } from "./upload-video";
+import { useUploadVideo } from "./upload-hook";
 import { showLoader, hideLoader } from "@twikkl/entities";
 
 type ICreatePost = {
@@ -18,7 +18,7 @@ export const usePostHook = () => {
     showLoader();
 
     const videoResponse = await _uploadVideo(post.contentUrl);
-    console.log(videoResponse.url);
+
     if (videoResponse?.url) {
       const response = await createPost({
         contentUrl: videoResponse.url,

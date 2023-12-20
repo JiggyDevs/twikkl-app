@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable } from "react-native";
 import { Octicons, AntDesign, Ionicons, FontAwesome5, Feather } from "@expo/vector-icons";
 import Highlights from "@twikkl/components/Discover/Highlights";
 import Card from "@twikkl/components/Discover/Card";
-import { cardDataGroup, cardDataYou } from "@twikkl/data/discover/cardData";
 import ModalEl from "@twikkl/components/ModalEl";
-import { fetchGroups } from "@twikkl/services";
-import { useGroupHook, useYourGroupsHook } from "@twikkl/hooks/groups.hooks";
+import { useGroupHook, useYourFavouriteGroupsHook, useYourGroupsHook } from "@twikkl/hooks/groups.hooks";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import Scroll from "@twikkl/components/Scrollable";
 import { useRouter } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { Groups, createGroup, joinGroup, leaveGroup } from "@twikkl/services";
 import CreateGroup from "@twikkl/components/Discover/CreateGroup";
+import { hideLoader, showLoader } from "@twikkl/entities";
+import { toastSuccess } from "@twikkl/utils/common";
+import { useUploadPhoto } from "@twikkl/hooks/upload-hook";
 
 export const colors = {
   green100: "#041105",
@@ -21,76 +22,103 @@ export const colors = {
   white200: "#ffffff",
 };
 
-interface Group {
-  id: string;
-  title: string;
-  img: any;
-  smallImg: any;
-  desc: string;
-  members: string;
-  fav?: boolean;
-  status: string;
+// const criterias = [
+//   { icon: require("../../assets/imgs/bayc.png"), text: "BAYC NFT" },
+//   { icon: require("../../assets/imgs/jgy.png"), text: "10 JGY" },
+// ];
 
-  smallGroup: string[];
-  videos: any[];
-  followers?: number;
+export interface Group extends Groups {}
+
+interface GroupsObject {
+  [key: string]: Group[];
 }
+const discoverTabs = [
+  {
+    title: "For you",
+    activeIcon: <FontAwesome5 name="user-friends" size={22} color={colors.white200} />,
+    icon: <Feather name="users" size={22} color="#000" />,
+  },
+  {
+    title: "Your Groups",
+    activeIcon: <FontAwesome5 name="user-friends" size={22} color={colors.white200} />,
+    icon: <Feather name="users" size={22} color="#000" />,
+  },
+  {
+    title: "Favorites",
+    icon: <Feather name="star" size={22} color="#000" />,
+    activeIcon: <Ionicons name="star" size={22} color={colors.white100} />,
+  },
+];
 
 type ModalType = "access" | "leave" | null;
 
 const Discover = () => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-  const [, setGroups] = useState<Group[]>(cardDataGroup);
-  const [, setYourGroups] = useState<Group[]>(cardDataYou);
-  const [favoriteGroups, setFavoriteGroups] = useState<Group[]>([]);
+
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
-  const [createGroup, setCreateGroup] = useState(false);
+  const [showCreateGroup, setCreateGroup] = useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
   const router = useRouter();
 
-  const { groups } = useGroupHook();
-  const { yourGroups } = useYourGroupsHook();
+  const { groups, refetch: groupsRefetch } = useGroupHook();
 
-  const discoverTabs = [
-    {
-      title: "For you",
-      activeIcon: <FontAwesome5 name="user-friends" size={22} color={colors.white200} />,
-      icon: <Feather name="users" size={22} color="#000" />,
-    },
-    {
-      title: "Your Groups",
-      activeIcon: <FontAwesome5 name="user-friends" size={22} color={colors.white200} />,
-      icon: <Feather name="users" size={22} color="#000" />,
-    },
-    {
-      title: "Favorites",
-      icon: <Feather name="star" size={22} color="#000" />,
-      activeIcon: <Ionicons name="star" size={22} color={colors.white100} />,
-    },
-  ];
+  const { yourGroups, refetch: yourGroupsRefetch } = useYourGroupsHook();
+  const { favouriteGroups } = useYourFavouriteGroupsHook();
 
-  const criterias = [
-    { icon: require("../../assets/imgs/bayc.png"), text: "BAYC NFT" },
-    { icon: require("../../assets/imgs/jgy.png"), text: "10 JGY" },
-  ];
+  const { _uploadPhoto } = useUploadPhoto();
 
-  const pressButton = (item: Group) => {
+  const handleCreateGroup = async (data: { name: string; description: string; coverImg: string; avatar: string }) => {
+    showLoader();
+
+    const [coverImg, avatar] = await Promise.all([_uploadPhoto(data.coverImg), _uploadPhoto(data.avatar)]);
+
+    if (coverImg && avatar) {
+      const response = await createGroup({
+        name: data.name,
+        description: data.description,
+        avatar: avatar.url,
+        coverImg: coverImg.url,
+      });
+
+      hideLoader();
+      if (response) {
+        setCreateGroup(false);
+        toastSuccess("Group created successfully");
+      }
+    }
+  };
+
+  const pressButton = async (item: Group) => {
     setModalType(null);
     if (modalType === "access") {
-      const filteredGroups = yourGroups.filter((group) => group?.name !== item?.title);
-      setYourGroups(filteredGroups);
-      setGroups((prevGroups) => [item, ...prevGroups]);
+      showLoader();
+
+      const response = await joinGroup(item._id);
+
+      if (response) {
+        groupsRefetch();
+        yourGroupsRefetch();
+        toastSuccess("Group joined successfully");
+      }
+
+      hideLoader();
     } else if (modalType === "leave") {
-      const filteredGroups = groups.filter((group) => group.name !== item.title);
-      setGroups(filteredGroups);
-      setYourGroups((prevGroups) => [item, ...prevGroups]);
+      showLoader();
+
+      const response = await leaveGroup(item._id);
+
+      if (response) {
+        groupsRefetch();
+        yourGroupsRefetch();
+        toastSuccess("Group joined successfully");
+      }
+
+      hideLoader();
     }
   };
 
   const favPress = (item: Group) => {
-    const updated = groups.map((group) => (group.name === item.title ? { ...group, fav: !group.fav } : group));
-    setGroups(updated);
-    setFavoriteGroups(updated.filter((item) => item.fav === true));
+    // const updated = groups.map((group) => (group.name === item.title ? { ...group, fav: !group.fav } : group));
   };
 
   const renderModalContent = () => (
@@ -99,17 +127,17 @@ const Discover = () => {
         <View style={styles.modal}>
           {modalType === "access" ? (
             <>
-              <Ionicons name="lock-closed" color="#000" size={35} />
-              <Text style={{ fontWeight: "700", fontSize: 15, marginTop: 8 }}>{selectedGroup?.title}</Text>
-              <Text style={{ fontSize: 16, marginBottom: 14, marginTop: 22 }}>Eligibility Criteria</Text>
+              {/* <Ionicons name="lock-closed" color="#000" size={35} /> */}
+              <Text style={{ fontWeight: "700", fontSize: 15, marginTop: 8 }}>{selectedGroup?.name}</Text>
+              {/* <Text style={{ fontSize: 16, marginBottom: 14, marginTop: 22 }}>Eligibility Criteria</Text>
               {criterias.map((item) => (
                 <View style={styles.criteria} key={item.text}>
                   <Text style={{ fontWeight: "700", fontSize: 15 }}>{item.text}</Text>
                   <Image source={item.icon} />
                 </View>
-              ))}
-              <View style={{ width: 200 }}>
-                <ButtonEl onPress={() => pressButton(selectedGroup)} height={45}>
+              ))} */}
+              <View style={{ width: 200, marginTop: 20 }}>
+                <ButtonEl onPress={() => selectedGroup && pressButton(selectedGroup)} height={45}>
                   <Text style={{ color: "#fff" }}>Access Group</Text>
                 </ButtonEl>
               </View>
@@ -118,7 +146,7 @@ const Discover = () => {
             <>
               <Text style={{ fontSize: 15 }}>Are you sure you want to leave</Text>
               <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 6, marginBottom: 22 }}>
-                {selectedGroup?.title}?
+                {selectedGroup?.name}?
               </Text>
               <View style={styles.btnContainer}>
                 <View style={{ width: 100 }}>
@@ -127,7 +155,7 @@ const Discover = () => {
                   </ButtonEl>
                 </View>
                 <View style={{ width: 100 }}>
-                  <ButtonEl onPress={() => pressButton(selectedGroup)} height={45}>
+                  <ButtonEl onPress={() => selectedGroup && pressButton(selectedGroup)} height={45}>
                     <Text style={{ color: "#fff" }}>Leave</Text>
                   </ButtonEl>
                 </View>
@@ -139,17 +167,16 @@ const Discover = () => {
     </ModalEl>
   );
 
-  const renderDisplay = () => {
-    if (activeTabIndex === 0) return groups;
-    if (activeTabIndex === 1) return yourGroups;
-    if (activeTabIndex === 2) return favoriteGroups;
-    return [];
+  const getGroups: GroupsObject = {
+    "0": groups,
+    "1": yourGroups,
+    "2": favouriteGroups,
   };
 
   const titleText = activeTabIndex === 0 ? "For You" : activeTabIndex === 1 ? "Your Groups" : "Favorite Groups";
 
-  return createGroup ? (
-    <CreateGroup setCreateGroup={setCreateGroup} />
+  return showCreateGroup ? (
+    <CreateGroup setCreateGroup={setCreateGroup} handleCreateGroup={handleCreateGroup} />
   ) : (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -186,8 +213,18 @@ const Discover = () => {
       <View style={styles.groupContainer}>
         <Text style={styles.text}>{titleText}</Text>
         <Scroll>
-          {renderDisplay().map((item) => (
-            <Pressable key={item._id} onPress={() => router.push(`/Discover/${item._id}`)}>
+          {getGroups[`${activeTabIndex}`].map((item) => (
+            <Pressable
+              key={item._id}
+              onPress={() =>
+                router.push({
+                  pathname: `/Discover/${item._id}`,
+                  params: {
+                    group: JSON.stringify(item),
+                  },
+                })
+              }
+            >
               <Card
                 onPress={() => {
                   setModalType("access");

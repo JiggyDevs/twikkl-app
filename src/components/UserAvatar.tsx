@@ -7,8 +7,7 @@ const UserAvatar = ({ pic, name }: { pic?: string; name?: string }) => {
   const initial = !fullNameArr.length
     ? ""
     : `${fullNameArr[0] ? fullNameArr[0][0] : ""}${fullNameArr[1] ? fullNameArr[1][0] : ""}`;
-  console.log(initial);
-  console.log(pic);
+
   return (
     <View>
       {pic ? (
