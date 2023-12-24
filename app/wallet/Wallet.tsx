@@ -16,7 +16,27 @@ import { isPriceToken, nfts, receiveNFt, tokens } from "@twikkl/data/constant";
 import { useRouter } from "expo-router";
 import { ReactElement, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
+// import { WalletConnectModal, useWalletConnectModal } from "@walletconnect/modal-react-native";
+// import { IBundler, Bundler } from "@biconomy/bundler";
+// import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account";
+// import { ECDSAOwnershipValidationModule, DEFAULT_ECDSA_OWNERSHIP_MODULE } from "@biconomy/modules";
+// import { ethers } from "ethers";
+// import { ChainId } from "@biconomy/core-types";
+
 import { Text } from "react-native-paper";
+
+// const projectId = "";
+
+// const providerMetadata = {
+//   name: "RN Starter",
+//   description: "Biconomy + Wallet Connect RN Starter",
+//   url: "https://your-project-website.com/",
+//   icons: ["https://your-project-logo.com/"],
+//   redirect: {
+//     native: "YOUR_APP_SCHEME://",
+//     universal: "YOUR_APP_UNIVERSAL_LINK.com",
+//   },
+// };
 
 type INFT = {
   title: string;
@@ -52,6 +72,51 @@ export default function Wallet(): ReactElement {
   const updateData = (field: string, value: boolean) => {
     setData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const [scwAddress, setScwAddress] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
+
+  // const bundler: IBundler = new Bundler({
+  //   bundlerUrl: "<from biconomy dashboard>",
+  //   chainId: ChainId.POLYGON_MUMBAI,
+  //   entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+  // });
+
+  // const { open, isConnected, address, provider } = useWalletConnectModal();
+
+  // const handleButtonPress = async () => {
+  //   if (isConnected) {
+  //     console.log("yay connections");
+  //     return provider?.disconnect();
+  //   }
+  //   return open();
+  // };
+  // const connectSmartAccount = async () => {
+  //   if (!provider) return;
+  //   try {
+  //     setLoading(true);
+  //     const web3Provider = new ethers.providers.Web3Provider(provider, "any");
+  //     const module = await ECDSAOwnershipValidationModule.create({
+  //       signer: web3Provider.getSigner(),
+  //       moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
+  //     });
+  //     let biconomySmartAccount = await BiconomySmartAccountV2.create({
+  //       chainId: ChainId.POLYGON_MUMBAI,
+  //       bundler: bundler,
+  //       entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+  //       defaultValidationModule: module,
+  //       activeValidationModule: module,
+  //     });
+  //     setScwAddress(await biconomySmartAccount.getAccountAddress());
+  //     setSmartAccount(biconomySmartAccount);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <View style={{ paddingTop: 60 }}>

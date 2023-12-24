@@ -1,7 +1,8 @@
-module.exports = function(api) {
+module.exports = function (api) {
   api.cache(true);
   return {
     presets: ["babel-preset-expo"],
+    // test: './node_modules/ethers',
     plugins: [
       [
         'module:react-native-dotenv',
@@ -32,8 +33,16 @@ module.exports = function(api) {
           },
         },
       ],
+      // "@babel/plugin-transform-flow-strip-types",
+      // [
+      //   "@babel/plugin-transform-private-methods",
+      //   {
+      //     "loose": true
+      //   }
+      // ],
       require.resolve("expo-router/babel"),
-      'react-native-reanimated/plugin',
+      'react-native-reanimated/plugin'
+
     ],
     env: {
       production: {
