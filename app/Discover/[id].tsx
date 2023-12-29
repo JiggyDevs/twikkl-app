@@ -10,6 +10,7 @@ import CreateUploadvideo from "../video/CreateUploadVideo";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGroupPosts } from "@twikkl/services";
 import { isUserFeedsResponse } from "@twikkl/services/feed.services";
+import { groupEntity } from "@twikkl/entities/group.entity";
 
 export interface IGroup {
   description: string;
@@ -25,10 +26,23 @@ export interface IGroup {
   videos: any;
 }
 
+const defaultState = {
+  name: "",
+  avatar: "",
+  coverImg: "",
+  description: "",
+  _id: "",
+  creator: "",
+  members: [],
+  isDeleted: false,
+  isAdminDeleted: false,
+};
 const Group = (): JSX.Element => {
-  const { id, group } = useSearchParams() as { id: string; group: string };
+  const { id } = useSearchParams() as { id: string };
+  const { group } = groupEntity.use();
 
-  const groupData: GroupResponse = JSON.parse(group || "{}");
+  const groupData: GroupResponse = group || defaultState;
+  console.log(groupData, "group");
   const { data: groupPosts } = useQuery(["group-post", id], () => fetchGroupPosts(id));
   const videos = isUserFeedsResponse(groupPosts) ? groupPosts.data : [];
 
@@ -49,7 +63,7 @@ const Group = (): JSX.Element => {
       ) : (
         <>
           <Header
-            img={undefined}
+            img={groupData.coverImg}
             status=""
             smallGroup={[]}
             videos={undefined}

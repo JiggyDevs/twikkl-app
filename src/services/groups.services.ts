@@ -57,6 +57,7 @@ export const createGroup = async (data: {
     const { data: group } = await fetchFromApi({
       path: "groups",
       method: "post",
+      body: data,
     });
     return group;
   } catch (error) {
