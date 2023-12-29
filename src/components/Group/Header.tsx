@@ -70,7 +70,7 @@ const Header = ({
             </View>
             <View style={[styles.horizontal, { marginLeft: 10 }]}>
               <FontAwesome5 name="user-friends" size={17} color={colors.white200} />
-              <Text style={styles.details}>{members.length} members</Text>
+              <Text style={styles.details}>{members?.length} members</Text>
             </View>
           </View>
           <View style={[styles.horizontal, { gap: 10 }]}>

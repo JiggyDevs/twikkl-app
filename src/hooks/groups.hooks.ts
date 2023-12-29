@@ -3,6 +3,8 @@ import { fetchFavouriteGroups, fetchGroups, fetchUserGroups, isGroupResponse } f
 
 export const useGroupHook = () => {
   const { data: groups, isLoading, ...rest } = useQuery(["all-groups"], () => fetchGroups());
+  // const groupsCat = isGroupResponse(groups) ? groups?.data[0]?.categories : [];
+  console.log("groupps", groups);
 
   return {
     ...rest,

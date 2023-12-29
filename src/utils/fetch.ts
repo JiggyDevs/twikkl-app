@@ -74,5 +74,6 @@ export const handleFetchError = (err: any, key?: any) => {
 };
 
 export function isAxiosError(error: any): error is AxiosError {
+  // console.log("axiosErrror", error);
   return error.isAxiosError === true;
 }

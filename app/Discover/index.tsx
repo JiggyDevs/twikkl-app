@@ -80,6 +80,8 @@ const Discover = () => {
         coverImg: coverImg.url,
       });
 
+      console.log("creategroupp", response);
+
       hideLoader();
       if (response) {
         setCreateGroup(false);

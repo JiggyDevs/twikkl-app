@@ -8,6 +8,7 @@ export type Groups = {
   description: string;
   creator: string;
   members: string[];
+  categories: string[];
   isDeleted: boolean;
   avatar: string;
   coverImg: string;
@@ -57,17 +58,21 @@ export const createGroup = async (data: {
     const { data: group } = await fetchFromApi({
       path: "groups",
       method: "post",
+      body: data,
     });
+    // console.log("createGroup", group);
+
     return group;
   } catch (error) {
     handleFetchError(error);
-
-    if (isAxiosError(error)) {
-      return error;
-    }
+    console.log("createGroupError", error);
+    // if (isAxiosError(error)) {
+    //   // console.log("createGroupError1", error);
+    //   // return error;
+    // }
     // Handle other types of errors or return a default value
 
-    // throw error;
+    throw error;
   }
 };
 export const joinGroup = async (groupId: string): Promise<boolean | AxiosError | undefined> => {

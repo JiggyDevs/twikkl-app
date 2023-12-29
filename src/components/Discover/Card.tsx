@@ -49,7 +49,7 @@ const Card = ({
           {forYou && (
             <View style={styles.membersContainer}>
               <FontAwesome5 name="user-friends" size={16} color="#fff" />
-              <Text style={styles.members}>{members.length} Members</Text>
+              <Text style={styles.members}>{members?.length} Members</Text>
             </View>
           )}
         </View>
