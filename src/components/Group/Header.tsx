@@ -49,7 +49,7 @@ const Header = ({
   const gridArr = [<Grid1 />, <Grid2 />, <Grid3 />];
   return (
     <View>
-      <ImageBackground style={[styles.bannerImage, { height: height * 0.32 }]} source={img}>
+      <ImageBackground style={[styles.bannerImage, { height: height * 0.32 }]} source={{ uri: img }}>
         <TouchableOpacity onPressOut={() => router.back()} style={styles.iconContainer}>
           <Octicons name="chevron-left" size={24} color="#fff" />
         </TouchableOpacity>
@@ -59,7 +59,7 @@ const Header = ({
         </View>
       </ImageBackground>
       <View style={styles.container}>
-        <Image style={styles.profilePicture} source={smallImg} />
+        <Image style={styles.profilePicture} source={{ uri: smallImg }} />
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
         <View style={[styles.horizontal, styles.detailsContainer]}>
