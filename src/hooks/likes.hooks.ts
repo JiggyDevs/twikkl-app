@@ -4,7 +4,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useState } from "react";
 
-export const useLikesHook = (likes: { user: TUser }[], postId: string) => {
+export const useLikesHook = (likes: { user: TUser }[] = [], postId: string) => {
   const likedUsers = likes.map((like) => like.user._id);
   const { user } = authEntity.get();
 

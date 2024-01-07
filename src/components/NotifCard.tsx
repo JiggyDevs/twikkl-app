@@ -1,9 +1,11 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import UserAvatar from "./UserAvatar";
 
 type IProps = {
   avatar: any;
+  handleView: () => void;
+  userId?: string;
   text: string;
   desc?: string;
   time?: string;
@@ -13,10 +15,10 @@ type IProps = {
   action?: string;
 };
 
-const NotifCard = ({ avatar, name, text, desc, time, like, img, action }: IProps) => {
+const NotifCard = ({ avatar, name, text, desc, time, like, img, action, handleView, userId = "" }: IProps) => {
   return (
     <View style={styles.wrapper}>
-      <UserAvatar name={name} pic={avatar} />
+      <UserAvatar name={name} pic={avatar} userId={userId} />
       <View style={styles.flex}>
         <Text style={styles.textBold}>{text}</Text>
         {desc && (
@@ -29,9 +31,13 @@ const NotifCard = ({ avatar, name, text, desc, time, like, img, action }: IProps
         {like ? (
           <Image source={img} />
         ) : (
-          <View style={styles.bgGreen}>
-            <Text style={styles.textWhite}>{action}</Text>
-          </View>
+          action && (
+            <View style={styles.bgGreen}>
+              <TouchableOpacity onPress={handleView}>
+                <Text style={styles.textWhite}>{action}</Text>
+              </TouchableOpacity>
+            </View>
+          )
         )}
       </View>
     </View>

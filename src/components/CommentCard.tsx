@@ -45,12 +45,14 @@ const RenderCard = ({
   comment,
   createdAt,
   handleReply,
+  userId,
   name = "",
   likeCount,
 }: {
   pic?: string;
   createdAt: string;
   comment: string;
+  userId: string;
   handleReply?: () => void;
   name?: string;
   likeCount: number;
@@ -58,7 +60,7 @@ const RenderCard = ({
   const [isLike, setIsLike] = useState(false);
   return (
     <Wrapper>
-      <UserAvatar pic={pic} name={name} />
+      <UserAvatar pic={pic} name={name} userId={userId} />
       <Main>
         <TextWrapper>
           <Text style={{ fontSize: 16 }}>{comment}</Text>
@@ -97,6 +99,7 @@ const CommentCard = ({
         likeCount={likeCount}
         pic={comment.user?.img || ""}
         handleReply={handleReply}
+        userId={comment.user._id || ""}
         name={comment.user.username}
         createdAt={comment.updatedAt}
         comment={comment.comment}

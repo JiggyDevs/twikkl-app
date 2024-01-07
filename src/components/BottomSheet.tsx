@@ -25,9 +25,7 @@ const AppBottomSheet = ({
 }) => {
   const snapPoints = useMemo(() => ["1%", height], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
 
   useEffect(() => {
     //@ts-ignore

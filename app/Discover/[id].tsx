@@ -42,7 +42,7 @@ const Group = (): JSX.Element => {
   const { group } = groupEntity.use();
 
   const groupData: GroupResponse = group || defaultState;
-  console.log(groupData, "group");
+
   const { data: groupPosts } = useQuery(["group-post", id], () => fetchGroupPosts(id));
   const videos = isUserFeedsResponse(groupPosts) ? groupPosts.data : [];
 
@@ -57,7 +57,7 @@ const Group = (): JSX.Element => {
       {showSearch ? (
         <Search setShowSearch={setShowSearch} />
       ) : bigView ? (
-        <BigView setBigView={setBigView} />
+        <BigView setBigView={setBigView} refetchComments={() => null} />
       ) : postVideo ? (
         <CreateUploadvideo group />
       ) : (

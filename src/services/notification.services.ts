@@ -1,4 +1,6 @@
+import { TUser } from "@twikkl/entities/auth.entity";
 import { fetchFromApi, handleFetchError } from "@twikkl/utils/fetch";
+import { Post } from "./feed.services";
 
 export type NotificationResponse = {
   _id: string;
@@ -6,7 +8,8 @@ export type NotificationResponse = {
   type: string;
   content: string;
   clicked: boolean;
-  user: string;
+  user: TUser;
+  post?: Post;
   createdAt: string;
   updatedAt: string;
 };
@@ -24,10 +27,21 @@ export const userNotifications = async (
 > => {
   try {
     const { data } = await fetchFromApi({
-      path: `notifications/${userId}${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
+      path: `notifications/${userId}${pageSize ? `?perpage=${pageSize}` : ""}`,
       method: "get",
     });
     return data;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+export const markNotification = async (notificationId: string): Promise<boolean | undefined> => {
+  try {
+    await fetchFromApi({
+      path: `notifications/${notificationId}`,
+      method: "get",
+    });
+    return true;
   } catch (error) {
     handleFetchError(error);
   }

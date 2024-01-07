@@ -7,7 +7,7 @@ import ModalEl from "@twikkl/components/ModalEl";
 import { useGroupHook, useYourFavouriteGroupsHook, useYourGroupsHook } from "@twikkl/hooks/groups.hooks";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import Scroll from "@twikkl/components/Scrollable";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Groups, createGroup, joinGroup, leaveGroup } from "@twikkl/services";
 import CreateGroup from "@twikkl/components/Discover/CreateGroup";
 import { hideLoader, showLoader } from "@twikkl/entities";
@@ -74,7 +74,6 @@ const Discover = () => {
     const [coverImg, avatar] = await Promise.all([_uploadPhoto(data.coverImg), _uploadPhoto(data.avatar)]);
 
     if (coverImg && avatar) {
-      console.log("data", data);
       const response = await createGroup({
         name: data.name,
         description: data.description,
@@ -174,7 +173,7 @@ const Discover = () => {
     "1": yourGroups,
     "2": favouriteGroups,
   };
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const titleText = activeTabIndex === 0 ? "For You" : activeTabIndex === 1 ? "Your Groups" : "Favorite Groups";
 
   return showCreateGroup ? (

@@ -33,13 +33,10 @@ module.exports = function (api) {
           },
         },
       ],
-      // "@babel/plugin-transform-flow-strip-types",
-      // [
-      //   "@babel/plugin-transform-private-methods",
-      //   {
-      //     "loose": true
-      //   }
-      // ],
+      "@babel/plugin-transform-flow-strip-types",
+      "@babel/plugin-transform-private-methods",
+      "@babel/plugin-transform-class-properties",
+      "@babel/plugin-transform-private-property-in-object",
       require.resolve("expo-router/babel"),
       'react-native-reanimated/plugin'
 

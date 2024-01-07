@@ -2,24 +2,48 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import VideoFeedItem from "../VideoFeedItem";
 import { Octicons } from "@expo/vector-icons";
+import { Post, fetchPostComments } from "@twikkl/services/feed.services";
+import { useQuery } from "@tanstack/react-query";
 
-const BigView = ({ setBigView }: { setBigView: Function }) => {
+const BigView = ({
+  setBigView,
+  post,
+  refetchComments,
+}: {
+  setBigView: Function;
+  post?: Post;
+  refetchComments: () => void;
+}) => {
   const [shareVisible, setShareVisible] = useState(false);
 
+  const { data: comments, refetch } = useQuery(["big-view-comments"], () => fetchPostComments(post?._id || ""), {
+    enabled: !!post?._id && !post.comments,
+  });
+  
   return (
     <>
       <TouchableOpacity onPressOut={() => setBigView(false)} style={styles.iconContainer}>
         <Octicons name="chevron-left" size={24} color="#fff" />
       </TouchableOpacity>
-      <View style={[StyleSheet.absoluteFill]}>
-        <VideoFeedItem
-          item={{ video: require("@assets/videos/home-temp.mp4") }}
-          index={0}
-          bigView
-          visibleIndex={0}
-          onShareClick={() => setShareVisible(true)}
-        />
-      </View>
+      {post && (
+        <View style={[StyleSheet.absoluteFill]}>
+          <VideoFeedItem
+            item={{
+              ...post,
+              video: post.contentUrl || "",
+              comments: post?.comments || comments?.data,
+            }}
+            index={0}
+            bigView
+            visibleIndex={0}
+            onShareClick={() => setShareVisible(true)}
+            refetchComments={() => {
+              refetch();
+              refetchComments();
+            }}
+          />
+        </View>
+      )}
     </>
   );
 };
