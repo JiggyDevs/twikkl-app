@@ -59,13 +59,13 @@ const Group = (): JSX.Element => {
       ) : bigView ? (
         <BigView setBigView={setBigView} refetchComments={() => null} />
       ) : postVideo ? (
-        <CreateUploadvideo group />
+        <CreateUploadvideo groupId={groupData._id} />
       ) : (
         <>
           <Header
             img={groupData.coverImg}
             status=""
-            smallGroup={[]}
+            smallGroup={groupData.categories}
             videos={undefined}
             title={groupData.name}
             id={id}

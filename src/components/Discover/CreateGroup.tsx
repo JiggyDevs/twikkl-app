@@ -41,8 +41,10 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
   const handleFetchCategories = useCallback(async () => {
     const response = await fetchCategories();
     if (response) {
+      setAllCategories(response.data);
     }
   }, []);
+
   const [showModal, setShowModal] = useState(false);
 
   const [categoryForm, setCategoryForm] = useState({

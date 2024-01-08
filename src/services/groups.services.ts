@@ -9,6 +9,7 @@ export type Groups = {
   description: string;
   creator: string;
   members: string[];
+  categories: string[];
   isDeleted: boolean;
   avatar: string;
   coverImg: string;
@@ -49,10 +50,10 @@ export const fetchGroups = async (): Promise<FetchGroupsResponse> => {
   }
 };
 
-export const fetchCategories = async (): Promise<{ data: { group: string }[] }> => {
+export const fetchCategories = async (): Promise<{ data: { _id: string; description: string; name: string }[] }> => {
   try {
     const { data: categories } = await fetchFromApi({
-      path: "categories",
+      path: "categories?perpage=20",
       method: "get",
     });
 

@@ -28,6 +28,7 @@ const Card = ({
   forYou,
   members,
   description,
+
   followers,
   onPress,
   leaveGroup,

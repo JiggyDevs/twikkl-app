@@ -188,6 +188,8 @@ type ICreatePost = {
   contentUrl: string;
   description: string;
   tags: string[];
+  categoryId?: string;
+  groupId?: string;
 };
 
 export const createPost = async (post: ICreatePost) => {

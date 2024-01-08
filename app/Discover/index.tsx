@@ -192,7 +192,7 @@ const Discover = () => {
     "1": yourGroups,
     "2": yourGroups.filter((group) => getFavouriteGroups.includes(group._id)),
   };
-
+  console.log(yourGroups, "yourGroups");
   // const navigation = useNavigation();
   const titleText = activeTabIndex === 0 ? "For You" : activeTabIndex === 1 ? "Your Groups" : "Favorite Groups";
 
