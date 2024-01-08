@@ -118,7 +118,7 @@ const Notification = () => {
   };
 
   const allNotifications = Array.from(getActive());
-  console.log(allNotifications.length);
+
   if (viewNotification) {
     const getNotificationsFromAll = allNotifications[viewNotification[0]][1];
 

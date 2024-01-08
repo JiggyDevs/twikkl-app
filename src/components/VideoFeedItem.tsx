@@ -36,6 +36,8 @@ const { height } = Dimensions.get("window");
 type Props = {
   item: {
     comments: TComment[];
+    totalLikes: number;
+    totalComments: number;
     video: string;
     likes: { user: TUser }[];
     _id: string;

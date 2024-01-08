@@ -6,6 +6,13 @@ export type TComment = {
   _id: string;
   comment: string;
   user: TUser;
+  subComments: TComment[];
+  updatedAt: string;
+  post: string;
+};
+export type TLikes = {
+  _id: string;
+  user: TUser;
   updatedAt: string;
   post: string;
 };
@@ -13,6 +20,8 @@ export type TComment = {
 export type Post = {
   contentUrl?: string;
   video: string;
+  totalLikes: number;
+  totalComments: number;
   description: string;
   creator: TUser;
   comments: TComment[];
@@ -111,16 +120,60 @@ export const fetchPost = async (postId: string): Promise<Post | undefined> => {
     handleFetchError(error);
   }
 };
+
 export const fetchPostComments = async (
   postId: string,
+  perPage?: number,
 ): Promise<{ data: TComment[]; pagination: Pagination } | undefined> => {
   try {
     const { data: comments } = await fetchFromApi({
-      path: `comments/${postId}`,
+      path: `comments/${postId}?perPage=${perPage || 10}`,
       method: "get",
     });
 
-    return comments;
+    const includeSubComments = await Promise.all(
+      comments.data.map(async (comment: { _id: string }) => {
+        const subComments = await fetchPostSubComments(comment._id);
+        // console.log(subComments.data, "subComments");
+        return {
+          ...comment,
+          subComments: subComments?.data || [], // Ensure to handle undefined case
+        };
+      }),
+    );
+
+    return {
+      ...comments,
+      data: includeSubComments,
+    };
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+
+export const fetchPostLikes = async (postId: string): Promise<{ data: TLikes[] } | undefined> => {
+  try {
+    const { data: likes } = await fetchFromApi({
+      path: `posts/post/likes/${postId}`,
+      method: "get",
+    });
+
+    return likes;
+  } catch (error) {
+    handleFetchError(error);
+  }
+};
+
+export const fetchPostSubComments = async (
+  commentId: string,
+): Promise<{ data: TComment[]; pagination: Pagination } | undefined> => {
+  try {
+    const { data: comments } = await fetchFromApi({
+      path: `comments/comment/${commentId}/replies?perpage=50`,
+      method: "get",
+    });
+
+    return comments.data;
   } catch (error) {
     handleFetchError(error);
   }

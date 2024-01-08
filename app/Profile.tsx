@@ -149,7 +149,7 @@ const Profile = () => {
               <ImgBgRender
                 key={post._id}
                 img={post.video}
-                likes={post.likes.length}
+                likes={post.totalLikes}
                 handleView={() => setViewPost(idx)}
               />
             ))}

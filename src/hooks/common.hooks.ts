@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export const useFormField = <T extends Record<string, any>>(defaultFormFields: T) => {
   const [form, setForm] = useState<T>(defaultFormFields);
 
-  const updateField = (field: keyof T, value: string) => {
+  const updateField = (field: keyof T, value: any) => {
     setForm((currentForm) => ({ ...currentForm, [field]: value }));
   };
 

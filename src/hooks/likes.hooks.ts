@@ -1,11 +1,14 @@
 import { TUser, authEntity } from "@twikkl/entities/auth.entity";
-import { likePost, unlikePost } from "@twikkl/services/feed.services";
+import { fetchPostLikes, likePost, unlikePost } from "@twikkl/services/feed.services";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export const useLikesHook = (likes: { user: TUser }[] = [], postId: string) => {
-  const likedUsers = likes.map((like) => like.user._id);
+  const { data, refetch } = useQuery(["post-likes", postId], () => fetchPostLikes(postId));
+
+  const likedUsers = data?.data.map((like) => like.user._id) || [];
   const { user } = authEntity.get();
 
   const isPostLiked = likedUsers.includes(user?._id || "");
@@ -21,11 +24,12 @@ export const useLikesHook = (likes: { user: TUser }[] = [], postId: string) => {
 
     if (!liked) {
       const response = await unlikePost(postId);
-
+      refetch();
       return response;
     }
 
     const response = await likePost(postId);
+    refetch();
     return response;
   }, 1000);
 

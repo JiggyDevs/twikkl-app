@@ -14,12 +14,12 @@ const BigView = ({
   post?: Post;
   refetchComments: () => void;
 }) => {
-  const [shareVisible, setShareVisible] = useState(false);
+  const [, setShareVisible] = useState(false);
 
   const { data: comments, refetch } = useQuery(["big-view-comments"], () => fetchPostComments(post?._id || ""), {
     enabled: !!post?._id && !post.comments,
   });
-  
+
   return (
     <>
       <TouchableOpacity onPressOut={() => setBigView(false)} style={styles.iconContainer}>

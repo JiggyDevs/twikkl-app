@@ -8,7 +8,7 @@ import { useGroupHook, useYourFavouriteGroupsHook, useYourGroupsHook } from "@tw
 import ButtonEl from "@twikkl/components/ButtonEl";
 import Scroll from "@twikkl/components/Scrollable";
 import { useRouter } from "expo-router";
-import { Groups, createGroup, joinGroup, leaveGroup } from "@twikkl/services";
+import { Groups, createGroup, favouriteGroup, joinGroup, leaveGroup, unfavouriteGroup } from "@twikkl/services";
 import CreateGroup from "@twikkl/components/Discover/CreateGroup";
 import { hideLoader, showLoader } from "@twikkl/entities";
 import { toastSuccess } from "@twikkl/utils/common";
@@ -68,7 +68,13 @@ const Discover = () => {
 
   const { _uploadPhoto } = useUploadPhoto();
 
-  const handleCreateGroup = async (data: { name: string; description: string; coverImg: string; avatar: string }) => {
+  const handleCreateGroup = async (data: {
+    name: string;
+    description: string;
+    coverImg: string;
+    avatar: string;
+    categories: string[];
+  }) => {
     showLoader();
 
     const [coverImg, avatar] = await Promise.all([_uploadPhoto(data.coverImg), _uploadPhoto(data.avatar)]);
@@ -78,6 +84,7 @@ const Discover = () => {
         name: data.name,
         description: data.description,
         avatar: avatar.url,
+        categories: data.categories,
         coverImg: coverImg.url,
       });
 
@@ -118,7 +125,17 @@ const Discover = () => {
     }
   };
 
-  const favPress = (item: Group) => {
+  const favPress = async (item: Group, isChecked: boolean) => {
+    if (isChecked) {
+      return favouriteGroup(item._id).then(() => {
+        groupsRefetch();
+        yourGroupsRefetch();
+      });
+    }
+    unfavouriteGroup(item._id).then(() => {
+      groupsRefetch();
+      yourGroupsRefetch();
+    });
     // const updated = groups.map((group) => (group.name === item.title ? { ...group, fav: !group.fav } : group));
   };
 
@@ -168,11 +185,14 @@ const Discover = () => {
     </ModalEl>
   );
 
+  const getFavouriteGroups = favouriteGroups.map((group) => group.group);
+
   const getGroups: GroupsObject = {
     "0": groups,
     "1": yourGroups,
-    "2": favouriteGroups,
+    "2": yourGroups.filter((group) => getFavouriteGroups.includes(group._id)),
   };
+
   // const navigation = useNavigation();
   const titleText = activeTabIndex === 0 ? "For You" : activeTabIndex === 1 ? "Your Groups" : "Favorite Groups";
 
@@ -233,7 +253,8 @@ const Discover = () => {
                   setModalType("leave");
                   setSelectedGroup(item);
                 }}
-                favPress={() => favPress(item)}
+                fav={getFavouriteGroups.includes(item._id)}
+                favPress={(checked: boolean) => favPress(item, checked)}
                 forYou={activeTabIndex === 0}
                 {...item}
               />

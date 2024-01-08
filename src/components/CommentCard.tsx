@@ -111,9 +111,11 @@ const CommentCard = ({
               {subComment?.map((item) => (
                 <RenderCard
                   likeCount={item.likeCount}
-                  pic={item.img}
+                  pic={item.user.img}
+                  handleReply={handleReply}
                   createdAt={item.updatedAt}
-                  comment={item?.subComment}
+                  userId={item.user._id || ""}
+                  comment={item?.comment}
                   key={item?.id}
                 />
               ))}

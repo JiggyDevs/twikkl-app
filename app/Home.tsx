@@ -113,7 +113,7 @@ export default function ScreenHome() {
           </View>
         </View>
       )}
-      <BottomNav setComment={setComment} commentCount={visiblePost?.comments.length || 0} />
+      <BottomNav setComment={setComment} commentCount={visiblePost?.totalComments || 0} />
       {shareVisible && (
         <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
