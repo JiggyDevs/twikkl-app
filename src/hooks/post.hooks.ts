@@ -25,7 +25,7 @@ export const usePostHook = () => {
         description: post.description,
         tags: post.tags,
       });
-
+      console.log("postResponse", response);
       if (response) {
         toastSuccess("Post created");
         router.push("Home");

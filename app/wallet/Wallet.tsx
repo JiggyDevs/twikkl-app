@@ -75,15 +75,17 @@ export default function Wallet(): ReactElement {
 
   const [scwAddress, setScwAddress] = useState<string>("");
 
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
 
   // const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
 
   // const bundler: IBundler = new Bundler({
-  //   bundlerUrl: "<from biconomy dashboard>",
+  //   bundlerUrl: `https://bundler.biconomy.io/api/v2/${ChainId.POLYGON_MUMBAI}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
   //   chainId: ChainId.POLYGON_MUMBAI,
   //   entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
   // });
+
+  // console.log("bundler", bundler);
 
   // const { open, isConnected, address, provider } = useWalletConnectModal();
 
@@ -103,9 +105,9 @@ export default function Wallet(): ReactElement {
   //       signer: web3Provider.getSigner(),
   //       moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
   //     });
-  //     let biconomySmartAccount = await BiconomySmartAccountV2.create({
+  //     const biconomySmartAccount = await BiconomySmartAccountV2.create({
   //       chainId: ChainId.POLYGON_MUMBAI,
-  //       bundler: bundler,
+  //       bundler,
   //       entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
   //       defaultValidationModule: module,
   //       activeValidationModule: module,
@@ -117,6 +119,7 @@ export default function Wallet(): ReactElement {
   //     console.error(error);
   //   }
   // };
+  // console.log({ scwAddress, smartAccount });
 
   return (
     <View style={{ paddingTop: 60 }}>
@@ -156,7 +159,7 @@ export default function Wallet(): ReactElement {
               </View>
               <View style={{ flexDirection: "row", gap: 40, alignSelf: "center" }}>
                 {nftOption.map((option) => (
-                  <View style={{ alignItems: "center" }}>
+                  <View key={option.text} style={{ alignItems: "center" }}>
                     <View style={styles.optionBox}>{option.icon}</View>
                     <Text style={{ color: "#000" }}>{option.text}</Text>
                   </View>
@@ -178,6 +181,7 @@ export default function Wallet(): ReactElement {
                 <View style={{ marginTop: 20, gap: 15 }}>
                   {allTokens.map((token) => (
                     <TokenCard
+                      key={token.name}
                       checked={data[token.name]}
                       onToggle={() => updateData(token.name, !data[token.name])}
                       add
@@ -190,6 +194,7 @@ export default function Wallet(): ReactElement {
                 <View style={{ gap: 10 }}>
                   {receiveNFt.map((nft) => (
                     <Pressable
+                      key={nft.title}
                       onPress={() => setNft(nft)}
                       style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
                     >
@@ -216,7 +221,7 @@ export default function Wallet(): ReactElement {
             <Text style={{ color: "#000" }}>Balance</Text>
             <View style={{ flexDirection: "row", gap: 20, marginVertical: 20 }}>
               {walletOption.map((option) => (
-                <View style={{ alignItems: "center" }}>
+                <View key={option.text} style={{ alignItems: "center" }}>
                   <View style={styles.optionBox}>{option.icon}</View>
                   <Text style={{ color: "#000" }}>{option.text}</Text>
                 </View>
@@ -226,6 +231,7 @@ export default function Wallet(): ReactElement {
           <View style={styles.tabs}>
             {tabs.map((tab) => (
               <Pressable
+                key={tab}
                 style={{
                   borderBottomColor: "#000",
                   borderBottomWidth: tabState === tab ? 3 : 0,
@@ -254,7 +260,7 @@ export default function Wallet(): ReactElement {
                 </Pressable>
                 <View style={{ marginTop: 20, gap: 15 }}>
                   {tokens.map((token) => (
-                    <TokenCard {...token} />
+                    <TokenCard key={token.name} {...token} />
                   ))}
                 </View>
               </>
@@ -275,7 +281,7 @@ export default function Wallet(): ReactElement {
                   }}
                 >
                   {nfts.map((nft) => (
-                    <NFTCard {...nft} />
+                    <NFTCard key={nft.name} {...nft} />
                   ))}
                 </View>
               </>

@@ -111,6 +111,7 @@ export const createPost = async (post: ICreatePost) => {
       method: "post",
       body: post,
     });
+    console.log("postData", data);
     return data;
   } catch (error) {
     handleFetchError(error);

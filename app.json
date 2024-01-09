@@ -16,15 +16,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-       "infoPlist": {
-        "LSApplicationQueriesSchemes": [
-          "metamask",
-          "trust",
-          "safe",
-          "rainbow",
-          "uniswap",
-          // Add other wallet schemes names here
-        ]
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["metamask", "trust", "safe", "rainbow", "uniswap"]
       }
     },
     "android": {
@@ -35,9 +28,7 @@
       "package": "com.twikkl.twikklapp",
       "permissions": ["CAMERA", "RECORD_AUDIO", "WRITE_EXTERNAL_STORAGE"]
     },
-    "extra": {
-     
-    },
+    "extra": {},
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
