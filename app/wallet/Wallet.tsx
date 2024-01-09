@@ -25,18 +25,18 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { Text } from "react-native-paper";
 
-// const projectId = "";
+const projectId = "";
 
-// const providerMetadata = {
-//   name: "RN Starter",
-//   description: "Biconomy + Wallet Connect RN Starter",
-//   url: "https://your-project-website.com/",
-//   icons: ["https://your-project-logo.com/"],
-//   redirect: {
-//     native: "YOUR_APP_SCHEME://",
-//     universal: "YOUR_APP_UNIVERSAL_LINK.com",
-//   },
-// };
+const providerMetadata = {
+  name: "RN Starter",
+  description: "Biconomy + Wallet Connect RN Starter",
+  url: "https://your-project-website.com/",
+  icons: ["https://your-project-logo.com/"],
+  redirect: {
+    native: "YOUR_APP_SCHEME://",
+    universal: "YOUR_APP_UNIVERSAL_LINK.com",
+  },
+};
 
 type INFT = {
   title: string;

@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { TwikklIcon, EIcon } from "@twikkl/configs";
 import { ButtonAddSimple } from "@twikkl/components";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 // import { useTranslation } from "react-i18next";
 import { useLikesHook } from "@twikkl/hooks/likes.hooks";
 import { TUser } from "@twikkl/entities/auth.entity";
@@ -13,9 +13,14 @@ import Like from "@assets/svg/Like";
 // import { useQuery } from "@tanstack/react-query";
 import { s5ClientAuthToken } from "@twikkl/utils/config";
 
-import { bookmarkPost, fetchBookmarks, removeBookmark } from "@twikkl/services/feed.services";
+import { TComment, bookmarkPost, fetchBookmarks, removeBookmark } from "@twikkl/services/feed.services";
 import { useDebouncedCallback } from "use-debounce";
 import UserAvatar from "./UserAvatar";
+
+import AppLoader from "./AppLoader";
+import AppBottomSheet from "./BottomSheet";
+import Comment from "./Comment";
+import { useQuery } from "@tanstack/react-query";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -30,6 +35,9 @@ const { height } = Dimensions.get("window");
 
 type Props = {
   item: {
+    comments: TComment[];
+    totalLikes: number;
+    totalComments: number;
     video: string;
     likes: { user: TUser }[];
     _id: string;
@@ -39,16 +47,27 @@ type Props = {
   index: number;
   visibleIndex: number;
   onShareClick: any;
+  refetchComments?: () => void;
   bigView?: boolean;
 };
 
-export default function VideoFeedItem({ item, index, visibleIndex, onShareClick, bigView }: Props) {
+export default function VideoFeedItem({ item, index, visibleIndex, onShareClick, bigView, refetchComments }: Props) {
   const router = useRouter();
 
   const { toggleLikePost, liked } = useLikesHook(item.likes, item._id);
 
   // TODO: work on getting post bookmarks
-  // const { data } = useQuery(["bookmarks"], () => fetchBookmarks());
+  useQuery(["bookmarks"], () => getUserBookmarks());
+
+  const getUserBookmarks = useCallback(async () => {
+    const response = await fetchBookmarks();
+    if (response) {
+      const isPostBookmarked = response?.data.find((bookmark) => bookmark.post === item._id);
+      if (isPostBookmarked) setBookMarked(true);
+      return response;
+    }
+    return null;
+  }, [item._id]);
 
   const [bookmarked, setBookMarked] = useState(false);
 
@@ -98,12 +117,14 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
       options.unshift({
         color: DEFAULT_CAMERA_ACTION_COLOR,
         icon: EIcon.COMMENT,
-        action: () => null,
+        action: () => setComment(true),
       });
     return options;
   };
 
-  const [shouldPlay, setShouldPlay] = useState(false);
+  const [shouldPlay, setShouldPlay] = useState(true);
+
+  const [loading, setLoading] = useState(true);
 
   // const { t } = useTranslation();
 
@@ -112,6 +133,8 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
     setShouldPlay(index === visibleIndex);
     // router.push("video/CreateUploadVideo");
   }, [visibleIndex]);
+
+  const [comment, setComment] = useState(false);
 
   const togglePlay = () => {
     setShouldPlay(!shouldPlay);
@@ -128,10 +151,19 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
             uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
           }}
           shouldPlay={shouldPlay}
+          onLoad={() => {
+            setLoading(false);
+          }}
+          onError={() => {
+            setLoading(false);
+          }}
           isLooping
           resizeMode={ResizeMode.COVER}
           style={[StyleSheet.absoluteFill]}
         />
+
+        {loading && <AppLoader />}
+
         <View style={styles.bottomContainer}>
           <View style={styles.rightActionsContainer}>
             <View
@@ -170,7 +202,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
                 flexDirection: "row",
               }}
             >
-              <UserAvatar pic={item.creator?.img || ""} name={item.creator.username} />
+              <UserAvatar pic={item.creator?.img || ""} name={item.creator.username} userId={item.creator._id} />
               <Text variant="titleMedium" style={[styles.headActionText, { width: "75%", marginLeft: 8 }]}>
                 @{item.creator.username} {"\n"}
                 <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
@@ -185,6 +217,18 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
             )}
           </View>
         </View>
+        {comment && (
+          <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
+            <Comment
+              setComment={setComment}
+              comments={item.comments}
+              postId={item._id}
+              newComment={(comment) => {
+                refetchComments && refetchComments();
+              }}
+            />
+          </AppBottomSheet>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

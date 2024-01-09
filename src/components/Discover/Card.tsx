@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { useState } from "react";
 
 interface ICard {
   coverImg: string;
@@ -27,12 +28,15 @@ const Card = ({
   forYou,
   members,
   description,
+
   followers,
   onPress,
   leaveGroup,
   favPress,
   fav,
 }: ICard): JSX.Element => {
+  const [isFavourite, setIsFavourite] = useState(fav);
+
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.image} source={{ uri: coverImg }} resizeMode="cover">
@@ -40,7 +44,15 @@ const Card = ({
           <></>
         ) : (
           // <Ionicons name="lock-closed" color="#fff" size={22} />
-          <Ionicons onPress={() => favPress()} name={fav ? "star" : "star-outline"} color="#fff" size={26} />
+          <Ionicons
+            onPress={() => {
+              setIsFavourite(!isFavourite);
+              favPress(!isFavourite);
+            }}
+            name={isFavourite ? "star" : "star-outline"}
+            color="#fff"
+            size={26}
+          />
         )}
       </ImageBackground>
       <View style={styles.content}>
@@ -137,7 +149,7 @@ const styles = StyleSheet.create({
   image: {
     padding: 16,
     alignItems: "flex-end",
-    backgroundColor: "#F1FCF2",
+    backgroundColor: "#143615",
     height: 220,
   },
   titleContainer: {

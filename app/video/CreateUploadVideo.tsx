@@ -24,7 +24,7 @@ const actionArr = [
 const speedArr = ["0.25x", "0.5x", "1x", "1.5x", "2x"];
 const timerArr = ["15s", "30s", "60s", "3m", "5m"];
 
-const CreateUploadvideo = ({ group }: { group?: boolean }) => {
+const CreateUploadvideo = ({ groupId }: { groupId?: string }) => {
   const router = useRouter();
   const cameraRef = useRef<any>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -131,7 +131,7 @@ const CreateUploadvideo = ({ group }: { group?: boolean }) => {
       <View style={styles.wrapper}>
         {videoUri && !isRecording ? (
           caption ? (
-            <CaptionVideo group={group} videoUri={videoUri} setCaption={setCaption} />
+            <CaptionVideo group={groupId} videoUri={videoUri} setCaption={setCaption} />
           ) : (
             <Pressable onPress={() => setShouldPlay(!shouldPlay)} style={{ flex: 1 }}>
               <Video

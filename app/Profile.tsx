@@ -1,4 +1,15 @@
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Linking, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 import React, { useState } from "react";
 import Back from "@assets/svg/Back";
 import MoreIcon from "@assets/svg/More";
@@ -8,7 +19,6 @@ import Play from "@assets/svg/Play";
 import PinIcon from "@assets/svg/PinIcon";
 
 import LabelIcon from "@assets/svg/LabelIcon";
-// import ImgBgRender from "@twikkl/components/ImgBgRender";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProfile, userFollowers } from "@twikkl/services/profile.services";
@@ -16,6 +26,7 @@ import { authEntity } from "@twikkl/entities/auth.entity";
 import AppLoader from "@twikkl/components/AppLoader";
 import { fetchUserPost, isUserFeedsResponse } from "@twikkl/services/feed.services";
 import ImgBgRender from "@twikkl/components/ImgBgRender";
+import BigView from "@twikkl/components/Discover/BigView";
 
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 
@@ -34,16 +45,46 @@ const Profile = () => {
 
   const { data: followers } = useQuery(["user-followers", user], () => userFollowers(user || ""));
 
-  const { data: userPosts } = useQuery(["user-posts", user], () => fetchUserPost(user || ""));
+  const [pageSize, setPageSize] = useState(10);
+
+  const { data: userPosts, refetch } = useQuery(["user-posts", user, pageSize], () => fetchUserPost(user || ""));
 
   const posts = isUserFeedsResponse(userPosts) ? userPosts.data : [];
 
+  const postsPagination = isUserFeedsResponse(userPosts) ? userPosts.pagination : null;
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
+
+    if (isEndReached && postsPagination && active === 0) {
+      if (!isLoading && (postsPagination.total || 0) > pageSize) {
+        setPageSize((prev) => prev + 10);
+      }
+    }
+  };
+
+  const loggedInProfile = loggedInUser?._id === user;
+
+  const [viewPost, setViewPost] = useState<number | null>(null);
+
   if (isLoading) return <AppLoader />;
+
+  if (viewPost !== null)
+    return (
+      <BigView
+        setBigView={() => setViewPost(null)}
+        post={posts[viewPost]}
+        refetchComments={() => {
+          refetch();
+        }}
+      />
+    );
 
   const detailsArr = [
     { num: data?.following.length || 0, text: "Followers" },
     { num: followers?.pagination.total || 0, text: "Following" },
-    { num: posts.length, text: "Total Twikks" },
+    { num: postsPagination?.total || 0, text: "Total Twikks" },
   ];
 
   return (
@@ -53,11 +94,13 @@ const Profile = () => {
           <Back dark="#041105" />
         </Pressable>
         <Text style={styles.boldText}>Profile</Text>
-        <TouchableOpacity onPress={() => router.push("/settings/Account")}>
-          <MoreIcon />
-        </TouchableOpacity>
+        {loggedInProfile && (
+          <TouchableOpacity onPress={() => router.push("/settings/Account")}>
+            <MoreIcon />
+          </TouchableOpacity>
+        )}
       </View>
-      <ScrollView style={{ paddingHorizontal: 10 }}>
+      <ScrollView style={{ paddingHorizontal: 10 }} onScroll={handleScroll}>
         <View style={styles.center}>
           <Image source={{ uri: data?.avatar }} style={styles.profileImg} />
           <Text style={styles.boldTextSpace}>{data?.username}</Text>
@@ -71,9 +114,12 @@ const Profile = () => {
           </View>
           <Text style={styles.textLight}>{data?.bio || "-"}</Text>
           <View style={styles.flex}>
-            <Pressable style={styles.bgGreen}>
-              <Text style={styles.textWhite}>Edit Profile</Text>
-            </Pressable>
+            {loggedInProfile && (
+              <Pressable style={styles.bgGreen}>
+                <Text style={styles.textWhite}>Edit Profile</Text>
+              </Pressable>
+            )}
+
             <Pressable
               style={styles.bgGreen}
               onPress={() => (data?.twitter ? Linking.openURL(`https://twitter.com/${data?.twitter}`) : null)}
@@ -99,7 +145,14 @@ const Profile = () => {
         <View style={styles.img}>
           {active === 0 &&
             posts &&
-            posts.map((post) => <ImgBgRender key={post._id} img={post.video} likes={post.likes.length} />)}
+            posts.map((post, idx) => (
+              <ImgBgRender
+                key={post._id}
+                img={post.video}
+                likes={post.totalLikes}
+                handleView={() => setViewPost(idx)}
+              />
+            ))}
         </View>
       </ScrollView>
     </View>

@@ -1,15 +1,23 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  ScrollView,
+} from "react-native";
+import React, { useRef, useState } from "react";
 import styled from "styled-components/native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import Scroll from "./Scrollable";
 import { ViewVariant } from "@twikkl/configs";
 import CommentCard from "./CommentCard";
 import { useFormField } from "@twikkl/hooks/common.hooks";
 import CancelIcon from "@assets/svg/CancelIcon";
 import SendIcon from "@assets/svg/SendIcon";
-import { TComment, createComment } from "@twikkl/services/feed.services";
+import { TComment, createComment, fetchPostComments } from "@twikkl/services/feed.services";
 import { ActivityIndicator } from "react-native-paper";
+import { useQuery } from "@tanstack/react-query";
 
 const Wrapper = styled.View`
   padding-horizontal: ${hp(2)}px;
@@ -33,29 +41,53 @@ const defaultForm = {
 type CommentProps = {
   setComment: Function;
   postId: string;
-  newComment: () => void;
+  newComment: (comment: string) => void;
   comments: TComment[];
 };
-const Comment = ({ setComment, postId, newComment, comments }: CommentProps) => {
+const Comment = ({ setComment, postId, newComment }: CommentProps) => {
   const { form, updateField, clearForm } = useFormField(defaultForm);
 
-  console.log(comments);
   const [loader, setLoader] = useState(false);
+
+  const [replyComment, setReplyComment] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+
+  const { data, isLoading, refetch } = useQuery(["comments", postId, pageSize], () =>
+    fetchPostComments(postId, pageSize),
+  );
+
+  const comments = data?.data || [];
+
+  const commentsPagination = data?.pagination;
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
+
+    if (isEndReached && commentsPagination) {
+      if (!isLoading && (commentsPagination.total || 0) > pageSize) {
+        setPageSize((prev) => prev + 10);
+      }
+    }
+  };
+
+  const inputRef = useRef<TextInput>(null);
 
   const handleSubmit = async () => {
     setLoader(true);
 
-    const response = await createComment(postId, form.comment);
+    const response = await createComment(postId, form.comment, replyComment || undefined);
 
     if (response) {
-      newComment();
-
+      newComment(form.comment);
+      refetch();
       clearForm();
     }
 
     setLoader(false);
     return response;
   };
+
   return (
     <Container>
       <Wrapper>
@@ -66,13 +98,24 @@ const Comment = ({ setComment, postId, newComment, comments }: CommentProps) => 
             <CancelIcon />
           </CancelWrapper>
         </View>
-        <Scroll>
+        <ScrollView onScroll={handleScroll}>
           <View style={{ gap: 30 }}>
-            {comments.map((comment) => (
-              <CommentCard subComment={[]} likeCount={0} handleReply={() => {}} key={comment._id} comment={comment} />
-            ))}
+            {isLoading && <ActivityIndicator />}
+            {!isLoading &&
+              comments.map((comment) => (
+                <CommentCard
+                  subComment={comment?.subComments || []}
+                  likeCount={0}
+                  handleReply={() => {
+                    setReplyComment(comment._id);
+                    inputRef?.current!.focus();
+                  }}
+                  key={comment._id}
+                  comment={comment}
+                />
+              ))}
           </View>
-        </Scroll>
+        </ScrollView>
       </Wrapper>
       <View
         style={{
@@ -88,6 +131,7 @@ const Comment = ({ setComment, postId, newComment, comments }: CommentProps) => 
           placeholder="Write a comment"
           style={{ flex: 1, fontSize: 16 }}
           value={form.comment}
+          ref={inputRef}
           multiline
           onChangeText={(val) => updateField("comment", val)}
         />

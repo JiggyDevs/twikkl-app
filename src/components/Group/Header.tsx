@@ -45,8 +45,11 @@ const Header = ({
 }: Header): JSX.Element => {
   const { height } = Dimensions.get("window");
   const [dropDown, setDropDown] = useState(false);
+
   const router = useRouter();
+
   const gridArr = [<Grid1 />, <Grid2 />, <Grid3 />];
+
   return (
     <View>
       <ImageBackground style={[styles.bannerImage, { height: height * 0.32 }]} source={{ uri: img }}>

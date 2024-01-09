@@ -1,32 +1,44 @@
-import { View, Text, ImageBackground, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import React from "react";
 import LikeIcon from "@assets/svg/LikeIcon";
 import EyeIcon from "@assets/svg/EyeIcon";
 import { s5ClientAuthToken } from "@twikkl/utils/config";
 import { ResizeMode, Video } from "expo-av";
 
-const ImgBgRender = ({ img, views = 0, likes = 0 }: { img?: string; views?: number; likes?: number }) => {
+const ImgBgRender = ({
+  img,
+  views = 0,
+  likes = 0,
+  handleView,
+}: {
+  img?: string;
+  views?: number;
+  likes?: number;
+  handleView: () => void;
+}) => {
   const { width } = Dimensions.get("window");
-  console.log(img);
+
   const cardWidth = (width - 12 - 12 * 3) / 3;
 
   return (
-    <Video
-      source={{
-        uri: `${img}?auth_token=${s5ClientAuthToken}`,
-      }}
-      shouldPlay={false}
-      isLooping
-      resizeMode={ResizeMode.COVER}
-      style={[styles.container, { width: cardWidth }]}
-    >
-      <View style={styles.flexRow}>
-        <LikeIcon />
-        <Text style={{ color: "#fff" }}>{likes}</Text>
-        <EyeIcon />
-        <Text style={{ color: "#fff" }}>{views}</Text>
-      </View>
-    </Video>
+    <TouchableOpacity onPress={handleView}>
+      <Video
+        source={{
+          uri: `${img}?auth_token=${s5ClientAuthToken}`,
+        }}
+        shouldPlay={false}
+        isLooping
+        resizeMode={ResizeMode.COVER}
+        style={[styles.container, { width: cardWidth }]}
+      >
+        <View style={styles.flexRow}>
+          <LikeIcon />
+          <Text style={{ color: "#fff" }}>{likes}</Text>
+          <EyeIcon />
+          <Text style={{ color: "#fff" }}>{views}</Text>
+        </View>
+      </Video>
+    </TouchableOpacity>
   );
 };
 

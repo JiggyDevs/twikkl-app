@@ -8,9 +8,10 @@ import NotifCard from "@twikkl/components/NotifCard";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { authEntity } from "@twikkl/entities/auth.entity";
-import { NotificationResponse, userNotifications } from "@twikkl/services/notification.services";
+import { NotificationResponse, markNotification, userNotifications } from "@twikkl/services/notification.services";
 import AppLoader from "@twikkl/components/AppLoader";
 import dayjs from "dayjs";
+import BigView from "@twikkl/components/Discover/BigView";
 
 const arr = ["All", "Likes", "Comments", "Mentions", "Following"];
 
@@ -27,11 +28,21 @@ const Notification = () => {
 
   const [page] = useState(1);
 
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  const { data, isLoading } = useQuery(["notifications", user?._id, pageSize], () =>
+  const { data, isLoading, refetch } = useQuery(["notifications", user?._id, pageSize], () =>
     userNotifications(user?._id || "", page, pageSize),
   );
+
+  const [viewNotification, setViewNotification] = useState<[number, number] | null>(null);
+
+  const handleMarkNotification = async (notificationId: string) => {
+    const response = await markNotification(notificationId);
+
+    if (response) {
+      refetch();
+    }
+  };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -106,48 +117,84 @@ const Notification = () => {
     return day.format("Do MMM YYYY");
   };
 
+  const allNotifications = Array.from(getActive());
+
+  if (viewNotification) {
+    const getNotificationsFromAll = allNotifications[viewNotification[0]][1];
+
+    return (
+      <BigView
+        setBigView={() => setViewNotification(null)}
+        post={getNotificationsFromAll[viewNotification[1]].post}
+        refetchComments={refetch}
+      />
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.topHeader}>
-        <Pressable onPress={() => router.push("Home")}>
-          <Back dark="#041105" />
-        </Pressable>
-        <Text style={styles.boldText}>Notifications</Text>
-        <View style={{ width: 20 }} />
-      </View>
-      <View style={styles.wrapper}>
-        <ScrollView contentContainerStyle={{ alignItems: "center" }} showsHorizontalScrollIndicator={false} horizontal>
-          {arr.map((item, index) => (
-            <Pressable
-              key={index}
-              onPress={() => setActive(item)}
-              style={[active === item ? styles.bgGreen : { backgroundColor: "transparent" }, { paddingHorizontal: 20 }]}
-            >
-              <Text style={{ color: active === item ? "#fff" : "#000" }}>{item}</Text>
-            </Pressable>
-          ))}
+    <>
+      <View style={styles.container}>
+        <View style={styles.topHeader}>
+          <Pressable onPress={() => router.push("Home")}>
+            <Back dark="#041105" />
+          </Pressable>
+          <Text style={styles.boldText}>Notifications</Text>
+          <View style={{ width: 20 }} />
+        </View>
+        <View style={styles.wrapper}>
+          <ScrollView
+            contentContainerStyle={{ alignItems: "center" }}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          >
+            {arr.map((item, index) => (
+              <Pressable
+                key={index}
+                onPress={() => setActive(item)}
+                style={[
+                  active === item ? styles.bgGreen : { backgroundColor: "transparent" },
+                  { paddingHorizontal: 20 },
+                ]}
+              >
+                <Text style={{ color: active === item ? "#fff" : "#000" }}>{item}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+        <ScrollView onScroll={handleScroll}>
+          <View style={{ flex: 1 }}>
+            {Array.from(getActive()).map(([key, value], idx) => (
+              <View key={key}>
+                <Text style={styles.dayText}>{computeDate(key)}</Text>
+
+                {value.length ? (
+                  value.map((item, index) => (
+                    <NotifCard
+                      key={item._id}
+                      text={item.title}
+                      handleView={() => {
+                        if (item.post) setViewNotification([idx, index]);
+
+                        handleMarkNotification(item._id);
+                      }}
+                      desc={item.content}
+                      avatar={item.user.avatar}
+                      userId={item.user._id}
+                      name={item.user.name || item.user.username}
+                      action={item.post ? "View" : undefined}
+                    />
+                  ))
+                ) : (
+                  <View style={styles.textCenter}>
+                    <Text style={{ color: "#50A040" }}>You have no notifications yet</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
         </ScrollView>
       </View>
-      <ScrollView contentContainerStyle={{ flex: 1 }} onScroll={handleScroll}>
-        <View style={{ flex: 1 }}>
-          {Array.from(getActive()).map(([key, value]) => (
-            <View key={key}>
-              <Text style={styles.dayText}>{computeDate(key)}</Text>
-
-              {value.length ? (
-                value.map((item) => (
-                  <NotifCard key={item._id} text={item.title} desc={item.content} avatar={""} action="View" />
-                ))
-              ) : (
-                <View style={styles.textCenter}>
-                  <Text style={{ color: "#50A040" }}>You have no notifications yet</Text>
-                </View>
-              )}
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </View>
+    </>
   );
 };
 

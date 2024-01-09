@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, Badge } from "react-native-paper";
+import { Text, Badge, Button } from "react-native-paper";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
@@ -60,23 +60,26 @@ export default function ScreenHome() {
 
   return (
     <>
-      <FlatList
-        style={[StyleSheet.absoluteFill]}
-        data={posts}
-        renderItem={({ item, index }) => (
-          <VideoFeedItem
-            item={item}
-            index={index}
-            visibleIndex={visibleIndex}
-            onShareClick={() => setShareVisible(true)}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        pagingEnabled
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        onScroll={onScroll}
-      />
+      {posts.length ? (
+        <FlatList
+          style={[StyleSheet.absoluteFill]}
+          data={posts}
+          renderItem={({ item, index }) => (
+            <VideoFeedItem
+              item={item}
+              index={index}
+              visibleIndex={visibleIndex}
+              onShareClick={() => setShareVisible(true)}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          pagingEnabled
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          onScroll={onScroll}
+        />
+      ) : null}
+
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
           <Pressable onPress={() => router.push("votes")}>
@@ -100,7 +103,17 @@ export default function ScreenHome() {
           </Pressable>
         </View>
       </SafeAreaView>
-      <BottomNav setComment={setComment} commentCount={visiblePost?.comments.length || 0} />
+      {!posts.length && (
+        <View style={{ flex: 1 }}>
+          <View style={styles.placeholder}>
+            <Text variant="titleMedium" style={styles.placeholderText}>
+              No posts yet.
+            </Text>
+            <Button onPress={() => router.push("video/CreateUploadVideo")}>Upload</Button>
+          </View>
+        </View>
+      )}
+      <BottomNav setComment={setComment} commentCount={visiblePost?.totalComments || 0} />
       {shareVisible && (
         <AppBottomSheet backgroundColor={BACKGROUND_COLOR} height="50%" closeModal={() => setShareVisible(false)}>
           <Share />
@@ -129,6 +142,15 @@ const styles = StyleSheet.create({
   },
   headActionText: {
     color: DEFAULT_CAMERA_ACTION_COLOR,
+    fontWeight: "600",
+  },
+  placeholder: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  placeholderText: {
+    color: "black",
     fontWeight: "600",
   },
   headActionIndicator: {

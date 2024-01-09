@@ -15,7 +15,6 @@ interface IRequestApiData {
 
 export const fetchFromApi = async ({ method = "get", path, body, headers = {}, params }: IRequestApiData) => {
   const token = getToken();
-  console.log("token", token);
 
   const url = `${baseUrl}${path}`;
 
@@ -52,7 +51,6 @@ export const fetchFromApi = async ({ method = "get", path, body, headers = {}, p
       ...headers,
     };
 
-  console.log("requestConfig", requestConfig);
   return axios(requestConfig);
 };
 

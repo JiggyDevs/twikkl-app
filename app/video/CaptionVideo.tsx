@@ -1,14 +1,14 @@
-import Back from "@assets/svg/Back";
+// import Back from "@assets/svg/Back";
 import { Avatar } from "react-native-paper";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import ListItem from "@twikkl/components/ListItem";
 import ToggleButton from "@twikkl/components/ToggleButton";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 // import styled from "styled-components/native";
 // import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import ArrowDown from "@assets/svg/ArrowDown";
-import { authEntity } from "@twikkl/entities/auth.entity";
+// import { authEntity } from "@twikkl/entities/auth.entity";
 import { usePostHook } from "@twikkl/hooks/post.hooks";
 import People from "@assets/svg/People";
 import Key from "@assets/svg/Key";
@@ -16,6 +16,8 @@ import Globe from "@assets/svg/Globe";
 import Dropdown from "@twikkl/components/Dropdown";
 import { ViewVariant } from "@twikkl/configs";
 import BackHeader from "@twikkl/components/BackHeader";
+import { fetchCategories } from "@twikkl/services";
+import { useQuery } from "@tanstack/react-query";
 
 // const SubscribeOption = styled.View`
 //   flex-direction: row;
@@ -36,14 +38,14 @@ import BackHeader from "@twikkl/components/BackHeader";
 //   height: ${hp(1.6)}px;
 // `;
 
-const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCaption: Function; group?: boolean }) => {
+const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCaption: Function; group?: string }) => {
   const [data, setData] = useState({
     device: true,
     duet: true,
     stitch: true,
   });
 
-  const { user } = authEntity.get();
+  // const { user } = authEntity.get();
 
   const { _createPost } = usePostHook();
 
@@ -51,6 +53,7 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
     setData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [shouldPlay, setShouldPlay] = useState(false);
   const [category, setCategory] = useState(false);
   const [subData, setSubData] = useState("Followers");
@@ -68,8 +71,17 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
     { icon: <Key />, title: "Private", desc: "This post will only be seen by you." },
   ];
 
+  const handleFetchCategories = useCallback(async () => {
+    const response = await fetchCategories();
+    if (response) {
+      return response.data;
+    }
+  }, []);
+
+  const { data: allCategories } = useQuery(["categories"], () => handleFetchCategories());
+
   const tagArr = ["# Hashtags", "@ Tag Friends"];
-  const categories = ["breed & size", "exercise", "vaccination", "grooming"];
+  const categories = allCategories?.map((categ) => categ.name);
 
   return (
     <View style={{ paddingHorizontal: 16 }}>
@@ -94,6 +106,8 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
             _createPost({
               contentUrl: videoUri,
               description: captionText,
+              groupId: group,
+              categoryId: allCategories?.find((categ) => categ.name === selectedCategory)?._id,
               tags: [],
             })
           }
@@ -157,11 +171,18 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
           {category && (
             <View style={styles.optionsWrapper}>
               <Text style={{ fontSize: 18, color: "#fff" }}>Category</Text>
-              {categories.map((item) => (
-                <Pressable onPress={() => setCategory(false)} key={item}>
-                  <Text style={styles.optionText}>{item}</Text>
-                </Pressable>
-              ))}
+              {categories &&
+                categories.map((item) => (
+                  <Pressable
+                    onPress={() => {
+                      setSelectedCategory(item);
+                      setCategory(false);
+                    }}
+                    key={item}
+                  >
+                    <Text style={styles.optionText}>{item}</Text>
+                  </Pressable>
+                ))}
             </View>
           )}
           <Pressable onPress={() => setCategory(!category)} style={ViewVariant.rowSpaceBetween}>

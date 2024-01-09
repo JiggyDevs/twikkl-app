@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { FetchUserFeedsResponse } from "./feed.services";
 
 export type Groups = {
+  group: any;
   _id: string;
   name: string;
   description: string;
@@ -48,13 +49,42 @@ export const fetchGroups = async (): Promise<FetchGroupsResponse> => {
     // throw error;
   }
 };
+
+export const fetchCategories = async (): Promise<{ data: { _id: string; description: string; name: string }[] }> => {
+  try {
+    const { data: categories } = await fetchFromApi({
+      path: "categories?perpage=20",
+      method: "get",
+    });
+
+    const computeData = {
+      ...categories,
+    };
+
+    return computeData;
+  } catch (error) {
+    handleFetchError(error);
+
+    // Handle other types of errors or return a default value
+    return {
+      data: [],
+
+      // Other properties as needed
+    };
+
+    // throw error;
+  }
+};
+
 export const createGroup = async (data: {
   name: string;
   description: string;
+  categories: string[];
   coverImg: string;
   avatar: string;
 }): Promise<FetchGroupsResponse | undefined> => {
   try {
+    console.log(data);
     const { data: group } = await fetchFromApi({
       path: "groups",
       method: "post",
@@ -75,6 +105,30 @@ export const createGroup = async (data: {
     throw error;
   }
 };
+
+export const createCategory = async (data: {
+  name: string;
+  description: string;
+}): Promise<FetchGroupsResponse | undefined> => {
+  try {
+    const { data: categories } = await fetchFromApi({
+      path: "categories",
+      method: "post",
+      body: data,
+    });
+    return categories;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+
+    // throw error;
+  }
+};
+
 export const joinGroup = async (groupId: string): Promise<boolean | AxiosError | undefined> => {
   try {
     await fetchFromApi({
@@ -104,6 +158,46 @@ export const leaveGroup = async (groupId: string): Promise<boolean | AxiosError 
       body: {
         groupId,
       },
+    });
+    return true;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+
+    // throw error;
+  }
+};
+export const favouriteGroup = async (groupId: string): Promise<boolean | AxiosError | undefined> => {
+  try {
+    await fetchFromApi({
+      path: "favorite-groups",
+      method: "post",
+      body: {
+        groupId,
+      },
+    });
+    return true;
+  } catch (error) {
+    handleFetchError(error);
+
+    if (isAxiosError(error)) {
+      return error;
+    }
+    // Handle other types of errors or return a default value
+
+    // throw error;
+  }
+};
+
+export const unfavouriteGroup = async (groupId: string): Promise<boolean | AxiosError | undefined> => {
+  try {
+    await fetchFromApi({
+      path: `favorite-groups/${groupId}`,
+      method: "delete",
     });
     return true;
   } catch (error) {
@@ -153,7 +247,7 @@ export const fetchFavouriteGroups = async (): Promise<FetchGroupsResponse> => {
     const computeData = {
       ...groups,
     };
-    console.log(computeData);
+
     return computeData;
   } catch (error) {
     handleFetchError(error);

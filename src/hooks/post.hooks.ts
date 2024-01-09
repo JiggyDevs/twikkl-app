@@ -7,7 +7,9 @@ import { showLoader, hideLoader } from "@twikkl/entities";
 type ICreatePost = {
   contentUrl: string;
   description: string;
+  categoryId?: string;
   tags: string[];
+  groupId?: string;
 };
 
 export const usePostHook = () => {
@@ -23,6 +25,8 @@ export const usePostHook = () => {
       const response = await createPost({
         contentUrl: videoResponse.url,
         description: post.description,
+        groupId: post.groupId,
+        categoryId: post?.categoryId,
         tags: post.tags,
       });
       console.log("postResponse", response);
