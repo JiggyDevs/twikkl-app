@@ -25,7 +25,7 @@ type FetchGroupsResponse = GroupResponse | AxiosError;
 export const fetchGroups = async (): Promise<FetchGroupsResponse> => {
   try {
     const { data: posts } = await fetchFromApi({
-      path: "groups",
+      path: "groups?excludeJoined=true",
       method: "get",
     });
     const computeData = {
@@ -80,6 +80,7 @@ export const createGroup = async (data: {
   name: string;
   description: string;
   categories: string[];
+  isPrivate: boolean;
   coverImg: string;
   avatar: string;
 }): Promise<FetchGroupsResponse | undefined> => {

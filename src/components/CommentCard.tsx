@@ -99,7 +99,7 @@ const CommentCard = ({
         likeCount={likeCount}
         pic={comment.user?.img || ""}
         handleReply={handleReply}
-        userId={comment.user._id || ""}
+        userId={typeof comment.user === "string" ? comment.user : comment.user._id || ""}
         name={comment.user.username}
         createdAt={comment.updatedAt}
         comment={comment.comment}
@@ -114,7 +114,7 @@ const CommentCard = ({
                   pic={item.user.img}
                   handleReply={handleReply}
                   createdAt={item.updatedAt}
-                  userId={item.user._id || ""}
+                  userId={typeof item.user === "string" ? item.user : item.user._id || ""}
                   comment={item?.comment}
                   key={item?.id}
                 />

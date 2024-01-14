@@ -64,7 +64,8 @@ const Discover = () => {
   const { groups, refetch: groupsRefetch } = useGroupHook();
 
   const { yourGroups, refetch: yourGroupsRefetch } = useYourGroupsHook();
-  const { favouriteGroups } = useYourFavouriteGroupsHook();
+
+  const { favouriteGroups, refetch: favouriteGroupRefetch } = useYourFavouriteGroupsHook();
 
   const { _uploadPhoto } = useUploadPhoto();
 
@@ -72,6 +73,7 @@ const Discover = () => {
     name: string;
     description: string;
     coverImg: string;
+    isPrivate: boolean;
     avatar: string;
     categories: string[];
   }) => {
@@ -85,6 +87,7 @@ const Discover = () => {
         description: data.description,
         avatar: avatar.url,
         categories: data.categories,
+        isPrivate: data.isPrivate,
         coverImg: coverImg.url,
       });
 
@@ -92,6 +95,8 @@ const Discover = () => {
       if (response) {
         setCreateGroup(false);
         toastSuccess("Group created successfully");
+        yourGroupsRefetch();
+        groupsRefetch();
       }
     }
   };
@@ -130,11 +135,13 @@ const Discover = () => {
       return favouriteGroup(item._id).then(() => {
         groupsRefetch();
         yourGroupsRefetch();
+        favouriteGroupRefetch();
       });
     }
     unfavouriteGroup(item._id).then(() => {
       groupsRefetch();
       yourGroupsRefetch();
+      favouriteGroupRefetch();
     });
     // const updated = groups.map((group) => (group.name === item.title ? { ...group, fav: !group.fav } : group));
   };
@@ -192,7 +199,7 @@ const Discover = () => {
     "1": yourGroups,
     "2": yourGroups.filter((group) => getFavouriteGroups.includes(group._id)),
   };
-  console.log(yourGroups, "yourGroups");
+
   // const navigation = useNavigation();
   const titleText = activeTabIndex === 0 ? "For You" : activeTabIndex === 1 ? "Your Groups" : "Favorite Groups";
 

@@ -76,3 +76,31 @@ export const updateUserProfile = async (profile: {
     handleFetchError(error);
   }
 };
+
+export const followUser = async (userId: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: "following/follow",
+      method: "post",
+      body: { userToFollow: userId },
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+    throw error;
+  }
+};
+
+export const unfollowUser = async (userId: string) => {
+  try {
+    const { data } = await fetchFromApi({
+      path: "following/unfollow",
+      method: "delete",
+      body: { userToUnFollow: userId },
+    });
+    return data;
+  } catch (error) {
+    handleFetchError(error);
+    throw error;
+  }
+};

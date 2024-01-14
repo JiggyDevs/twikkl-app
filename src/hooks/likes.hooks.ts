@@ -2,18 +2,31 @@ import { TUser, authEntity } from "@twikkl/entities/auth.entity";
 import { fetchPostLikes, likePost, unlikePost } from "@twikkl/services/feed.services";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 export const useLikesHook = (likes: { user: TUser }[] = [], postId: string) => {
-  const { data, refetch } = useQuery(["post-likes", postId], () => fetchPostLikes(postId));
-
-  const likedUsers = data?.data.map((like) => like.user._id) || [];
   const { user } = authEntity.get();
 
-  const isPostLiked = likedUsers.includes(user?._id || "");
+  const [liked, setLike] = useState(false);
 
-  const [liked, setLike] = useState(isPostLiked);
+  const handlePostLikes = useCallback(async () => {
+    const response = await fetchPostLikes(postId);
+
+    if (response) {
+      const likedUsers = response?.data.map((like) => like.user._id) || [];
+
+      const isPostLiked = likedUsers.includes(user?._id || "");
+
+      setLike(isPostLiked);
+      return response;
+    }
+    return {
+      data: [],
+    };
+  }, [postId]);
+
+  const { refetch } = useQuery(["post-likes", postId], () => handlePostLikes());
 
   const [likeStatus, setLikeStatus] = useState<boolean | undefined>();
 

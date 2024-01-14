@@ -22,6 +22,7 @@ interface CreateGroupProps {
     description: string;
     avatar: string;
     coverImg: string;
+    isPrivate: boolean;
     categories: string[];
   }) => Promise<void>;
   setCreateGroup: Function;
@@ -55,9 +56,11 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
   const { refetch } = useQuery(["categories"], () => handleFetchCategories());
 
   const [createCategoryLoader, setCreateCategoryLoader] = useState(false);
+
   const updateAllCategory = (data: { name: string; description: string }) => {
     setAllCategories((prev) => [...prev, data]);
   };
+
   const { form, updateField } = useFormField(createGroupData);
   const updateSelectedCategories = (name: string) => {
     if (form.categories.includes(name)) {
@@ -207,6 +210,7 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
             name: form.name,
             description: form.desc,
             categories: form.categories,
+            isPrivate: subData === "Private",
             avatar: form.avatar,
             coverImg: form.coverImg,
           });
