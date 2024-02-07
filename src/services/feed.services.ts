@@ -258,7 +258,7 @@ export const removeBookmark = async (postId: string) => {
     const { data } = await fetchFromApi({
       path: `posts/bookmarks/${postId}`,
       method: "delete",
-      // body: {},
+      body: {},
     });
     return data;
   } catch (error) {

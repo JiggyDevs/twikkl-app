@@ -24,7 +24,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchProfile, userFollowers } from "@twikkl/services/profile.services";
 import { authEntity } from "@twikkl/entities/auth.entity";
 import AppLoader from "@twikkl/components/AppLoader";
-import { fetchUserPost, isUserFeedsResponse } from "@twikkl/services/feed.services";
+import { fetchBookmarks, fetchUserPost, isUserFeedsResponse } from "@twikkl/services/feed.services";
 import ImgBgRender from "@twikkl/components/ImgBgRender";
 import BigView from "@twikkl/components/Discover/BigView";
 
@@ -45,6 +45,9 @@ const Profile = () => {
 
   const { data: followers } = useQuery(["user-followers", user], () => userFollowers(user || ""));
 
+  const { data: bookmarks } = useQuery(["user-bookmarks", user], () => fetchBookmarks());
+
+  console.log(bookmarks);
   const [pageSize, setPageSize] = useState(10);
 
   const { data: userPosts, refetch } = useQuery(["user-posts", user, pageSize], () => fetchUserPost(user || ""));
