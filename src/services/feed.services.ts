@@ -256,9 +256,9 @@ export const bookmarkPost = async (postId: string) => {
 export const removeBookmark = async (postId: string) => {
   try {
     const { data } = await fetchFromApi({
-      path: `posts/bookmarks/${postId}/remove`,
-      method: "post",
-      body: {},
+      path: `posts/bookmarks/${postId}`,
+      method: "delete",
+      // body: {},
     });
     return data;
   } catch (error) {

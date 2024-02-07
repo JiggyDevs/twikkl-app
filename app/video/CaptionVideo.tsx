@@ -79,6 +79,7 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
   }, []);
 
   const { data: allCategories } = useQuery(["categories"], () => handleFetchCategories());
+  // console.log("cateee", allCategories, selectedCategory, group, captionText, videoUri);
 
   const tagArr = ["# Hashtags", "@ Tag Friends"];
   const categories = allCategories?.map((categ) => categ.name);

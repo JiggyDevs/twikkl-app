@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { FetchUserFeedsResponse } from "./feed.services";
 
 export type Groups = {
-  group: any;
+  group?: any;
   _id: string;
   name: string;
   description: string;
@@ -271,6 +271,8 @@ export const fetchGroupPosts = async (groupId: string): Promise<FetchUserFeedsRe
       path: `groups/${groupId}/posts`,
       method: "get",
     });
+    // console.log("fetchhgroupsss", groups);
+
     const computeData = {
       ...groups,
     };
@@ -285,7 +287,6 @@ export const fetchGroupPosts = async (groupId: string): Promise<FetchUserFeedsRe
     // Handle other types of errors or return a default value
     return {
       data: [],
-
       // Other properties as needed
     };
 

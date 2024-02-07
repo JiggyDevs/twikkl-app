@@ -1,0 +1,12 @@
+diff --git a/node_modules/@alchemy/aa-core/dist/cjs/account/schema.js b/node_modules/@alchemy/aa-core/dist/cjs/account/schema.js
+index 4a77e41..f9664b3 100644
+--- a/node_modules/@alchemy/aa-core/dist/cjs/account/schema.js
++++ b/node_modules/@alchemy/aa-core/dist/cjs/account/schema.js
+@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.SimpleSmartAccountParamsSchema = exports.createBaseSmartAccountParamsSchema = void 0;
+ const zod_1 = require("abitype/zod");
++console.log('hi biconomy')
+ const viem_1 = require("viem");
+ const zod_2 = __importDefault(require("zod"));
+ const schema_js_1 = require("../client/schema.js");

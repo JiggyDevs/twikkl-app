@@ -13,11 +13,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["metamask", "trust", "safe", "rainbow", "uniswap"]
+        "LSApplicationQueriesSchemes": [
+          "metamask",
+          "trust",
+          "safe",
+          "rainbow",
+          "uniswap"
+        ]
       }
     },
     "android": {
@@ -26,7 +34,11 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.twikkl.twikklapp",
-      "permissions": ["CAMERA", "RECORD_AUDIO", "WRITE_EXTERNAL_STORAGE"]
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "extra": {},
     "runtimeVersion": {
@@ -42,7 +54,8 @@
           "cameraPermission": "Allow twikkl to access your camera.",
           "microphonePermission": "Allow twikkl to access your microphone"
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }

@@ -36,6 +36,7 @@ const defaultState = {
   members: [],
   isDeleted: false,
   isAdminDeleted: false,
+  categories: [""],
 };
 const Group = (): JSX.Element => {
   const { id } = useSearchParams() as { id: string };
@@ -45,6 +46,7 @@ const Group = (): JSX.Element => {
 
   const { data: groupPosts } = useQuery(["group-post", id], () => fetchGroupPosts(id));
   const videos = isUserFeedsResponse(groupPosts) ? groupPosts.data : [];
+  // console.log("fettttch postt", videos, groupPosts);
 
   const [select, setSelect] = useState(0);
   const [showSearch, setShowSearch] = useState(false);

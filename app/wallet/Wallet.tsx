@@ -13,10 +13,12 @@ import InputField from "@twikkl/components/InputField";
 import NFTCard from "@twikkl/components/NFTCard";
 import TokenCard from "@twikkl/components/TokenCard";
 import { isPriceToken, nfts, receiveNFt, tokens } from "@twikkl/data/constant";
+import { createWallet } from "@twikkl/services/wallet.services";
+import { useWalletHook } from "@twikkl/SmartAccount/hook";
 import { useRouter } from "expo-router";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
-// import { WalletConnectModal, useWalletConnectModal } from "@walletconnect/modal-react-native";
+
 // import { IBundler, Bundler } from "@biconomy/bundler";
 // import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account";
 // import { ECDSAOwnershipValidationModule, DEFAULT_ECDSA_OWNERSHIP_MODULE } from "@biconomy/modules";
@@ -24,19 +26,22 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 // import { ChainId } from "@biconomy/core-types";
 
 import { Text } from "react-native-paper";
+// import { useSmartAccount } from "@twikkl/SmartAccount";
+// import { hello, useSmartAccount } from "@twikkl/SmartAccount";
+// import { userSmartContract } from "@twikkl/SmartAccount/helper";
 
-const projectId = "";
+// const projectId = "";
 
-const providerMetadata = {
-  name: "RN Starter",
-  description: "Biconomy + Wallet Connect RN Starter",
-  url: "https://your-project-website.com/",
-  icons: ["https://your-project-logo.com/"],
-  redirect: {
-    native: "YOUR_APP_SCHEME://",
-    universal: "YOUR_APP_UNIVERSAL_LINK.com",
-  },
-};
+// const providerMetadata = {
+//   name: "RN Starter",
+//   description: "Biconomy + Wallet Connect RN Starter",
+//   url: "https://your-project-website.com/",
+//   icons: ["https://your-project-logo.com/"],
+//   redirect: {
+//     native: "YOUR_APP_SCHEME://",
+//     universal: "YOUR_APP_UNIVERSAL_LINK.com",
+//   },
+// };
 
 type INFT = {
   title: string;
@@ -74,8 +79,15 @@ export default function Wallet(): ReactElement {
   };
 
   const [scwAddress, setScwAddress] = useState<string>("");
+  const { walletDetails, refetch: walletRefetch } = useWalletHook();
 
+  useEffect(() => {}, []);
+  console.log("walletDetailsss", walletDetails);
   // const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    createWallet();
+  }, []);
 
   // const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
 
@@ -121,6 +133,12 @@ export default function Wallet(): ReactElement {
   // };
   // console.log({ scwAddress, smartAccount });
 
+  // useEffect(() => {
+  //   // UserSmartAccount.test();
+  //   hello();
+  //   userSmartContract();
+  // }, []);
+  // useSmartAccount();
   return (
     <View style={{ paddingTop: 60 }}>
       {search.length ? (

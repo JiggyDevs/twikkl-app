@@ -157,7 +157,9 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
                 <ArrowDown color="#000" />
               </Pressable>
             </View>
-
+            {options && (
+              <Dropdown options={options} optionsArray={optionsArray} setSubData={setSubData} subData={subData} />
+            )}
             <View>
               <Text style={styles.label}>Category</Text>
               <View style={styles.allCategory}>
@@ -185,9 +187,7 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
                 <Text style={styles.addCatText}>Add category</Text>
               </TouchableOpacity>
             </View>
-            {options && (
-              <Dropdown options={options} optionsArray={optionsArray} setSubData={setSubData} subData={subData} />
-            )}
+
             <LabelInput
               label="Invite friends"
               placeholder="Enter names"

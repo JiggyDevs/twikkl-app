@@ -1,4 +1,6 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
+console.log("bundling.......");
+
 const { getDefaultConfig } = require("expo/metro-config");
 
 /**
@@ -18,11 +20,13 @@ const blackList =
 
 // module.exports = getDefaultConfig(__dirname);
 
+console.log("bundling.......");
 
 module.exports = (() => {
   const config = getDefaultConfig(__dirname);
 
   const { transformer, resolver } = config;
+  // console.log({ resolver });
 
   config.transformer = {
     ...transformer,
@@ -31,10 +35,8 @@ module.exports = (() => {
   config.resolver = {
     ...resolver,
     assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
-    sourceExts: [...resolver.sourceExts, "svg"],
+    sourceExts: [...resolver.sourceExts, "svg", "mjs"],
   };
 
   return config;
 })();
-
-
