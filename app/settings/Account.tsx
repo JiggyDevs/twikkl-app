@@ -1,14 +1,10 @@
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView } from "react-native";
-import React from "react";
 import { useFormField } from "@twikkl/hooks/common.hooks";
 import LabelInput from "@twikkl/components/LabelInput";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import { ViewVariant } from "@twikkl/configs";
 import AccountAvatar from "@assets/svg/AccountAvatar";
 import Camera from "@assets/svg/Camera";
-import BackHeader from "@twikkl/components/BackHeader";
-import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { setUser, useAuth } from "@twikkl/entities/auth.entity";
 import { useImageHook } from "@twikkl/hooks/image.hooks";
 import { isValidFormSubmit, toastSuccess } from "@twikkl/utils/common";
@@ -29,7 +25,7 @@ const Account = () => {
     bio: user?.bio || "",
   };
 
-  const { form, updateField } = useFormField(updateProfile);
+  const { form, updateField, clearForm } = useFormField(updateProfile);
 
   const { _uploadPhoto } = useUploadPhoto();
 
@@ -46,6 +42,7 @@ const Account = () => {
     if (response) {
       setUser(response as any);
       toastSuccess("Profile updated successfully");
+      clearForm();
     }
     hideLoader();
   };
@@ -64,24 +61,21 @@ const Account = () => {
     handleProfileUpdate(otherFields);
   };
 
-  const router = useRouter();
-
   return (
-    <SafeAreaView style={styles.screen}>
+    <View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View>
-          <BackHeader title="Account" onPress={() => router.back()} />
-        </View>
-
-        <Text style={{ textAlign: "center", marginTop: 20 }}>Update profile image</Text>
-
         <View style={styles.inputs}>
-          <Text style={{ fontWeight: "bold" }}>Avatar</Text>
-
-          <TouchableOpacity style={styles.avatarWrapper} onPress={handleImagePick}>
-            <Image source={{ uri: form?.avatar }} style={styles.profileImg} />
-          </TouchableOpacity>
-
+          <View style={styles.avatarWrapper}>
+            <TouchableOpacity style={styles.profileImg} onPress={handleImagePick}>
+              {form?.avatar ? (
+                <Image style={{ width: "100%", height: "100%", borderRadius: 99 }} source={{ uri: form?.avatar }} />
+              ) : (
+                <AccountAvatar />
+              )}
+              <Camera style={{ position: "absolute", bottom: 5, right: 5 }} />
+            </TouchableOpacity>
+            <Text>Update profile image</Text>
+          </View>
           <LabelInput
             label="Name"
             placeholder="Enter your name"
@@ -116,28 +110,24 @@ const Account = () => {
           <Text style={[ViewVariant.buttonText]}>Update Profile</Text>
         </ButtonEl>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default Account;
 
 const styles = StyleSheet.create({
-  screen: {
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    // gap: 42,
-  },
-  avatarWrapper: { alignItems: "center", justifyContent: "center" },
+  avatarWrapper: { alignItems: "center" },
   profileImg: {
-    width: 163,
-    height: 163,
+    width: 130,
+    height: 130,
     borderRadius: 100,
     backgroundColor: "white",
-    marginBottom: 16,
+    marginBottom: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputs: {
-    marginVertical: 24,
     gap: 20,
     marginBottom: 70,
   },
@@ -157,22 +147,3 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 });
-
-{
-  /* <View style={{ alignSelf: "center" }}>
-<View
-  style={{
-    backgroundColor: "#fff",
-    width: 110,
-    height: 110,
-    borderRadius: 99,
-    justifyContent: "center",
-    alignItems: "center",
-  }}
->
-  <AccountAvatar />
-</View>
-<Camera style={{ position: "absolute", bottom: -10, right: 0 }} />
-</View>
-<Text style={{ textAlign: "center", marginTop: 20 }}>Update profile image</Text> */
-}

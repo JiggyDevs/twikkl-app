@@ -38,7 +38,19 @@ import { useQuery } from "@tanstack/react-query";
 //   height: ${hp(1.6)}px;
 // `;
 
-const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCaption: Function; group?: string }) => {
+const CaptionVideo = ({
+  videoUri,
+  setCaption,
+  group,
+  groupCat,
+  setPostVideo,
+}: {
+  videoUri: string;
+  setCaption: Function;
+  group?: string;
+  groupCat?: string[];
+  setPostVideo?: Function;
+}) => {
   const [data, setData] = useState({
     device: true,
     duet: true,
@@ -47,7 +59,7 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
 
   // const { user } = authEntity.get();
 
-  const { _createPost } = usePostHook();
+  const { _createPost } = usePostHook(group, setPostVideo, setCaption);
 
   const updateData = (field: string, value: boolean) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -82,7 +94,12 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
   // console.log("cateee", allCategories, selectedCategory, group, captionText, videoUri);
 
   const tagArr = ["# Hashtags", "@ Tag Friends"];
-  const categories = allCategories?.map((categ) => categ.name);
+  // const categories = allCategories?.map((categ) => categ.name);
+  const categories = groupCat ?? [];
+
+  // console.log("====================================");
+  // console.log(allCategories?.length, categories, group);
+  // console.log("====================================");
 
   return (
     <View style={{ paddingHorizontal: 16 }}>
@@ -102,7 +119,7 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
           </View>
         </View>
         <Pressable
-          disabled={!captionText}
+          // disabled={!captionText}
           onPress={() =>
             _createPost({
               contentUrl: videoUri,
@@ -188,7 +205,10 @@ const CaptionVideo = ({ videoUri, setCaption, group }: { videoUri: string; setCa
           )}
           <Pressable onPress={() => setCategory(!category)} style={ViewVariant.rowSpaceBetween}>
             <View>
-              <Text>Category</Text>
+              <View style={{ flexDirection: "row", gap: 20 }}>
+                <Text>Category</Text>
+                <Text>{selectedCategory}</Text>
+              </View>
               <Text style={{ color: "#50A040", fontSize: 10 }}>Select a category in which your video fits.</Text>
             </View>
             <ArrowDown />

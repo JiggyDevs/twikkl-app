@@ -1,5 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import UserAvatar from "./UserAvatar";
 
 type IProps = {
@@ -9,13 +8,12 @@ type IProps = {
   text: string;
   desc?: string;
   time?: string;
-  like?: boolean;
+  type?: string;
   name?: string;
-  img?: any;
   action?: string;
 };
 
-const NotifCard = ({ avatar, name, text, desc, time, like, img, action, handleView, userId = "" }: IProps) => {
+const NotifCard = ({ avatar, name, text, desc, time, type, action, handleView, userId = "" }: IProps) => {
   return (
     <View style={styles.wrapper}>
       <UserAvatar name={name} pic={avatar} userId={userId} />
@@ -28,8 +26,12 @@ const NotifCard = ({ avatar, name, text, desc, time, like, img, action, handleVi
         )}
       </View>
       <View style={{ marginLeft: 20 }}>
-        {like ? (
-          <Image source={img} />
+        {type === "following" ? (
+          <View style={styles.bgGreen}>
+            <TouchableOpacity>
+              <Text style={styles.textWhite}>Folllow</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           action && (
             <View style={styles.bgGreen}>

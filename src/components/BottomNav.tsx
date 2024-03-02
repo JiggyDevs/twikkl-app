@@ -14,7 +14,7 @@ type BottomNavProps = {
 };
 
 function BottomNav({ commentCount = 0, setComment }: BottomNavProps, {}) {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const router = useRouter();
   return (
@@ -24,22 +24,22 @@ function BottomNav({ commentCount = 0, setComment }: BottomNavProps, {}) {
           <CommentIcon />
           <Text style={styles.commentCount}>{commentCount}</Text>
         </View>
-        <Text variant="titleMedium" style={styles.tabText}>
-          {t("comment")}
+        <Text variant="bodyMedium" style={styles.tabText}>
+          Comment
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("wallet/Wallet")} style={styles.tabContainer}>
         <WalletIcon />
-        <Text variant="titleMedium" style={styles.tabText}>
-          {t("wallet")}
+        <Text variant="bodyMedium" style={styles.tabText}>
+          Wallet
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("Profile")} style={styles.tabContainer}>
         <ProfileIcon />
-        <Text variant="titleMedium" style={styles.tabText}>
-          {t("profile")}
+        <Text variant="bodyMedium" style={styles.tabText}>
+          Profile
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

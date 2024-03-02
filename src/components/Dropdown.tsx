@@ -33,18 +33,26 @@ const Dropdown = ({
   optionsArray,
   setSubData,
   subData,
+  setOption,
 }: {
   options: boolean;
   optionsArray: Options[];
   setSubData: Function;
   subData: string;
+  setOption?: Function;
 }) => {
   return (
     <View style={{ zIndex: 1 }}>
       {options && (
         <View style={styles.optionsWrapper}>
           {optionsArray.map(({ icon, title, desc }) => (
-            <Pressable key={title} onPress={() => setSubData(title)}>
+            <Pressable
+              key={title}
+              onPress={() => {
+                setSubData(title);
+                setOption?.(false);
+              }}
+            >
               <SubscribeOption>
                 <Text style={{ width: 23 }}>{icon}</Text>
                 <View style={{ flex: 1, paddingHorizontal: 20 }}>

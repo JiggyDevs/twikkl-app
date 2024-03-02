@@ -94,6 +94,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
         icon: liked ? FilledLike : Like,
         color: liked ? "red" : DEFAULT_CAMERA_ACTION_COLOR,
         action: () => toggleLikePost(),
+        text: item.totalLikes,
       },
       {
         color: DEFAULT_CAMERA_ACTION_COLOR,
@@ -141,96 +142,85 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={togglePlay}
-      style={{ flex: 1, borderWidth: 5, borderColor: "red", borderStyle: "solid" }}
-    >
-      <View style={{ flex: 1, height }}>
-        <Video
-          source={{
-            uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
-          }}
-          shouldPlay={shouldPlay}
-          onLoad={() => {
-            setLoading(false);
-          }}
-          onError={() => {
-            setLoading(false);
-          }}
-          isLooping
-          resizeMode={ResizeMode.COVER}
-          style={[StyleSheet.absoluteFill]}
-        />
-
-        {loading && <AppLoader />}
-
-        <View style={styles.bottomContainer}>
-          <View style={styles.rightActionsContainer}>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {icons().map((icon, index) => (
-                <TouchableOpacity
-                  onPress={() => icon.action()}
-                  key={index}
-                  style={{
-                    paddingVertical: 12,
-                  }}
-                >
-                  {typeof icon.icon === "string" ? (
-                    <TwikklIcon name={icon.icon} size={24} color={icon.color} />
-                  ) : (
-                    <icon.icon />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 5,
-              marginBottom: 10,
+    <>
+      <TouchableWithoutFeedback
+        onPress={togglePlay}
+        style={{ flex: 1, borderWidth: 5, borderColor: "red", borderStyle: "solid" }}
+      >
+        <View style={{ flex: 1, height }}>
+          <Video
+            source={{
+              uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
             }}
-          >
+            shouldPlay={shouldPlay}
+            onLoad={() => {
+              setLoading(false);
+            }}
+            onError={() => {
+              setLoading(false);
+            }}
+            isLooping
+            resizeMode={ResizeMode.COVER}
+            style={[StyleSheet.absoluteFill]}
+          />
+
+          {loading && <AppLoader />}
+
+          <View style={[styles.bottomContainer, { marginBottom: bigView ? "10%" : "23%" }]}>
             <View
               style={{
                 flexDirection: "row",
+                gap: 15,
               }}
             >
-              <UserAvatar pic={item.creator?.img || ""} name={item.creator.username} userId={item.creator._id} />
-              <Text variant="titleMedium" style={[styles.headActionText, { width: "75%", marginLeft: 8 }]}>
-                @{item.creator.username} {"\n"}
-                <Text variant="bodyLarge" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
+              <UserAvatar pic={item.creator?.avatar || ""} name={item.creator.username} userId={item.creator._id} />
+              <View style={{ width: "75%" }}>
+                <Text style={styles.headActionText}>@{item.creator.username}</Text>
+                <Text variant="bodyMedium" style={{ color: DEFAULT_CAMERA_ACTION_COLOR }}>
                   {item.description}
                 </Text>
-              </Text>
+              </View>
             </View>
-            {!bigView && (
-              <TouchableOpacity onPress={() => router.push("video/CreateUploadVideo")}>
-                <ButtonAddSimple />
-              </TouchableOpacity>
-            )}
+            <View
+              style={{
+                alignItems: "center",
+                gap: 20,
+              }}
+            >
+              {icons().map((icon, index) => (
+                <View key={index} style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
+                  {Boolean(icon?.text) && <Text style={{ color: "#50A040" }}>{icon.text}</Text>}
+                  <TouchableOpacity onPress={() => icon.action()}>
+                    {typeof icon.icon === "string" ? (
+                      <TwikklIcon name={icon.icon} size={24} color={icon.color} />
+                    ) : (
+                      <icon.icon />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              ))}
+              {!bigView && (
+                <TouchableOpacity onPress={() => router.push("video/CreateUploadVideo")}>
+                  <ButtonAddSimple />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
-        {comment && (
-          <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
-            <Comment
-              setComment={setComment}
-              comments={item.comments}
-              postId={item._id}
-              newComment={(comment) => {
-                refetchComments && refetchComments();
-              }}
-            />
-          </AppBottomSheet>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+      {comment && (
+        <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
+          <Comment
+            setComment={setComment}
+            comments={item.comments}
+            postId={item._id}
+            newComment={(comment) => {
+              refetchComments && refetchComments();
+            }}
+          />
+        </AppBottomSheet>
+      )}
+    </>
   );
 }
 
@@ -238,6 +228,7 @@ const styles = StyleSheet.create({
   headActionText: {
     color: DEFAULT_CAMERA_ACTION_COLOR,
     fontWeight: "600",
+    fontSize: 18,
   },
   headActionIndicator: {
     alignSelf: "center",
@@ -245,13 +236,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 3,
     height: 5,
-  },
-  rightActionsContainer: {
-    justifyContent: "space-between",
-    alignSelf: "flex-end",
-    alignItems: "flex-end",
-    marginVertical: 10,
-    paddingRight: 5,
   },
   profileImg: {
     width: 40,
@@ -263,8 +247,9 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     flex: 1,
-    marginHorizontal: 10,
-    marginBottom: "20%",
-    justifyContent: "flex-end",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    marginBottom: "23%",
+    paddingHorizontal: 10,
   },
 });

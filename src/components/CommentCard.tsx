@@ -48,6 +48,7 @@ const RenderCard = ({
   userId,
   name = "",
   likeCount,
+  main,
 }: {
   pic?: string;
   createdAt: string;
@@ -56,20 +57,19 @@ const RenderCard = ({
   handleReply?: () => void;
   name?: string;
   likeCount: number;
+  main?: boolean;
 }) => {
   const [isLike, setIsLike] = useState(false);
   return (
     <Wrapper>
-      <UserAvatar pic={pic} name={name} userId={userId} />
+      <UserAvatar size={main ? 35 : 27} pic={pic} name={name} userId={userId} />
       <Main>
         <TextWrapper>
           <Text style={{ fontSize: 16 }}>{comment}</Text>
         </TextWrapper>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
           <SmallText>{(dayjs(createdAt) as any).fromNow()}</SmallText>
-          <Pressable onPress={handleReply}>
-            <SmallText>Reply</SmallText>
-          </Pressable>
+          <Pressable onPress={handleReply}>{main && <SmallText>Reply</SmallText>}</Pressable>
           <View style={{ flex: 1 }} />
           <Pressable onPress={() => setIsLike(!isLike)} style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Text style={{ color: "#fff" }}>{likeCount > 0 && likeCount}</Text>
@@ -93,16 +93,20 @@ const CommentCard = ({
   likeCount: number;
 }) => {
   const [viewReplies, setViewReplies] = useState(false);
+  // console.log("====================================");
+  // console.log(comment.user);
+  // console.log("====================================");
   return (
     <View>
       <RenderCard
         likeCount={likeCount}
-        pic={comment.user?.img || ""}
+        pic={comment.user?.avatar || ""}
         handleReply={handleReply}
         userId={typeof comment.user === "string" ? comment.user : comment.user._id || ""}
         name={comment.user.username}
         createdAt={comment.updatedAt}
         comment={comment.comment}
+        main
       />
       {Boolean(subComment?.length) && (
         <>
@@ -111,10 +115,11 @@ const CommentCard = ({
               {subComment?.map((item) => (
                 <RenderCard
                   likeCount={item.likeCount}
-                  pic={item.user.img}
+                  pic={item.user.avatar}
                   handleReply={handleReply}
                   createdAt={item.updatedAt}
                   userId={typeof item.user === "string" ? item.user : item.user._id || ""}
+                  name={item.user.username}
                   comment={item?.comment}
                   key={item?.id}
                 />

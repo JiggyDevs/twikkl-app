@@ -23,7 +23,7 @@ import { useState } from "react";
 import Grid3 from "@assets/svg/Grid3";
 import Grid2 from "@assets/svg/Grid2";
 
-interface Header extends IGroup {
+interface IHeader extends IGroup {
   select: number;
   setSelect: Function;
   setShowSearch: Function;
@@ -31,28 +31,28 @@ interface Header extends IGroup {
 }
 
 const Header = ({
-  title,
+  name,
   description,
   members,
-  img,
-  smallImg,
-  status,
-  smallGroup,
+  coverImg,
+  avatar,
+  categories,
   select,
   setSelect,
   setShowSearch,
   setPostVideo,
-}: Header): JSX.Element => {
+  isPrivate,
+}: IHeader): JSX.Element => {
   const { height } = Dimensions.get("window");
   const [dropDown, setDropDown] = useState(false);
-
+  const [activeCategory, setActiveCategory] = useState("All");
   const router = useRouter();
-
   const gridArr = [<Grid1 />, <Grid2 />, <Grid3 />];
+  const categoriesToUse = ["All", ...categories];
 
   return (
     <View>
-      <ImageBackground style={[styles.bannerImage, { height: height * 0.32 }]} source={{ uri: img }}>
+      <ImageBackground style={[styles.bannerImage, { height: height * 0.32 }]} source={{ uri: coverImg }}>
         <TouchableOpacity onPressOut={() => router.back()} style={styles.iconContainer}>
           <Octicons name="chevron-left" size={24} color="#fff" />
         </TouchableOpacity>
@@ -62,14 +62,18 @@ const Header = ({
         </View>
       </ImageBackground>
       <View style={styles.container}>
-        <Image style={styles.profilePicture} source={{ uri: smallImg }} />
-        <Text style={styles.title}>{title}</Text>
+        <Image style={styles.profilePicture} source={{ uri: avatar }} />
+        <Text style={styles.title}>{name}</Text>
         <Text style={styles.description}>{description}</Text>
         <View style={[styles.horizontal, styles.detailsContainer]}>
           <View style={styles.horizontal}>
             <View style={styles.horizontal}>
-              <MaterialCommunityIcons name="lock" size={20} color={colors.white100} />
-              <Text style={styles.details}>{status}</Text>
+              {isPrivate ? (
+                <MaterialCommunityIcons name="lock" size={20} color={colors.white100} />
+              ) : (
+                <MaterialCommunityIcons name="lock-open" size={20} color={colors.white100} />
+              )}
+              <Text style={styles.details}>{isPrivate ? "Closed" : "Open"}</Text>
             </View>
             <View style={[styles.horizontal, { marginLeft: 10 }]}>
               <FontAwesome5 name="user-friends" size={17} color={colors.white200} />
@@ -89,10 +93,14 @@ const Header = ({
         </View>
       </View>
 
-      <ScrollView horizontal>
-        {smallGroup?.map((topic, index) => {
+      <ScrollView style={{ marginVertical: 8 }} horizontal>
+        {categoriesToUse?.map((topic, index) => {
           return (
-            <TouchableOpacity key={index} style={[styles.topicsButton]}>
+            <TouchableOpacity
+              onPress={() => setActiveCategory(topic)}
+              key={index}
+              style={[styles.topicsButton, activeCategory === topic && styles.topicsButtonActive]}
+            >
               <Text>{topic}</Text>
             </TouchableOpacity>
           );
@@ -103,7 +111,20 @@ const Header = ({
         <View style={styles.actionContainer}>
           <View style={styles.horizontal}>
             <Image source={require("../../../assets/imgs/smallImg1.png")} style={styles.actionAvatar} />
-            <PlayUpload onPress={() => setPostVideo(true)} />
+            <Pressable onPress={() => setPostVideo(true)} style={styles.actionContent}>
+              <Text style={{ color: "#fff", fontWeight: "700" }}>Post</Text>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: -7,
+                  right: 0,
+                  backgroundColor: "#fff",
+                  borderRadius: 10,
+                }}
+              >
+                <PlayUpload />
+              </View>
+            </Pressable>
           </View>
           <View style={[styles.horizontal, { gap: 20 }]}>
             <Pressable onPress={() => setDropDown(!dropDown)} style={[styles.horizontal, { gap: 7 }]}>
@@ -217,12 +238,14 @@ const styles = StyleSheet.create({
   },
   topicsButton: {
     paddingVertical: 6,
-    marginVertical: 8,
     paddingHorizontal: 15,
-    marginLeft: 16,
+    marginLeft: 10,
     borderColor: colors.green300,
     borderWidth: 1,
     borderRadius: 100,
+  },
+  topicsButtonActive: {
+    backgroundColor: colors.green300,
   },
   iconContainer: {
     backgroundColor: "#000",
@@ -231,6 +254,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
+  },
+  actionContent: {
+    borderRadius: 15,
+    backgroundColor: "#50A040",
+    paddingVertical: 7,
+    paddingHorizontal: 20,
   },
 });
 export default Header;

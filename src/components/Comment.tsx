@@ -6,6 +6,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import styled from "styled-components/native";
@@ -23,6 +24,7 @@ const Wrapper = styled.View`
   padding-horizontal: ${hp(2)}px;
   flex: 1;
   gap: 20px;
+  padding-bottom: 25px;
 `;
 const Container = styled.View`
   padding-top: ${hp(2)}px;
@@ -48,6 +50,8 @@ const Comment = ({ setComment, postId, newComment }: CommentProps) => {
   const { form, updateField, clearForm } = useFormField(defaultForm);
 
   const [loader, setLoader] = useState(false);
+  // comment.user.username
+  const [placeholder, setPlaceholder] = useState("Write a comment");
 
   const [replyComment, setReplyComment] = useState("");
   const [pageSize, setPageSize] = useState(10);
@@ -82,6 +86,8 @@ const Comment = ({ setComment, postId, newComment }: CommentProps) => {
       newComment(form.comment);
       refetch();
       clearForm();
+      setReplyComment("");
+      setPlaceholder("Write a comment");
     }
 
     setLoader(false);
@@ -89,6 +95,7 @@ const Comment = ({ setComment, postId, newComment }: CommentProps) => {
   };
 
   return (
+    // <KeyboardAvoidingView style={{ flex: 1 }}>
     <Container>
       <Wrapper>
         <View style={[ViewVariant.rowSpaceBetween]}>
@@ -108,6 +115,7 @@ const Comment = ({ setComment, postId, newComment }: CommentProps) => {
                   likeCount={0}
                   handleReply={() => {
                     setReplyComment(comment._id);
+                    setPlaceholder(`Reply to ${comment?.user.username}`);
                     inputRef?.current!.focus();
                   }}
                   key={comment._id}
@@ -128,7 +136,7 @@ const Comment = ({ setComment, postId, newComment }: CommentProps) => {
         }}
       >
         <TextInput
-          placeholder="Write a comment"
+          placeholder={placeholder}
           style={{ flex: 1, fontSize: 16 }}
           value={form.comment}
           ref={inputRef}
@@ -140,6 +148,7 @@ const Comment = ({ setComment, postId, newComment }: CommentProps) => {
         </TouchableOpacity>
       </View>
     </Container>
+    // </KeyboardAvoidingView>
   );
 };
 

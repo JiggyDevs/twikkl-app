@@ -12,7 +12,7 @@ type ICreatePost = {
   groupId?: string;
 };
 
-export const usePostHook = () => {
+export const usePostHook = (group?: string, setPostVideo?: Function, setCaption?: Function) => {
   const router = useRouter();
   const { _uploadVideo } = useUploadVideo();
 
@@ -32,7 +32,13 @@ export const usePostHook = () => {
       console.log("postResponse", response);
       if (response) {
         toastSuccess("Post created");
-        router.push("Home");
+        if (group) {
+          setPostVideo?.(false);
+          setCaption?.(false);
+          // router.push("Discover/group");
+        } else {
+          router.push("Home");
+        }
       }
       hideLoader();
       return response;

@@ -87,13 +87,13 @@ export default function ScreenHome() {
           </Pressable>
           <View style={ViewVariant.centered}>
             <Text variant="titleMedium" style={styles.headActionText}>
-              {t("home.myFeed")}
+              {t("My Feed")}
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: colorPrimary }} />
           </View>
           <Pressable onPress={() => router.push("Discover")}>
             <Text variant="titleMedium" style={styles.headActionText}>
-              {t("home.discover")}
+              {t("Discover")}
             </Text>
             <Badge size={10} style={{ ...styles.headActionIndicator, backgroundColor: DEFAULT_CAMERA_ACTION_COLOR }} />
           </Pressable>

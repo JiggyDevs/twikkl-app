@@ -38,6 +38,15 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
   };
 
   const [allCategories, setAllCategories] = useState<{ name: string; description: string }[]>([]);
+  const [tc, setTc] = useState(false);
+  const [options, setOptions] = useState(false);
+  const [subData, setSubData] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [categoryForm, setCategoryForm] = useState({
+    name: "",
+    description: "",
+  });
+  const [createCategoryLoader, setCreateCategoryLoader] = useState(false);
 
   const handleFetchCategories = useCallback(async () => {
     const response = await fetchCategories();
@@ -45,17 +54,7 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
       setAllCategories(response.data);
     }
   }, []);
-
-  const [showModal, setShowModal] = useState(false);
-
-  const [categoryForm, setCategoryForm] = useState({
-    name: "",
-    description: "",
-  });
-
   const { refetch } = useQuery(["categories"], () => handleFetchCategories());
-
-  const [createCategoryLoader, setCreateCategoryLoader] = useState(false);
 
   const updateAllCategory = (data: { name: string; description: string }) => {
     setAllCategories((prev) => [...prev, data]);
@@ -87,14 +86,7 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
     }
   };
 
-  const [tc, setTc] = useState(false);
-
-  const [options, setOptions] = useState(false);
-
   const { pickImage } = useImageHook();
-
-  const [subData, setSubData] = useState("");
-
   const handleImagePick = async () => {
     const response = await pickImage();
 
@@ -161,11 +153,17 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
               </Pressable>
             </View>
             {options && (
-              <Dropdown options={options} optionsArray={optionsArray} setSubData={setSubData} subData={subData} />
+              <Dropdown
+                setOption={setOptions}
+                options={options}
+                optionsArray={optionsArray}
+                setSubData={setSubData}
+                subData={subData}
+              />
             )}
             <View>
               <Text style={styles.label}>Category</Text>
-              <View style={styles.allCategory}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.allCategory}>
                 {allCategories.map((categories) => (
                   <TouchableOpacity
                     key={categories.name}
@@ -185,7 +183,7 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
                     </Text>
                   </TouchableOpacity>
                 ))}
-              </View>
+              </ScrollView>
               <TouchableOpacity onPress={() => setShowModal(true)}>
                 <Text style={styles.addCatText}>Add category</Text>
               </TouchableOpacity>
@@ -199,7 +197,6 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
             />
           </View>
         </ScrollView>
-
         <TermsAndPrivacy setTc={setTc} tc={tc} />
       </View>
       <ButtonEl
@@ -283,7 +280,6 @@ const styles = StyleSheet.create({
   },
   allCategory: {
     flexDirection: "row",
-    alignItems: "center",
   },
   category: {
     paddingHorizontal: 12,

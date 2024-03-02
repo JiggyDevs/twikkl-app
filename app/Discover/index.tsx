@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable, Image } from "react-native";
 import { Octicons, AntDesign, Ionicons, FontAwesome5, Feather } from "@expo/vector-icons";
 import Highlights from "@twikkl/components/Discover/Highlights";
 import Card from "@twikkl/components/Discover/Card";
@@ -11,9 +11,10 @@ import { useRouter } from "expo-router";
 import { Groups, createGroup, favouriteGroup, joinGroup, leaveGroup, unfavouriteGroup } from "@twikkl/services";
 import CreateGroup from "@twikkl/components/Discover/CreateGroup";
 import { hideLoader, showLoader } from "@twikkl/entities";
-import { toastSuccess } from "@twikkl/utils/common";
+import { toastError, toastSuccess } from "@twikkl/utils/common";
 import { useUploadPhoto } from "@twikkl/hooks/upload-hook";
 import { updateGroup } from "@twikkl/entities/group.entity";
+import { appToast } from "@twikkl/utils/AppAlert";
 
 export const colors = {
   green100: "#041105",
@@ -23,10 +24,10 @@ export const colors = {
   white200: "#ffffff",
 };
 
-// const criterias = [
-//   { icon: require("../../assets/imgs/bayc.png"), text: "BAYC NFT" },
-//   { icon: require("../../assets/imgs/jgy.png"), text: "10 JGY" },
-// ];
+const criterias = [
+  { icon: require("../../assets/imgs/bayc.png"), text: "BAYC NFT" },
+  { icon: require("../../assets/imgs/jgy.png"), text: "10 JGY" },
+];
 
 export interface Group extends Groups {}
 
@@ -58,6 +59,7 @@ const Discover = () => {
 
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [showCreateGroup, setCreateGroup] = useState(false);
+  const [isCriteriaMet, setIsCriteriaMet] = useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
   const router = useRouter();
 
@@ -68,6 +70,10 @@ const Discover = () => {
   const { favouriteGroups, refetch: favouriteGroupRefetch } = useYourFavouriteGroupsHook();
 
   const { _uploadPhoto } = useUploadPhoto();
+
+  // console.log("====================================");
+  // console.log(groups);
+  // console.log("====================================");
 
   const handleCreateGroup = async (data: {
     name: string;
@@ -154,18 +160,36 @@ const Discover = () => {
         <View style={styles.modal}>
           {modalType === "access" ? (
             <>
-              {/* <Ionicons name="lock-closed" color="#000" size={35} /> */}
+              {selectedGroup?.isPrivate ? (
+                <Ionicons name="lock-closed" color="#000" size={35} />
+              ) : (
+                <Ionicons name="lock-open" color="#000" size={35} />
+              )}
               <Text style={{ fontWeight: "700", fontSize: 15, marginTop: 8 }}>{selectedGroup?.name}</Text>
-              {/* <Text style={{ fontSize: 16, marginBottom: 14, marginTop: 22 }}>Eligibility Criteria</Text>
-              {criterias.map((item) => (
-                <View style={styles.criteria} key={item.text}>
-                  <Text style={{ fontWeight: "700", fontSize: 15 }}>{item.text}</Text>
-                  <Image source={item.icon} />
-                </View>
-              ))} */}
-              <View style={{ width: 200, marginTop: 20 }}>
-                <ButtonEl onPress={() => selectedGroup && pressButton(selectedGroup)} height={45}>
+              {selectedGroup?.isPrivate && (
+                <>
+                  <Text style={{ fontSize: 16, marginBottom: 14, marginTop: 16 }}>Eligibility Criteria</Text>
+                  {criterias.map((item) => (
+                    <View style={styles.criteria} key={item.text}>
+                      <Text style={{ fontWeight: "700", fontSize: 15 }}>{item.text}</Text>
+                      <Image source={item.icon} />
+                    </View>
+                  ))}
+                </>
+              )}
+              <View style={{ width: 200, marginTop: 10, gap: 15 }}>
+                <ButtonEl
+                  onPress={() =>
+                    selectedGroup?.isPrivate && !isCriteriaMet
+                      ? toastError("You're not eligible to join this group")
+                      : selectedGroup && pressButton(selectedGroup)
+                  }
+                  height={45}
+                >
                   <Text style={{ color: "#fff" }}>Access Group</Text>
+                </ButtonEl>
+                <ButtonEl onPress={() => setModalType(null)} outline height={45}>
+                  <Text>Cancel</Text>
                 </ButtonEl>
               </View>
             </>
@@ -247,6 +271,7 @@ const Discover = () => {
             <Pressable
               key={item._id}
               onPress={() => {
+                if (activeTabIndex === 0) return;
                 updateGroup(item);
                 router.push({
                   pathname: `/Discover/${item._id}`,
@@ -344,7 +369,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: "#fff",
-    width: "80%",
+    width: "85%",
     padding: 32,
     alignItems: "center",
     borderRadius: 8,

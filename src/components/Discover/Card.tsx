@@ -13,6 +13,7 @@ interface ICard {
   leaveGroup: Function;
   favPress: Function;
   fav?: boolean;
+  isPrivate?: boolean;
 }
 
 export const imgArr = [
@@ -28,12 +29,12 @@ const Card = ({
   forYou,
   members,
   description,
-
   followers,
   onPress,
   leaveGroup,
   favPress,
   fav,
+  isPrivate,
 }: ICard): JSX.Element => {
   const [isFavourite, setIsFavourite] = useState(fav);
 
@@ -41,9 +42,12 @@ const Card = ({
     <View style={styles.container}>
       <ImageBackground style={styles.image} source={{ uri: coverImg }} resizeMode="cover">
         {forYou ? (
-          <></>
+          isPrivate ? (
+            <Ionicons name="lock-closed" color="#fff" size={24} />
+          ) : (
+            <Ionicons name="lock-open" color="#fff" size={24} />
+          )
         ) : (
-          // <Ionicons name="lock-closed" color="#fff" size={22} />
           <Ionicons
             onPress={() => {
               setIsFavourite(!isFavourite);
@@ -58,12 +62,12 @@ const Card = ({
       <View style={styles.content}>
         <View style={styles.titleContainer}>
           <Text style={{ fontSize: 16, color: "#fff", fontWeight: "700" }}>{name}</Text>
-          {forYou && (
-            <View style={styles.membersContainer}>
-              <FontAwesome5 name="user-friends" size={16} color="#fff" />
-              <Text style={styles.members}>{members?.length} Members</Text>
-            </View>
-          )}
+          {/* {forYou && ( */}
+          <View style={styles.membersContainer}>
+            <FontAwesome5 name="user-friends" size={16} color="#fff" />
+            <Text style={styles.members}>{members?.length} Members</Text>
+          </View>
+          {/* )} */}
         </View>
         <Text style={styles.description}>{description}</Text>
         {/* <View style={styles.avatarContainer}>
@@ -82,7 +86,6 @@ const Card = ({
         <TouchableOpacity
           onPress={() => {
             if (forYou) onPress();
-            return;
           }}
           style={styles.button}
         >
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 15,
+    marginTop: 10,
     backgroundColor: "#fff",
     borderRadius: 16,
   },

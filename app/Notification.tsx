@@ -7,7 +7,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat";
 import NotifCard from "@twikkl/components/NotifCard";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { authEntity } from "@twikkl/entities/auth.entity";
+import { TUser, authEntity } from "@twikkl/entities/auth.entity";
 import { NotificationResponse, markNotification, userNotifications } from "@twikkl/services/notification.services";
 import AppLoader from "@twikkl/components/AppLoader";
 import dayjs from "dayjs";
@@ -20,25 +20,18 @@ dayjs.extend(isYesterday);
 dayjs.extend(advancedFormat);
 
 const Notification = () => {
-  const router = useRouter();
-
-  const [active, setActive] = useState("All");
-
   const { user } = authEntity.get();
-
+  const router = useRouter();
+  const [active, setActive] = useState("All");
   const [page] = useState(1);
-
   const [pageSize, setPageSize] = useState(10);
-
+  const [viewNotification, setViewNotification] = useState<[number, number] | null>(null);
   const { data, isLoading, refetch } = useQuery(["notifications", user?._id, pageSize], () =>
     userNotifications(user?._id || "", page, pageSize),
   );
 
-  const [viewNotification, setViewNotification] = useState<[number, number] | null>(null);
-
   const handleMarkNotification = async (notificationId: string) => {
     const response = await markNotification(notificationId);
-
     if (response) {
       refetch();
     }
@@ -47,7 +40,6 @@ const Notification = () => {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
-
     if (isEndReached) {
       if (!isLoading && (data?.pagination.total || 0) > pageSize) {
         setPageSize((prev) => prev + 10);
@@ -57,18 +49,21 @@ const Notification = () => {
 
   const organizeDataByDate = (data: NotificationResponse[]): Map<string, NotificationResponse[]> => {
     const dataByDate = new Map();
-
     data.forEach((item) => {
       const dateKey = dayjs(item.createdAt).format("YYYY-MM-DD");
-
       if (!dataByDate.has(dateKey)) {
         dataByDate.set(dateKey, []);
       }
-
       dataByDate.get(dateKey).push(item);
     });
-
     return dataByDate;
+  };
+
+  const computeDate = (date: string) => {
+    const day = dayjs(date);
+    if (day.isToday()) return "Today";
+    if (day.isYesterday()) return "Yesterday";
+    return day.format("Do MMM YYYY");
   };
 
   if (isLoading) {
@@ -86,7 +81,6 @@ const Notification = () => {
   }
 
   const notifications = data.data;
-
   // Assuming `data` is an array of Notification objects
   const dataByDate = organizeDataByDate(notifications);
 
@@ -103,29 +97,24 @@ const Notification = () => {
     if (active === "Comments") return comments;
     if (active === "Mentions") return mentions;
     if (active === "Following") return following;
-
     return dataByDate;
-  };
-
-  const computeDate = (date: string) => {
-    const day = dayjs(date);
-
-    if (day.isToday()) return "Today";
-
-    if (day.isYesterday()) return "Yesterday";
-
-    return day.format("Do MMM YYYY");
   };
 
   const allNotifications = Array.from(getActive());
 
   if (viewNotification) {
     const getNotificationsFromAll = allNotifications[viewNotification[0]][1];
-
+    const postToShow = getNotificationsFromAll[viewNotification[1]];
     return (
       <BigView
         setBigView={() => setViewNotification(null)}
-        post={getNotificationsFromAll[viewNotification[1]].post}
+        post={{
+          ...postToShow.post,
+          creator: {
+            avatar: postToShow.user.avatar,
+            username: postToShow.user.username,
+          },
+        }}
         refetchComments={refetch}
       />
     );
@@ -161,29 +150,34 @@ const Notification = () => {
             ))}
           </ScrollView>
         </View>
-        <ScrollView onScroll={handleScroll}>
-          <View style={{ flex: 1 }}>
+        <ScrollView showsVerticalScrollIndicator={false} onScroll={handleScroll}>
+          <View style={{ flex: 1, gap: 15 }}>
             {Array.from(getActive()).map(([key, value], idx) => (
               <View key={key}>
                 <Text style={styles.dayText}>{computeDate(key)}</Text>
-
                 {value.length ? (
-                  value.map((item, index) => (
-                    <NotifCard
-                      key={item._id}
-                      text={item.title}
-                      handleView={() => {
-                        if (item.post) setViewNotification([idx, index]);
-
-                        handleMarkNotification(item._id);
-                      }}
-                      desc={item.content}
-                      avatar={item.user.avatar}
-                      userId={item.user._id}
-                      name={item.user.name || item.user.username}
-                      action={item.post ? "View" : undefined}
-                    />
-                  ))
+                  value.map((item, index) => {
+                    console.log("====================================");
+                    console.log(item);
+                    console.log("====================================");
+                    return (
+                      <NotifCard
+                        key={item._id}
+                        text={item.title}
+                        handleView={() => {
+                          if (item.post) setViewNotification([idx, index]);
+                          handleMarkNotification(item._id);
+                        }}
+                        time={(dayjs(item.createdAt) as any).fromNow()}
+                        type={item.type}
+                        desc={item.content}
+                        avatar={item.user.avatar}
+                        userId={item.user._id}
+                        name={item.user.name || item.user.username}
+                        action={item.post ? "View" : undefined}
+                      />
+                    );
+                  })
                 ) : (
                   <View style={styles.textCenter}>
                     <Text style={{ color: "#50A040" }}>You have no notifications yet</Text>
@@ -207,7 +201,7 @@ const styles = StyleSheet.create({
   },
   dayText: {
     fontWeight: "700",
-    fontSize: 12,
+    fontSize: 14,
     marginBottom: 10,
   },
   topHeader: {

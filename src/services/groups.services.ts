@@ -11,6 +11,7 @@ export type Groups = {
   members: string[];
   categories: string[];
   isDeleted: boolean;
+  isPrivate?: boolean;
   avatar: string;
   coverImg: string;
   isAdminDeleted: boolean;

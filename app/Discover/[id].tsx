@@ -1,8 +1,8 @@
 import { View, FlatList, Pressable } from "react-native";
-import { useSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import Header from "@twikkl/components/Group/Header";
 import VideoCard from "@twikkl/components/Group/VideoCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Search from "@twikkl/components/Discover/Search";
 import BigView from "@twikkl/components/Discover/BigView";
 import { Group as GroupResponse } from ".";
@@ -15,15 +15,13 @@ import { groupEntity } from "@twikkl/entities/group.entity";
 export interface IGroup {
   description: string;
   followers?: number;
-  img: any;
-  title: string;
+  coverImg: any;
+  name: string;
   members: string[];
   fav?: boolean;
-  id: string;
-  smallImg: any;
-  status: string;
-  smallGroup: string[];
-  videos: any;
+  avatar: any;
+  categories: string[];
+  isPrivate?: boolean;
 }
 
 const defaultState = {
@@ -39,54 +37,59 @@ const defaultState = {
   categories: [""],
 };
 const Group = (): JSX.Element => {
-  const { id } = useSearchParams() as { id: string };
+  const { id } = useLocalSearchParams() as { id: string };
   const { group } = groupEntity.use();
 
   const groupData: GroupResponse = group || defaultState;
 
-  const { data: groupPosts } = useQuery(["group-post", id], () => fetchGroupPosts(id));
+  const { data: groupPosts, refetch } = useQuery(["group-post", id], () => fetchGroupPosts(id));
   const videos = isUserFeedsResponse(groupPosts) ? groupPosts.data : [];
   // console.log("fettttch postt", videos, groupPosts);
-
+  // console.log("fettttch postt", id, groupData._id);
   const [select, setSelect] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
+  const [viewPost, setViewPost] = useState<number | null>(null);
   const [bigView, setBigView] = useState(false);
   const [postVideo, setPostVideo] = useState(false);
   const numColumns = select + 1;
+  // console.log("====================================");
+  // console.log("vidd", videos, "...........", groupData.categories);
+  // console.log("====================================");
+  useEffect(() => {
+    refetch();
+  }, [postVideo]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       {showSearch ? (
         <Search setShowSearch={setShowSearch} />
-      ) : bigView ? (
-        <BigView setBigView={setBigView} refetchComments={() => null} />
+      ) : bigView && viewPost !== null ? (
+        <BigView setBigView={setBigView} post={videos[viewPost]} refetchComments={refetch} />
       ) : postVideo ? (
-        <CreateUploadvideo groupId={groupData._id} />
+        <CreateUploadvideo setPostVideo={setPostVideo} groupCat={groupData.categories} groupId={groupData._id} />
       ) : (
         <>
           <Header
-            img={groupData.coverImg}
-            status=""
-            smallGroup={groupData.categories}
-            videos={undefined}
-            title={groupData.name}
-            id={id}
             setPostVideo={setPostVideo}
             setShowSearch={setShowSearch}
             select={select}
-            smallImg={groupData.avatar}
             setSelect={setSelect}
             {...groupData}
           />
-          <View style={{ zIndex: -2, flex: 1 }}>
+          <View style={{ zIndex: -2, flex: 1, marginBottom: 20 }}>
             <FlatList
               numColumns={numColumns}
               key={numColumns}
               data={videos}
-              renderItem={({ item }) => {
+              renderItem={({ item, index }) => {
                 return (
-                  <Pressable onPress={() => setBigView(true)}>
-                    <VideoCard numCol={numColumns} videoLink={item} />
+                  <Pressable
+                    onPress={() => {
+                      setViewPost(index);
+                      setBigView(true);
+                    }}
+                  >
+                    <VideoCard numCol={numColumns} videoLink={item.contentUrl} />
                   </Pressable>
                 );
               }}

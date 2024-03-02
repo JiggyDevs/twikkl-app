@@ -27,6 +27,7 @@ import AppLoader from "@twikkl/components/AppLoader";
 import { fetchBookmarks, fetchUserPost, isUserFeedsResponse } from "@twikkl/services/feed.services";
 import ImgBgRender from "@twikkl/components/ImgBgRender";
 import BigView from "@twikkl/components/Discover/BigView";
+import Settings from "@assets/svg/Settings";
 
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 
@@ -93,14 +94,16 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topHeader}>
-        <Pressable onPress={() => router.push("Home")}>
+        <Pressable onPress={router.back}>
           <Back dark="#041105" />
         </Pressable>
         <Text style={styles.boldText}>Profile</Text>
-        {loggedInProfile && (
-          <TouchableOpacity onPress={() => router.push("/settings/Account")}>
-            <MoreIcon />
+        {loggedInProfile ? (
+          <TouchableOpacity onPress={() => router.push("/settings")}>
+            <Settings />
           </TouchableOpacity>
+        ) : (
+          <MoreIcon />
         )}
       </View>
       <ScrollView style={{ paddingHorizontal: 10 }} onScroll={handleScroll}>
@@ -117,9 +120,16 @@ const Profile = () => {
           </View>
           <Text style={styles.textLight}>{data?.bio || "-"}</Text>
           <View style={styles.flex}>
-            {loggedInProfile && (
-              <Pressable style={styles.bgGreen}>
+            {loggedInProfile ? (
+              <Pressable
+                onPress={() => router.push({ pathname: "settings", params: { name: "Account" } })}
+                style={styles.bgGreen}
+              >
                 <Text style={styles.textWhite}>Edit Profile</Text>
+              </Pressable>
+            ) : (
+              <Pressable style={styles.bgGreen}>
+                <Text style={styles.textWhite}>Follow</Text>
               </Pressable>
             )}
 
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
   },
   img: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flexWrap: "wrap",
     gap: 10,
     marginTop: 38,
