@@ -13,10 +13,14 @@ import InputField from "@twikkl/components/InputField";
 import NFTCard from "@twikkl/components/NFTCard";
 import TokenCard from "@twikkl/components/TokenCard";
 import { isPriceToken, nfts, receiveNFt, tokens } from "@twikkl/data/constant";
-import { createWallet } from "@twikkl/services/wallet.services";
+import { addToken, removeToken, updateToken, useSavedTokenNft } from "@twikkl/entities/tokenNft.entity";
+import { useWallet } from "@twikkl/hooks/wallet.hooks";
+import { createWallet, sendFund } from "@twikkl/services/wallet.services";
 import { useWalletHook } from "@twikkl/SmartAccount/hook";
+import { searchFilter, toastInfo } from "@twikkl/utils/common";
+import { TOAST_MESSAGE } from "@twikkl/utils/helper.enum";
 import { useRouter } from "expo-router";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 // import { IBundler, Bundler } from "@biconomy/bundler";
@@ -80,14 +84,24 @@ export default function Wallet(): ReactElement {
 
   const [scwAddress, setScwAddress] = useState<string>("");
   const { walletDetails, refetch: walletRefetch } = useWalletHook();
+  const { isSavedToken, savedTokens } = useSavedTokenNft();
 
-  useEffect(() => {}, []);
+  console.log({ savedTokens });
+
+  const { tokensToDisplay } = useWallet();
+
+  // useEffect(() => {}, []);
   console.log("walletDetailsss", walletDetails);
   // const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    createWallet();
-  }, []);
+  // useEffect(() => {
+  //   // createWallet();
+  //   sendFund({
+  //     amount: 10,
+  //     pin: "1234",
+  //     toAddress: "0x02d83275891e102c5122ed474db302c28b880498",
+  //   });
+  // }, []);
 
   // const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
 
@@ -139,6 +153,23 @@ export default function Wallet(): ReactElement {
   //   userSmartContract();
   // }, []);
   // useSmartAccount();
+
+  const searchDataToRender = useMemo(() => {
+    if (query.trim()) {
+      return searchFilter(allTokens, query, "name");
+    } else {
+      return allTokens;
+    }
+  }, [query]);
+
+  const receiveNFtToRender = useMemo(() => {
+    if (query.trim()) {
+      return searchFilter(receiveNFt, query, "title");
+    } else {
+      return receiveNFt;
+    }
+  }, [query]);
+
   return (
     <View style={{ paddingTop: 60 }}>
       {search.length ? (
@@ -197,11 +228,20 @@ export default function Wallet(): ReactElement {
               </View>
               {search === "token" && (
                 <View style={{ marginTop: 20, gap: 15 }}>
-                  {allTokens.map((token) => (
+                  {searchDataToRender.map((token) => (
                     <TokenCard
                       key={token.name}
-                      checked={data[token.name]}
-                      onToggle={() => updateData(token.name, !data[token.name])}
+                      checked={isSavedToken(token.name)}
+                      onToggle={() => {
+                        if (savedTokens.length === 1 && isSavedToken(token.name)) {
+                          toastInfo(TOAST_MESSAGE.TOKEN_DISABLE_LAST_INFO);
+                          return;
+                        }
+                        isSavedToken(token.name) ? removeToken(token.name) : addToken(token.name);
+
+                        // updateData(token.name, !data[token.name])
+                        // isSavedToken(toke)
+                      }}
                       add
                       {...token}
                     />
@@ -210,7 +250,7 @@ export default function Wallet(): ReactElement {
               )}
               {search === "nft" && (
                 <View style={{ gap: 10 }}>
-                  {receiveNFt.map((nft) => (
+                  {receiveNFtToRender.map((nft) => (
                     <Pressable
                       key={nft.title}
                       onPress={() => setNft(nft)}
@@ -272,12 +312,18 @@ export default function Wallet(): ReactElement {
           <View style={{ padding: 16 }}>
             {tabState === "Tokens" && (
               <>
-                <Pressable onPress={() => setSearch("token")} style={{ flexDirection: "row", gap: 10 }}>
+                <Pressable
+                  onPress={() => {
+                    setSearch("token");
+                    setQuery("");
+                  }}
+                  style={{ flexDirection: "row", gap: 10 }}
+                >
                   <PlusIcon />
                   <Text style={{ color: "#000" }}>Add token</Text>
                 </Pressable>
                 <View style={{ marginTop: 20, gap: 15 }}>
-                  {tokens.map((token) => (
+                  {tokensToDisplay.map((token) => (
                     <TokenCard key={token.name} {...token} />
                   ))}
                 </View>
@@ -285,7 +331,13 @@ export default function Wallet(): ReactElement {
             )}
             {tabState === "NFTs" && (
               <>
-                <Pressable onPress={() => setSearch("nft")} style={{ flexDirection: "row", gap: 10 }}>
+                <Pressable
+                  onPress={() => {
+                    setSearch("nft");
+                    setQuery("");
+                  }}
+                  style={{ flexDirection: "row", gap: 10 }}
+                >
                   <PlusIcon />
                   <Text style={{ color: "#000" }}>Receive NFT</Text>
                 </Pressable>

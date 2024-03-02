@@ -7,6 +7,7 @@ import CommentIcon from "../../assets/svg/comment.svg";
 import WalletIcon from "../../assets/svg/wallet.svg";
 import ProfileIcon from "../../assets/svg/profile.svg";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components/native";
 
 type BottomNavProps = {
   commentCount: number | string;
