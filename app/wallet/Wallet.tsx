@@ -11,11 +11,13 @@ import Transfer from "@assets/svg/Transfer";
 import BackHeader from "@twikkl/components/BackHeader";
 import InputField from "@twikkl/components/InputField";
 import NFTCard from "@twikkl/components/NFTCard";
+import PinKeyboard from "@twikkl/components/PinKeyboard";
 import TokenCard from "@twikkl/components/TokenCard";
 import { isPriceToken, nfts, receiveNFt, tokens } from "@twikkl/data/constant";
+import { useAuth } from "@twikkl/entities/auth.entity";
 import { addToken, removeToken, updateToken, useSavedTokenNft } from "@twikkl/entities/tokenNft.entity";
 import { useWallet } from "@twikkl/hooks/wallet.hooks";
-import { createWallet, sendFund } from "@twikkl/services/wallet.services";
+import { createWallet, getWalletDetails, sendFund } from "@twikkl/services/wallet.services";
 import { useWalletHook } from "@twikkl/SmartAccount/hook";
 import { searchFilter, toastInfo } from "@twikkl/utils/common";
 import { TOAST_MESSAGE } from "@twikkl/utils/helper.enum";
@@ -82,9 +84,14 @@ export default function Wallet(): ReactElement {
     setData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const { isPinAvailable } = useAuth();
+
+  const pinType = isPinAvailable ? "verify" : "create";
+
   const [scwAddress, setScwAddress] = useState<string>("");
   const { walletDetails, refetch: walletRefetch } = useWalletHook();
   const { isSavedToken, savedTokens } = useSavedTokenNft();
+  const [canShowWallet, setCanShowWallet] = useState(true);
 
   console.log({ savedTokens });
 
@@ -94,14 +101,15 @@ export default function Wallet(): ReactElement {
   console.log("walletDetailsss", walletDetails);
   // const [loading, setLoading] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   // createWallet();
-  //   sendFund({
-  //     amount: 10,
-  //     pin: "1234",
-  //     toAddress: "0x02d83275891e102c5122ed474db302c28b880498",
-  //   });
-  // }, []);
+  useEffect(() => {
+    // createWallet();
+    // sendFund({
+    //   amount: 10,
+    //   pin: "1234",
+    //   toAddress: "0x02d83275891e102c5122ed474db302c28b880498",
+    // });
+    // getWalletDetails("1234");
+  }, []);
 
   // const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
 
@@ -171,43 +179,115 @@ export default function Wallet(): ReactElement {
   }, [query]);
 
   return (
-    <View style={{ paddingTop: 60 }}>
-      {search.length ? (
-        <View>
-          {nft !== null ? (
-            <View style={{ paddingHorizontal: 16 }}>
-              <BackHeader title={`Receive ${nft.title}`} onPress={() => setNft(null)} />
-              <View
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: "grey",
-                  padding: 15,
-                  alignSelf: "center",
-                  alignItems: "center",
-                  marginHorizontal: 40,
-                  marginTop: 40,
-                }}
-              >
-                <Image source={require("../../assets/imgs/qrCode.png")} />
-                <Text style={{ textAlign: "center" }}>{nft.address}</Text>
+    <>
+      <View style={{ paddingTop: 60 }}>
+        {search.length ? (
+          <View>
+            {nft !== null ? (
+              <View style={{ paddingHorizontal: 16 }}>
+                <BackHeader title={`Receive ${nft.title}`} onPress={() => setNft(null)} />
+                <View
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: "grey",
+                    padding: 15,
+                    alignSelf: "center",
+                    alignItems: "center",
+                    marginHorizontal: 40,
+                    marginTop: 40,
+                  }}
+                >
+                  <Image source={require("../../assets/imgs/qrCode.png")} />
+                  <Text style={{ textAlign: "center" }}>{nft.address}</Text>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: "#F8CF75",
+                    padding: 10,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    marginBottom: 30,
+                    marginTop: 20,
+                  }}
+                >
+                  <InfoIcon />
+                  <Text
+                    style={{ textAlign: "center", color: "#000" }}
+                  >{`Send only ${nft.text} (${nft.title}) to this address. Sending any other coins may result in permanent loss.`}</Text>
+                </View>
+                <View style={{ flexDirection: "row", gap: 40, alignSelf: "center" }}>
+                  {nftOption.map((option) => (
+                    <View key={option.text} style={{ alignItems: "center" }}>
+                      <View style={styles.optionBox}>{option.icon}</View>
+                      <Text style={{ color: "#000" }}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-              <View
-                style={{
-                  backgroundColor: "#F8CF75",
-                  padding: 10,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  marginBottom: 30,
-                  marginTop: 20,
-                }}
-              >
-                <InfoIcon />
-                <Text
-                  style={{ textAlign: "center", color: "#000" }}
-                >{`Send only ${nft.text} (${nft.title}) to this address. Sending any other coins may result in permanent loss.`}</Text>
+            ) : (
+              <View style={{ paddingHorizontal: 16 }}>
+                <View style={styles.top}>
+                  <Back onPress={() => setSearch("")} dark="#041105" />
+                  <InputField
+                    placeholder="Search for people and posts"
+                    style={{ flex: 1 }}
+                    value={query}
+                    onChangeText={(val) => setQuery(val)}
+                  />
+                </View>
+                {search === "token" && (
+                  <View style={{ marginTop: 20, gap: 15 }}>
+                    {searchDataToRender.map((token) => (
+                      <TokenCard
+                        key={token.name}
+                        checked={isSavedToken(token.name)}
+                        onToggle={() => {
+                          if (savedTokens.length === 1 && isSavedToken(token.name)) {
+                            toastInfo(TOAST_MESSAGE.TOKEN_DISABLE_LAST_INFO);
+                            return;
+                          }
+                          isSavedToken(token.name) ? removeToken(token.name) : addToken(token.name);
+
+                          // updateData(token.name, !data[token.name])
+                          // isSavedToken(toke)
+                        }}
+                        add
+                        {...token}
+                      />
+                    ))}
+                  </View>
+                )}
+                {search === "nft" && (
+                  <View style={{ gap: 10 }}>
+                    {receiveNFtToRender.map((nft) => (
+                      <Pressable
+                        key={nft.title}
+                        onPress={() => setNft(nft)}
+                        style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
+                      >
+                        <Image source={nft.icon} />
+                        <Text style={{ color: "#000" }}>{nft.text}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                )}
               </View>
-              <View style={{ flexDirection: "row", gap: 40, alignSelf: "center" }}>
-                {nftOption.map((option) => (
+            )}
+          </View>
+        ) : (
+          <>
+            <View style={styles.topHeader}>
+              <Back onPress={() => router.push("Home")} dark="#041105" />
+              <Text style={styles.boldText}>Wallet</Text>
+              <Pressable onPress={() => router.push("wallet/settings")}>
+                <Settings />
+              </Pressable>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ color: "#000", fontSize: 30 }}>$4950.80</Text>
+              <Text style={{ color: "#000" }}>Balance</Text>
+              <View style={{ flexDirection: "row", gap: 20, marginVertical: 20 }}>
+                {walletOption.map((option) => (
                   <View key={option.text} style={{ alignItems: "center" }}>
                     <View style={styles.optionBox}>{option.icon}</View>
                     <Text style={{ color: "#000" }}>{option.text}</Text>
@@ -215,151 +295,91 @@ export default function Wallet(): ReactElement {
                 ))}
               </View>
             </View>
-          ) : (
-            <View style={{ paddingHorizontal: 16 }}>
-              <View style={styles.top}>
-                <Back onPress={() => setSearch("")} dark="#041105" />
-                <InputField
-                  placeholder="Search for people and posts"
-                  style={{ flex: 1 }}
-                  value={query}
-                  onChangeText={(val) => setQuery(val)}
-                />
-              </View>
-              {search === "token" && (
-                <View style={{ marginTop: 20, gap: 15 }}>
-                  {searchDataToRender.map((token) => (
-                    <TokenCard
-                      key={token.name}
-                      checked={isSavedToken(token.name)}
-                      onToggle={() => {
-                        if (savedTokens.length === 1 && isSavedToken(token.name)) {
-                          toastInfo(TOAST_MESSAGE.TOKEN_DISABLE_LAST_INFO);
-                          return;
-                        }
-                        isSavedToken(token.name) ? removeToken(token.name) : addToken(token.name);
-
-                        // updateData(token.name, !data[token.name])
-                        // isSavedToken(toke)
-                      }}
-                      add
-                      {...token}
-                    />
-                  ))}
-                </View>
-              )}
-              {search === "nft" && (
-                <View style={{ gap: 10 }}>
-                  {receiveNFtToRender.map((nft) => (
-                    <Pressable
-                      key={nft.title}
-                      onPress={() => setNft(nft)}
-                      style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
-                    >
-                      <Image source={nft.icon} />
-                      <Text style={{ color: "#000" }}>{nft.text}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-              )}
-            </View>
-          )}
-        </View>
-      ) : (
-        <>
-          <View style={styles.topHeader}>
-            <Back onPress={() => router.push("Home")} dark="#041105" />
-            <Text style={styles.boldText}>Wallet</Text>
-            <Pressable onPress={() => router.push("wallet/settings")}>
-              <Settings />
-            </Pressable>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "#000", fontSize: 30 }}>$4950.80</Text>
-            <Text style={{ color: "#000" }}>Balance</Text>
-            <View style={{ flexDirection: "row", gap: 20, marginVertical: 20 }}>
-              {walletOption.map((option) => (
-                <View key={option.text} style={{ alignItems: "center" }}>
-                  <View style={styles.optionBox}>{option.icon}</View>
-                  <Text style={{ color: "#000" }}>{option.text}</Text>
-                </View>
+            <View style={styles.tabs}>
+              {tabs.map((tab) => (
+                <Pressable
+                  key={tab}
+                  style={{
+                    borderBottomColor: "#000",
+                    borderBottomWidth: tabState === tab ? 3 : 0,
+                    paddingBottom: 5,
+                    width: 100,
+                    alignItems: "center",
+                  }}
+                  onPress={() => setTabState(tab)}
+                >
+                  <Text
+                    style={{
+                      color: tabState === tab ? "green" : "#000",
+                    }}
+                  >
+                    {tab}
+                  </Text>
+                </Pressable>
               ))}
             </View>
-          </View>
-          <View style={styles.tabs}>
-            {tabs.map((tab) => (
-              <Pressable
-                key={tab}
-                style={{
-                  borderBottomColor: "#000",
-                  borderBottomWidth: tabState === tab ? 3 : 0,
-                  paddingBottom: 5,
-                  width: 100,
-                  alignItems: "center",
-                }}
-                onPress={() => setTabState(tab)}
-              >
-                <Text
-                  style={{
-                    color: tabState === tab ? "green" : "#000",
-                  }}
-                >
-                  {tab}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-          <View style={{ padding: 16 }}>
-            {tabState === "Tokens" && (
-              <>
-                <Pressable
-                  onPress={() => {
-                    setSearch("token");
-                    setQuery("");
-                  }}
-                  style={{ flexDirection: "row", gap: 10 }}
-                >
-                  <PlusIcon />
-                  <Text style={{ color: "#000" }}>Add token</Text>
-                </Pressable>
-                <View style={{ marginTop: 20, gap: 15 }}>
-                  {tokensToDisplay.map((token) => (
-                    <TokenCard key={token.name} {...token} />
-                  ))}
-                </View>
-              </>
-            )}
-            {tabState === "NFTs" && (
-              <>
-                <Pressable
-                  onPress={() => {
-                    setSearch("nft");
-                    setQuery("");
-                  }}
-                  style={{ flexDirection: "row", gap: 10 }}
-                >
-                  <PlusIcon />
-                  <Text style={{ color: "#000" }}>Receive NFT</Text>
-                </Pressable>
-                <View
-                  style={{
-                    marginTop: 20,
-                    gap: 15,
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {nfts.map((nft) => (
-                    <NFTCard key={nft.name} {...nft} />
-                  ))}
-                </View>
-              </>
-            )}
-          </View>
-        </>
+            <View style={{ padding: 16 }}>
+              {tabState === "Tokens" && (
+                <>
+                  <Pressable
+                    onPress={() => {
+                      setSearch("token");
+                      setQuery("");
+                    }}
+                    style={{ flexDirection: "row", gap: 10 }}
+                  >
+                    <PlusIcon />
+                    <Text style={{ color: "#000" }}>Add token</Text>
+                  </Pressable>
+                  <View style={{ marginTop: 20, gap: 15 }}>
+                    {tokensToDisplay.map((token) => (
+                      <TokenCard key={token.name} {...token} />
+                    ))}
+                  </View>
+                </>
+              )}
+              {tabState === "NFTs" && (
+                <>
+                  <Pressable
+                    onPress={() => {
+                      setSearch("nft");
+                      setQuery("");
+                    }}
+                    style={{ flexDirection: "row", gap: 10 }}
+                  >
+                    <PlusIcon />
+                    <Text style={{ color: "#000" }}>Receive NFT</Text>
+                  </Pressable>
+                  <View
+                    style={{
+                      marginTop: 20,
+                      gap: 15,
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {nfts.map((nft) => (
+                      <NFTCard key={nft.name} {...nft} />
+                    ))}
+                  </View>
+                </>
+              )}
+            </View>
+          </>
+        )}
+      </View>
+      {canShowWallet && (
+        <PinKeyboard
+          type={pinType}
+          onSuccess={() => setCanShowWallet(false)}
+          closePinModal={() => {
+            setCanShowWallet(false);
+            router.push("Home");
+          }}
+        />
       )}
-    </View>
+    </>
   );
 }
 

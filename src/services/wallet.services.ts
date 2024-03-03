@@ -36,7 +36,7 @@ export const fetchWallets = async () => {
   }
 };
 
-export const createWallet = async (pin: string = "1234") => {
+export const createWalletPin = async (pin: string = "1234") => {
   try {
     const { data } = await fetchFromApi({
       method: "post",
@@ -46,10 +46,11 @@ export const createWallet = async (pin: string = "1234") => {
     // const computeData = {
     //   ...posts,
     // };
-    console.log("create- walletttt", data);
+    console.log("create-walletttt", data);
     return data;
   } catch (error) {
     handleFetchError(error);
+    throw Error;
     console.log("createWalletError11", error);
 
     if (isAxiosError(error)) {
@@ -100,7 +101,7 @@ export const sendFund = async (sendFundParams: SendFundParams) => {
   }
 };
 
-export const walletDetails = async (pin: string) => {
+export const getWalletDetails = async (pin: string) => {
   try {
     const { data } = await fetchFromApi({
       path: "wallets/details",
