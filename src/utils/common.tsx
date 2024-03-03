@@ -69,3 +69,20 @@ export const isValidFormSubmit = (form: object, excludeFields: string[] = []) =>
     return String(value[1]).trim() !== "";
   });
 };
+
+// data search filter
+export const searchFilter = <T extends any[]>(data: T, query: string, filterBy?: keyof T[number]): Array<any> => {
+  if (!(data && query)) return [];
+  return filterBy
+    ? data.filter((datum) => {
+        const _query = query.toLowerCase();
+        const datumQuery = datum[filterBy].toLowerCase();
+
+        return datumQuery.includes(_query);
+      })
+    : data.filter((datum) => {
+        const _query = query.toLowerCase();
+        const datumQuery = datum.toLowerCase();
+        return datumQuery.includes(_query);
+      });
+};

@@ -6,6 +6,7 @@ import { useLogin } from "@twikkl/hooks/auth.hooks";
 import OAuthButton from "@twikkl/components/OAuthButton";
 import { useRouter } from "expo-router";
 import { ViewVariant } from "@twikkl/configs";
+import KeyboardAvoidView from "@twikkl/components/KeyboardAvoidView";
 
 const defaultLoginData = {
   email: "",
@@ -31,6 +32,7 @@ const Login = () => {
           <View style={{ gap: 12 }}>
             <LabelInput
               label="Email"
+              type="email"
               placeholder="example@gmail.com"
               value={form.email}
               onChangeText={(val) => updateField("email", val)}

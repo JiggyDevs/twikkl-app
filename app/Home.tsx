@@ -12,7 +12,7 @@ import { Text, Badge, Button } from "react-native-paper";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
@@ -21,6 +21,7 @@ import { useFeedHook } from "@twikkl/hooks/feed.hooks";
 import AppLoader from "@twikkl/components/AppLoader";
 import Share from "@twikkl/components/Share";
 import Comment from "@twikkl/components/Comment";
+import { setTokenDefault } from "@twikkl/entities/tokenNft.entity";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 const BACKGROUND_COLOR = "#041105";
@@ -53,6 +54,10 @@ export default function ScreenHome() {
   };
 
   const visiblePost = posts[visibleIndex];
+
+  useEffect(() => {
+    setTokenDefault();
+  }, []);
 
   if (isLoading) {
     return <AppLoader />;
@@ -104,7 +109,7 @@ export default function ScreenHome() {
         </View>
       </SafeAreaView>
       {!posts.length && (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: "black" }}>
           <View style={styles.placeholder}>
             <Text variant="titleMedium" style={styles.placeholderText}>
               No posts yet.
@@ -138,7 +143,8 @@ export default function ScreenHome() {
 const styles = StyleSheet.create({
   innerContainer: {
     paddingTop: 10,
-    marginHorizontal: 14,
+    paddingHorizontal: 14,
+    backgroundColor: "black",
   },
   headActionText: {
     color: DEFAULT_CAMERA_ACTION_COLOR,
@@ -150,7 +156,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   placeholderText: {
-    color: "black",
+    color: "#fff",
     fontWeight: "600",
   },
   headActionIndicator: {

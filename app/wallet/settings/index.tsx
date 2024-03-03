@@ -7,13 +7,14 @@ import Recovery from "./recovery";
 
 const Index = () => {
   const [screen, setScreen] = useState("Settings");
+  const isSeedPhraseScreen = screen === "Seed phrase";
   const router = useRouter();
 
   const handleBackPress = () => (screen === "Settings" ? router.replace("/wallet") : setScreen("Settings"));
 
   return (
-    <View style={{ gap: 42, paddingTop: 60, paddingHorizontal: 16 }}>
-      <BackHeader title={screen} onPress={handleBackPress} />
+    <View style={{ gap: 42, paddingTop: 60, paddingHorizontal: 16, flex: 1 }}>
+      <BackHeader title={isSeedPhraseScreen ? "Recovery phase" : screen} onPress={handleBackPress} />
       {screen === "Settings" && <Settings setScreen={setScreen} />}
       {screen === "Seed phrase" && <Recovery />}
     </View>

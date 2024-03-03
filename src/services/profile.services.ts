@@ -84,6 +84,7 @@ export const followUser = async (userId: string) => {
       method: "post",
       body: { userToFollow: userId },
     });
+    console.log("follow data: ", { followUser });
     return data;
   } catch (error) {
     handleFetchError(error);
@@ -98,6 +99,8 @@ export const unfollowUser = async (userId: string) => {
       method: "delete",
       body: { userToUnFollow: userId },
     });
+    console.log("unfollow data: ", { unfollowUser });
+
     return data;
   } catch (error) {
     handleFetchError(error);

@@ -17,12 +17,14 @@ export type IAuthEntity = {
   token: null | string;
   user: TUser | null;
   userEmail: string;
+  isPinAvailable: boolean;
 };
 
 const defaultState: IAuthEntity = {
   token: null,
   user: null,
   userEmail: "",
+  isPinAvailable: false,
 };
 
 export const authEntity = entity(defaultState, [
@@ -44,6 +46,12 @@ export const setEmail = (userEmail: string) =>
   authEntity.set((currentData: any) => ({
     ...currentData,
     userEmail,
+  }));
+
+export const setPinCreated = (state: boolean) =>
+  authEntity.set((currentData: any) => ({
+    ...currentData,
+    isPinAvailable: state,
   }));
 
 export const setToken = (token: string) =>
@@ -79,5 +87,6 @@ export const useAuth = () => {
     user: auth?.user,
     email: auth?.userEmail,
     token: auth?.token,
+    isPinAvailable: auth?.isPinAvailable,
   };
 };

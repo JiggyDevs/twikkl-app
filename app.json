@@ -31,8 +31,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/imgs/logos/logo.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
       },
+      "softwareKeyboardLayoutMode":"pan",
       "package": "com.twikkl.twikklapp",
       "permissions": [
         "CAMERA",

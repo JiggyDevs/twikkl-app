@@ -1,5 +1,4 @@
 import { View, Text, Image } from "react-native";
-import React, { ReactElement } from "react";
 import ToggleButton from "./ToggleButton";
 
 const TokenCard = ({
@@ -33,7 +32,7 @@ const TokenCard = ({
         {price ? (
           <View style={{ flexDirection: "row", gap: 3 }}>
             <Text>{price}</Text>
-            <Text style={{ color: percent > 0 ? "green" : "red" }}>{`${percent}%`}</Text>
+            <Text style={{ color: (percent as number) > 0 ? "green" : "red" }}>{`${percent}%`}</Text>
           </View>
         ) : (
           <Text>{fullname}</Text>

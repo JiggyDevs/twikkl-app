@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import React from "react";
+import React, { Fragment, useState } from "react";
 import SeedPhraseIcon from "@assets/svg/SeedPhraseIcon";
 import Lock from "@assets/svg/Lock";
+import OptionCard from "@twikkl/components/OptionCard";
+import WalletIcon from "@assets/svg/WalletIcon";
 // import { walletSettings } from "@twikkl/data/constant";
 
 const settings = [
@@ -20,17 +22,24 @@ const walletSettings = [
   { icon: <Lock />, text: "Change pin" },
 ];
 
+enum WalletActionText {
+  rename = "Rename",
+  save = "Save",
+}
+
 const Settings = ({ setScreen }: { setScreen: Function }) => {
+  const [isWalletAvailable, setIsWalletAvailable] = useState(true);
+  const [walletActionText, setWalletActionText] = useState<WalletActionText>(WalletActionText.rename);
+
   return (
     <View style={{ gap: 20 }}>
-      {walletSettings.map(({ icon, text, desc }) => (
-        <Pressable onPress={() => setScreen(text)} style={styles.flexRow}>
-          <View style={{ width: 25 }}>{icon}</View>
-          <View>
-            <Text>{text}</Text>
-            {desc && <Text>{desc}</Text>}
-          </View>
-        </Pressable>
+      {isWalletAvailable && (
+        <OptionCard icon={<WalletIcon />} text="Wallet02" desc="@desc" actionText={walletActionText} showActionText />
+      )}
+      {walletSettings.map(({ icon, text, desc }, itemIndex) => (
+        <Fragment key={itemIndex}>
+          <OptionCard icon={icon} text={text} desc={desc} setScreen={setScreen} />
+        </Fragment>
       ))}
     </View>
   );

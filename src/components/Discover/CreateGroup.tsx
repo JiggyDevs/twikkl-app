@@ -15,6 +15,7 @@ import { useImageHook } from "@twikkl/hooks/image.hooks";
 import { useQuery } from "@tanstack/react-query";
 import { createCategory, fetchCategories } from "@twikkl/services";
 import ModalEl from "../ModalEl";
+import KeyboardAvoidView from "../KeyboardAvoidView";
 
 interface CreateGroupProps {
   handleCreateGroup: (data: {
@@ -115,13 +116,15 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
         <Text style={styles.desc}>Organize people in a space and exchange your thoughts and ideas.</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.children}>
-            <View>
-              <Text style={styles.label}>Group Avatar</Text>
+            <KeyboardAvoidView>
+              <View>
+                <Text style={styles.label}>Group Avatar</Text>
 
-              <TouchableOpacity style={styles.avatarWrapper} onPress={handleImagePick}>
-                <Image source={{ uri: form?.avatar }} style={styles.avatarImg} />
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity style={styles.avatarWrapper} onPress={handleImagePick}>
+                  <Image source={{ uri: form?.avatar }} style={styles.avatarImg} />
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidView>
             <View>
               <Text style={styles.label}>Group cover image</Text>
 

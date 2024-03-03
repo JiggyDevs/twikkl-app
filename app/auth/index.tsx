@@ -1,11 +1,17 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import { ViewVariant } from "@twikkl/configs";
 import { useRouter } from "expo-router";
+import { createWallet } from "@twikkl/services/wallet.services";
 
 const Index = () => {
   const router = useRouter();
+
+  // useEffect(() => {
+  //   createWallet();
+  // }, []);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.top}>

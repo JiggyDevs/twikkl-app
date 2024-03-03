@@ -1,31 +1,29 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import React from "react";
+import React, { Fragment, useState } from "react";
+import DriveBackupIcon from "@assets/svg/DriveBackupIcon";
+import ManualBackupIcon from "@assets/svg/ManualBackupIcon";
+import OptionCard from "@twikkl/components/OptionCard";
+import RecoveryPhaseConfirmation from "@twikkl/components/RecoveryPhaseConfirmation";
 
 export const recovery = [
-  { icon: "", text: "Google drive backup", desc: "Not set" },
-  { icon: "", text: "Manual backup", desc: "Active" },
+  { icon: <DriveBackupIcon />, text: "Google drive backup", desc: "Not set" },
+  { icon: <ManualBackupIcon />, text: "Manual backup", desc: "Active" },
 ];
 
 const Recovery = () => {
+  const [showModal, setShowModal] = useState(true);
+
   return (
-    <View style={{ gap: 20 }}>
-      {recovery.map(({ icon, text, desc }) => (
-        <Pressable onPress={() => {}} style={styles.flexRow}>
-          {icon}
-          <View>
-            <Text>{text}</Text>
-            <Text>{desc}</Text>
-          </View>
-        </Pressable>
-      ))}
-    </View>
+    <>
+      <View style={{ gap: 20 }}>
+        {recovery.map(({ icon, text, desc }, itemIndex) => (
+          <Fragment key={itemIndex}>
+            <OptionCard icon={icon} text={text} desc={desc} />
+          </Fragment>
+        ))}
+      </View>
+      <RecoveryPhaseConfirmation showModal={showModal} onContinue={() => setShowModal(false)} />
+    </>
   );
 };
 export default Recovery;
-
-const styles = StyleSheet.create({
-  flexRow: {
-    flexDirection: "row",
-    gap: 20,
-  },
-});
