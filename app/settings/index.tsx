@@ -14,7 +14,7 @@ const Index = () => {
   const handleBackPress = () => (name || screen === "Settings" ? router.back() : setScreen("Settings"));
 
   return (
-    <View style={{ gap: 42, paddingTop: 60, paddingHorizontal: 16 }}>
+    <View style={{ gap: 42, paddingTop: 60, paddingHorizontal: 16, flex: 1 }}>
       <BackHeader title={screen as string} onPress={handleBackPress} />
       {screen === "Settings" && <Settings setScreen={setScreen} />}
       {screen === "Account" && <Account />}

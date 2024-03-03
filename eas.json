@@ -16,6 +16,17 @@
         "resourceClass": "m1-medium"
       }
     },
+    "preview2": {
+      "distribution": "internal",
+      "channel": "preview2"
+    },
+    "apkbuild": {
+      "distribution": "internal",
+      "channel": "apkbuild",
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {
       "ios": {
         "resourceClass": "m1-medium"

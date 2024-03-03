@@ -270,8 +270,8 @@ export const fetchBookmarks = async (): Promise<{ data: BookmarkPost[] } | undef
   try {
     const { data } = await fetchFromApi({
       path: `posts/bookmarks`,
-      method: "get",
-      body: {},
+      // method: "get",
+      // body: {},
     });
     return data;
   } catch (error) {

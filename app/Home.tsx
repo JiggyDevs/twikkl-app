@@ -119,7 +119,7 @@ export default function ScreenHome() {
           <Share />
         </AppBottomSheet>
       )}
-      {comment && (
+      {posts.length > 0 && comment && (
         <AppBottomSheet backgroundColor="#000" height="80%" closeModal={() => setComment(false)}>
           <Comment
             setComment={setComment}

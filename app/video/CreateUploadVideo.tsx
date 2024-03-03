@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image, Platform } from "react-native";
 import { Camera } from "expo-camera";
 import { ResizeMode, Video } from "expo-av";
 import Speed from "@assets/svg/Speed";
@@ -54,12 +54,12 @@ const CreateUploadvideo = ({
       console.log("Permission denied!");
     }
   };
-  // const getAudioRecordingPermission = async () => {
-  //   const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-  //   if (status !== "granted") {
-  //     console.log("Audio recording permission denied!");
-  //   }
-  // };
+  const getAudioRecordingPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+    if (status !== "granted") {
+      console.log("Audio recording permission denied!");
+    }
+  };
 
   const activateProgress = () => {
     const duration = iDuration;
@@ -130,7 +130,9 @@ const CreateUploadvideo = ({
   useEffect(() => {
     (async () => {
       await Camera.requestCameraPermissionsAsync();
-      // await getAudioRecordingPermission();
+      if (Platform.OS === "android") {
+        await getAudioRecordingPermission();
+      }
     })();
   }, []);
 

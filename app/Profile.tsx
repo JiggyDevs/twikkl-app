@@ -48,7 +48,9 @@ const Profile = () => {
 
   const { data: bookmarks } = useQuery(["user-bookmarks", user], () => fetchBookmarks());
 
-  console.log(bookmarks);
+  console.log("====================================");
+  console.log("markkk", bookmarks);
+  console.log("====================================");
   const [pageSize, setPageSize] = useState(10);
 
   const { data: userPosts, refetch } = useQuery(["user-posts", user, pageSize], () => fetchUserPost(user || ""));
@@ -166,6 +168,16 @@ const Profile = () => {
                 handleView={() => setViewPost(idx)}
               />
             ))}
+          {/* {active === 1 &&
+            bookmarks &&
+            bookmarks.data.map((bookmark, idx) => (
+              <ImgBgRender
+                key={bookmark._id}
+                img={post.video}
+                likes={post.totalLikes}
+                handleView={() => setViewPost(idx)}
+              />
+            ))} */}
         </View>
       </ScrollView>
     </View>

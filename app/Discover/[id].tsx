@@ -53,7 +53,7 @@ const Group = (): JSX.Element => {
   const [postVideo, setPostVideo] = useState(false);
   const numColumns = select + 1;
   // console.log("====================================");
-  // console.log("vidd", videos, "...........", groupData.categories);
+  // console.log("vidd", videos, "...........");
   // console.log("====================================");
   useEffect(() => {
     refetch();

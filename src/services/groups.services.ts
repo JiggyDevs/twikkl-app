@@ -217,7 +217,7 @@ export const fetchUserGroups = async (): Promise<FetchGroupsResponse> => {
   try {
     const { data: posts } = await fetchFromApi({
       path: "groups/user",
-      method: "get",
+      // method: "get",
     });
     const computeData = {
       ...posts,

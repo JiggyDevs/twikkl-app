@@ -106,10 +106,10 @@ const Account = () => {
             />
           </View>
         </View>
-        <ButtonEl disabled={!disabled} onPress={handleUpdate}>
-          <Text style={[ViewVariant.buttonText]}>Update Profile</Text>
-        </ButtonEl>
       </ScrollView>
+      <ButtonEl disabled={!disabled} onPress={handleUpdate}>
+        <Text style={[ViewVariant.buttonText]}>Update Profile</Text>
+      </ButtonEl>
     </View>
   );
 };
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   inputs: {
     gap: 20,
-    marginBottom: 70,
+    // marginBottom: 70,
   },
   textarea: {
     borderColor: "#C0CCC1",
