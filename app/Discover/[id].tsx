@@ -44,17 +44,16 @@ const Group = (): JSX.Element => {
 
   const { data: groupPosts, refetch } = useQuery(["group-post", id], () => fetchGroupPosts(id));
   const videos = isUserFeedsResponse(groupPosts) ? groupPosts.data : [];
-  // console.log("fettttch postt", videos, groupPosts);
-  // console.log("fettttch postt", id, groupData._id);
   const [select, setSelect] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
   const [viewPost, setViewPost] = useState<number | null>(null);
   const [bigView, setBigView] = useState(false);
   const [postVideo, setPostVideo] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
+
   const numColumns = select + 1;
-  // console.log("====================================");
-  // console.log("vidd", videos, "...........");
-  // console.log("====================================");
+  const videosToShow =
+    activeCategory === "All" ? videos : videos.filter((video) => video?.category?.name === activeCategory ?? []);
   useEffect(() => {
     refetch();
   }, [postVideo]);
@@ -75,12 +74,14 @@ const Group = (): JSX.Element => {
             select={select}
             setSelect={setSelect}
             {...groupData}
+            setActiveCategory={setActiveCategory}
+            activeCategory={activeCategory}
           />
           <View style={{ zIndex: -2, flex: 1, marginBottom: 20 }}>
             <FlatList
               numColumns={numColumns}
               key={numColumns}
-              data={videos}
+              data={videosToShow}
               renderItem={({ item, index }) => {
                 return (
                   <Pressable

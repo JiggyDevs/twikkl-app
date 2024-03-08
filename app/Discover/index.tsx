@@ -279,6 +279,12 @@ const Discover = () => {
               }}
             >
               <Card
+                onAccessGroup={() => {
+                  updateGroup(item);
+                  router.push({
+                    pathname: `/Discover/${item._id}`,
+                  });
+                }}
                 onPress={() => {
                   setModalType("access");
                   setSelectedGroup(item);

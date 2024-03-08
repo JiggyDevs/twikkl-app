@@ -28,6 +28,8 @@ interface IHeader extends IGroup {
   setSelect: Function;
   setShowSearch: Function;
   setPostVideo: Function;
+  setActiveCategory: Function;
+  activeCategory: string;
 }
 
 const Header = ({
@@ -42,10 +44,11 @@ const Header = ({
   setShowSearch,
   setPostVideo,
   isPrivate,
+  activeCategory,
+  setActiveCategory,
 }: IHeader): JSX.Element => {
   const { height } = Dimensions.get("window");
   const [dropDown, setDropDown] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("All");
   const router = useRouter();
   const gridArr = [<Grid1 />, <Grid2 />, <Grid3 />];
   const categoriesToUse = ["All", ...categories];

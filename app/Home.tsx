@@ -55,7 +55,12 @@ export default function ScreenHome() {
 
   const visiblePost = posts[visibleIndex];
 
+  // console.log("====================================");
+  // console.log(posts);
+  // console.log("====================================");
+
   useEffect(() => {
+    refetch();
     setTokenDefault();
   }, []);
 
@@ -84,7 +89,6 @@ export default function ScreenHome() {
           onScroll={onScroll}
         />
       ) : null}
-
       <SafeAreaView style={styles.innerContainer}>
         <View style={ViewVariant.rowSpaceBetween}>
           <Pressable onPress={() => router.push("votes")}>
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     paddingTop: 10,
     paddingHorizontal: 14,
-    backgroundColor: "black",
+    // backgroundColor: "black",
   },
   headActionText: {
     color: DEFAULT_CAMERA_ACTION_COLOR,

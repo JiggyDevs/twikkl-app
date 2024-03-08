@@ -25,6 +25,7 @@ export type Post = {
   description: string;
   creator: TUser;
   comments: TComment[];
+  category: { name: string };
   likes: { user: TUser }[];
   _id: string;
 };
@@ -45,7 +46,7 @@ export type BookmarkPost = {
 };
 interface UserFeedsResponse {
   data: Post[];
-  pagination: Pagination;
+  pagination?: Pagination;
 }
 
 export type FetchUserFeedsResponse = UserFeedsResponse | AxiosError;

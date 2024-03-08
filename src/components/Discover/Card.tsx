@@ -10,6 +10,7 @@ interface ICard {
   description: string;
   followers?: number;
   onPress: Function;
+  onAccessGroup: Function;
   leaveGroup: Function;
   favPress: Function;
   fav?: boolean;
@@ -31,6 +32,7 @@ const Card = ({
   description,
   followers,
   onPress,
+  onAccessGroup,
   leaveGroup,
   favPress,
   fav,
@@ -85,7 +87,11 @@ const Card = ({
         </View> */}
         <TouchableOpacity
           onPress={() => {
-            if (forYou) onPress();
+            if (forYou) {
+              onPress();
+            } else {
+              onAccessGroup();
+            }
           }}
           style={styles.button}
         >
