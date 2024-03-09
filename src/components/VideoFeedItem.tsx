@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { TwikklIcon, EIcon } from "@twikkl/configs";
 import { ButtonAddSimple } from "@twikkl/components";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 // import { useTranslation } from "react-i18next";
 import { useLikesHook } from "@twikkl/hooks/likes.hooks";
 import { TUser } from "@twikkl/entities/auth.entity";
@@ -21,6 +21,8 @@ import AppLoader from "./AppLoader";
 import AppBottomSheet from "./BottomSheet";
 import Comment from "./Comment";
 import { useQuery } from "@tanstack/react-query";
+import PlayIcon from "@assets/svg/PlayIcon";
+import PauseIcon from "@assets/svg/PauseIcon";
 
 const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
@@ -124,6 +126,7 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
   };
 
   const [shouldPlay, setShouldPlay] = useState(true);
+  const [showPausePlay, setShowPausePlay] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -141,13 +144,20 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
     setShouldPlay(!shouldPlay);
   };
 
+  useEffect(() => {
+    setShowPausePlay(true);
+    setTimeout(() => {
+      setShowPausePlay(false);
+    }, 2000);
+  }, [shouldPlay]);
+
   return (
     <>
       <TouchableWithoutFeedback
         onPress={togglePlay}
         style={{ flex: 1, borderWidth: 5, borderColor: "red", borderStyle: "solid" }}
       >
-        <View style={{ flex: 1, height }}>
+        <View style={{ flex: 1, height, alignItems: "center", justifyContent: "center" }}>
           <Video
             source={{
               uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
@@ -165,6 +175,9 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
           />
 
           {loading && <AppLoader />}
+          <View style={{ position: "absolute", zIndex: 100, opacity: showPausePlay ? 1 : 0 }}>
+            {shouldPlay ? <PauseIcon /> : <PlayIcon />}
+          </View>
 
           <View style={[styles.bottomContainer, { marginBottom: bigView ? "10%" : "23%" }]}>
             <View

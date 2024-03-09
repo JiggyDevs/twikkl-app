@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export const ViewVariant = StyleSheet.create({
   page: {
@@ -22,6 +23,6 @@ export const ViewVariant = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     backgroundColor: "#F1FCF2",
-    paddingTop: 60,
+    paddingTop: Platform.OS === "android" ? hp(5.4) : hp(7.4),
   },
 });

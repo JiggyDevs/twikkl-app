@@ -92,14 +92,14 @@ export const followUser = async (userId: string) => {
   }
 };
 
-export const unfollowUser = async (userId: string) => {
+export const unFollowUser = async (userId: string) => {
   try {
     const { data } = await fetchFromApi({
       path: "following/unfollow",
       method: "delete",
       body: { userToUnFollow: userId },
     });
-    console.log("unfollow data: ", { unfollowUser });
+    console.log("unfollow data: ", { unFollowUser });
 
     return data;
   } catch (error) {

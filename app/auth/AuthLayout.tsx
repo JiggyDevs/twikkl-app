@@ -4,6 +4,7 @@ import KeyboardAvoidView from "@twikkl/components/KeyboardAvoidView";
 import { ViewVariant } from "@twikkl/configs";
 import { ReactElement } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 type IProps = {
   title: string;
@@ -43,8 +44,8 @@ export default AuthLayout;
 
 const styles = StyleSheet.create({
   children: {
-    marginTop: 24,
-    marginBottom: 50,
+    marginTop: hp(2.95),
+    marginBottom: hp(5.9),
     zIndex: 10,
   },
   title: {
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: "center",
-    marginBottom: 16,
+    marginBottom: hp(1.97),
   },
   email: {
     textAlign: "center",

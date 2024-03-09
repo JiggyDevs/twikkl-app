@@ -65,8 +65,8 @@ const ButtonEl = ({
   width,
   outline = false,
 }: IButtonProps) => {
-  const customHeight = height ? (height / 852) * 100 : 0;
-  const customWidth = width ? (width / 390) * 100 : 0;
+  const customHeight = height ? (height / 812) * 100 : 0;
+  const customWidth = width ? (width / 375) * 100 : 0;
   return (
     <Button
       bg={bg}

@@ -108,15 +108,15 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
   ];
 
   return (
-    <View style={[ViewVariant.wrapper, { paddingBottom: 24 }]}>
-      <Back style={styles.backButton} onPress={() => setCreateGroup(false)} dark="#041105" />
-      <Image style={styles.image} source={require("../../../assets/imgs/logos/smLogo.png")} />
-      <View style={{ flex: 1 }}>
-        <Text style={styles.title}>Create group</Text>
-        <Text style={styles.desc}>Organize people in a space and exchange your thoughts and ideas.</Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.children}>
-            <KeyboardAvoidView>
+    <KeyboardAvoidView>
+      <View style={[ViewVariant.wrapper, { paddingBottom: 24 }]}>
+        <Back style={styles.backButton} onPress={() => setCreateGroup(false)} dark="#041105" />
+        <Image style={styles.image} source={require("../../../assets/imgs/logos/smLogo.png")} />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>Create group</Text>
+          <Text style={styles.desc}>Organize people in a space and exchange your thoughts and ideas.</Text>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.children}>
               <View>
                 <Text style={styles.label}>Group Avatar</Text>
 
@@ -124,136 +124,136 @@ const CreateGroup = ({ setCreateGroup, handleCreateGroup }: CreateGroupProps) =>
                   <Image source={{ uri: form?.avatar }} style={styles.avatarImg} />
                 </TouchableOpacity>
               </View>
-            </KeyboardAvoidView>
-            <View>
-              <Text style={styles.label}>Group cover image</Text>
+              <View>
+                <Text style={styles.label}>Group cover image</Text>
 
-              <TouchableOpacity onPress={handleCoverImagePick}>
-                <Image source={{ uri: form?.coverImg }} style={styles.coverImg} />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={handleCoverImagePick}>
+                  <Image source={{ uri: form?.coverImg }} style={styles.coverImg} />
+                </TouchableOpacity>
+              </View>
+              <LabelInput
+                label="Group name"
+                placeholder="Enter your group name"
+                value={form.name}
+                onChangeText={(val) => updateField("name", val)}
+              />
+              <View>
+                <Text style={styles.label}>Description</Text>
+                <TextInput
+                  multiline
+                  value={form.desc}
+                  onChangeText={(val) => updateField("desc", val)}
+                  placeholder="Let people know what your group is about"
+                  style={styles.textarea}
+                />
+              </View>
+              <View>
+                <Text style={styles.label}>Privacy</Text>
+                <Pressable style={[styles.textarea, styles.dropdown]} onPress={() => setOptions(!options)}>
+                  <Text>{subData}</Text>
+                  <ArrowDown color="#000" />
+                </Pressable>
+              </View>
+              {options && (
+                <Dropdown
+                  setOption={setOptions}
+                  options={options}
+                  optionsArray={optionsArray}
+                  setSubData={setSubData}
+                  subData={subData}
+                />
+              )}
+              <View>
+                <Text style={styles.label}>Category</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.allCategory}>
+                  {allCategories.map((categories) => (
+                    <TouchableOpacity
+                      key={categories.name}
+                      onPress={() => updateSelectedCategories(categories.name)}
+                      style={[
+                        styles.category,
+                        {
+                          backgroundColor: form.categories.includes(categories.name) ? "#50A040" : "white",
+                          borderColor: !form.categories.includes(categories.name) ? "#50A040" : "white",
+                          borderStyle: "solid",
+                          borderWidth: 1,
+                        },
+                      ]}
+                    >
+                      <Text style={{ color: form.categories.includes(categories.name) ? "white" : "black" }}>
+                        {categories.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+                <TouchableOpacity onPress={() => setShowModal(true)}>
+                  <Text style={styles.addCatText}>Add category</Text>
+                </TouchableOpacity>
+              </View>
+
+              <LabelInput
+                label="Invite friends"
+                placeholder="Enter names"
+                value={form.invite}
+                onChangeText={(val) => updateField("invite", val)}
+              />
             </View>
-            <LabelInput
-              label="Group name"
-              placeholder="Enter your group name"
-              value={form.name}
-              onChangeText={(val) => updateField("name", val)}
-            />
-            <View>
-              <Text style={styles.label}>Description</Text>
+          </ScrollView>
+          <TermsAndPrivacy setTc={setTc} tc={tc} />
+        </View>
+        <ButtonEl
+          loading={false}
+          disabled={!disabled || !tc}
+          onPress={() => {
+            handleCreateGroup({
+              name: form.name,
+              description: form.desc,
+              categories: form.categories,
+              isPrivate: subData === "Private",
+              avatar: form.avatar,
+              coverImg: form.coverImg,
+            });
+          }}
+        >
+          <Text style={[ViewVariant.buttonText, (!disabled || !tc) && { color: "#000" }]}>Create group</Text>
+        </ButtonEl>
+        <ModalEl transparent animate visible={showModal}>
+          <View style={styles.modalWrapper}>
+            <View style={styles.modal}>
+              <LabelInput
+                label="Category name"
+                placeholder="Enter your category name"
+                value={categoryForm.name}
+                onChangeText={(val) => setCategoryForm((prev) => ({ ...prev, name: val }))}
+              />
+              <View style={styles.space} />
+
+              <Text style={styles.label}>Category description</Text>
               <TextInput
-                multiline
-                value={form.desc}
-                onChangeText={(val) => updateField("desc", val)}
-                placeholder="Let people know what your group is about"
+                value={categoryForm.description}
+                onChangeText={(val) => setCategoryForm((prev) => ({ ...prev, description: val }))}
+                placeholder="Enter category description"
                 style={styles.textarea}
               />
-            </View>
-            <View>
-              <Text style={styles.label}>Privacy</Text>
-              <Pressable style={[styles.textarea, styles.dropdown]} onPress={() => setOptions(!options)}>
-                <Text>{subData}</Text>
-                <ArrowDown color="#000" />
-              </Pressable>
-            </View>
-            {options && (
-              <Dropdown
-                setOption={setOptions}
-                options={options}
-                optionsArray={optionsArray}
-                setSubData={setSubData}
-                subData={subData}
-              />
-            )}
-            <View>
-              <Text style={styles.label}>Category</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.allCategory}>
-                {allCategories.map((categories) => (
-                  <TouchableOpacity
-                    key={categories.name}
-                    onPress={() => updateSelectedCategories(categories.name)}
-                    style={[
-                      styles.category,
-                      {
-                        backgroundColor: form.categories.includes(categories.name) ? "#50A040" : "white",
-                        borderColor: !form.categories.includes(categories.name) ? "#50A040" : "white",
-                        borderStyle: "solid",
-                        borderWidth: 1,
-                      },
-                    ]}
-                  >
-                    <Text style={{ color: form.categories.includes(categories.name) ? "white" : "black" }}>
-                      {categories.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-              <TouchableOpacity onPress={() => setShowModal(true)}>
-                <Text style={styles.addCatText}>Add category</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.space} />
 
-            <LabelInput
-              label="Invite friends"
-              placeholder="Enter names"
-              value={form.invite}
-              onChangeText={(val) => updateField("invite", val)}
-            />
+              <ButtonEl
+                loading={createCategoryLoader}
+                disabled={!categoryForm.name || !categoryForm.description}
+                onPress={handleCreateCategory}
+              >
+                <Text style={[ViewVariant.buttonText, (!disabled || !tc) && { color: "#000" }]}>Create category</Text>
+              </ButtonEl>
+              <View style={styles.space} />
+
+              <ButtonEl loading={false} bg="white" outline onPress={() => setShowModal(false)}>
+                <Text style={[ViewVariant.buttonText, (!disabled || !tc) && { color: "#000" }]}>Cancel</Text>
+              </ButtonEl>
+            </View>
           </View>
-        </ScrollView>
-        <TermsAndPrivacy setTc={setTc} tc={tc} />
+        </ModalEl>
       </View>
-      <ButtonEl
-        loading={false}
-        disabled={!disabled || !tc}
-        onPress={() => {
-          handleCreateGroup({
-            name: form.name,
-            description: form.desc,
-            categories: form.categories,
-            isPrivate: subData === "Private",
-            avatar: form.avatar,
-            coverImg: form.coverImg,
-          });
-        }}
-      >
-        <Text style={[ViewVariant.buttonText, (!disabled || !tc) && { color: "#000" }]}>Create group</Text>
-      </ButtonEl>
-      <ModalEl transparent animate visible={showModal}>
-        <View style={styles.modalWrapper}>
-          <View style={styles.modal}>
-            <LabelInput
-              label="Category name"
-              placeholder="Enter your category name"
-              value={categoryForm.name}
-              onChangeText={(val) => setCategoryForm((prev) => ({ ...prev, name: val }))}
-            />
-            <View style={styles.space} />
-
-            <Text style={styles.label}>Category description</Text>
-            <TextInput
-              value={categoryForm.description}
-              onChangeText={(val) => setCategoryForm((prev) => ({ ...prev, description: val }))}
-              placeholder="Enter category description"
-              style={styles.textarea}
-            />
-            <View style={styles.space} />
-
-            <ButtonEl
-              loading={createCategoryLoader}
-              disabled={!categoryForm.name || !categoryForm.description}
-              onPress={handleCreateCategory}
-            >
-              <Text style={[ViewVariant.buttonText, (!disabled || !tc) && { color: "#000" }]}>Create category</Text>
-            </ButtonEl>
-            <View style={styles.space} />
-
-            <ButtonEl loading={false} bg="white" outline onPress={() => setShowModal(false)}>
-              <Text style={[ViewVariant.buttonText, (!disabled || !tc) && { color: "#000" }]}>Cancel</Text>
-            </ButtonEl>
-          </View>
-        </View>
-      </ModalEl>
-    </View>
+    </KeyboardAvoidView>
   );
 };
 

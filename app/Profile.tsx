@@ -10,7 +10,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Back from "@assets/svg/Back";
 import MoreIcon from "@assets/svg/More";
 import Twitter from "@assets/svg/Twitter";
@@ -21,13 +21,14 @@ import PinIcon from "@assets/svg/PinIcon";
 import LabelIcon from "@assets/svg/LabelIcon";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProfile, userFollowers } from "@twikkl/services/profile.services";
+import { fetchProfile, followUser, unFollowUser, userFollowers } from "@twikkl/services/profile.services";
 import { authEntity } from "@twikkl/entities/auth.entity";
 import AppLoader from "@twikkl/components/AppLoader";
 import { fetchBookmarks, fetchUserPost, isUserFeedsResponse } from "@twikkl/services/feed.services";
 import ImgBgRender from "@twikkl/components/ImgBgRender";
 import BigView from "@twikkl/components/Discover/BigView";
 import Settings from "@assets/svg/Settings";
+import { hideLoader, showLoader } from "@twikkl/entities";
 
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 
@@ -44,7 +45,7 @@ const Profile = () => {
 
   const { data, isLoading } = useQuery(["user-profile", user], () => fetchProfile(user || ""));
 
-  const { data: followers } = useQuery(["user-followers", user], () => userFollowers(user || ""));
+  const { data: followers } = useQuery<any>(["user-followers", user], () => userFollowers(user || ""));
 
   const { data: bookmarks } = useQuery(["user-bookmarks", user], () => fetchBookmarks());
 
@@ -59,6 +60,33 @@ const Profile = () => {
 
   const postsPagination = isUserFeedsResponse(userPosts) ? userPosts.pagination : null;
 
+  const handleFollow = async (userId: string) => {
+    if (!userId) return;
+    showLoader();
+
+    try {
+      const data = await followUser(userId);
+      console.log({ followData: data });
+    } catch (error) {
+      console.log({ followError: error });
+    } finally {
+      hideLoader();
+    }
+  };
+
+  const handleUnFollow = async (userId: string) => {
+    if (!userId) return;
+    showLoader();
+    try {
+      const data = await unFollowUser(userId);
+      console.log({ unFollowData: data });
+    } catch (error) {
+      console.log({ unFollowError: error });
+    } finally {
+      hideLoader();
+    }
+  };
+
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
@@ -71,6 +99,13 @@ const Profile = () => {
   };
 
   const loggedInProfile = loggedInUser?._id === user;
+
+  const isFollowingUser = useMemo(() => {
+    if (loggedInProfile) return null;
+    const isUserFollowed = followers?.data && followers.data.some((follower: any) => follower._id === user);
+
+    return isUserFollowed;
+  }, [followers]);
 
   const [viewPost, setViewPost] = useState<number | null>(null);
 
@@ -92,6 +127,8 @@ const Profile = () => {
     { num: followers?.pagination.total || 0, text: "Following" },
     { num: postsPagination?.total || 0, text: "Total Twikks" },
   ];
+
+  console.log({ followers });
 
   return (
     <View style={styles.container}>
@@ -129,8 +166,22 @@ const Profile = () => {
               >
                 <Text style={styles.textWhite}>Edit Profile</Text>
               </Pressable>
+            ) : isFollowingUser ? (
+              <Pressable
+                style={styles.bgGreen}
+                onPress={() => {
+                  handleUnFollow(user as string);
+                }}
+              >
+                <Text style={styles.textWhite}>UnFollow</Text>
+              </Pressable>
             ) : (
-              <Pressable style={styles.bgGreen}>
+              <Pressable
+                style={styles.bgGreen}
+                onPress={() => {
+                  handleFollow(user as string);
+                }}
+              >
                 <Text style={styles.textWhite}>Follow</Text>
               </Pressable>
             )}

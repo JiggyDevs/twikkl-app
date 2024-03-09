@@ -85,6 +85,7 @@ export default function Wallet(): ReactElement {
   };
 
   const { isPinAvailable } = useAuth();
+  console.log({ isPinAvailable });
 
   const pinType = isPinAvailable ? "verify" : "create";
 
@@ -369,7 +370,7 @@ export default function Wallet(): ReactElement {
           </>
         )}
       </View>
-      {canShowWallet && (
+      {/* {canShowWallet && (
         <PinKeyboard
           type={pinType}
           onSuccess={() => setCanShowWallet(false)}
@@ -378,7 +379,7 @@ export default function Wallet(): ReactElement {
             router.push("Home");
           }}
         />
-      )}
+      )} */}
     </>
   );
 }
