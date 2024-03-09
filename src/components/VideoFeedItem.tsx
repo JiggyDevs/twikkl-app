@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Dimensions, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Dimensions, TouchableWithoutFeedback, StatusBar } from "react-native";
 import { useRouter } from "expo-router";
 import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
@@ -26,7 +26,9 @@ const DEFAULT_CAMERA_ACTION_COLOR = "#FFF";
 
 //get device width and height
 const { height } = Dimensions.get("window");
-
+console.log("====================================");
+console.log(height, StatusBar.currentHeight);
+console.log("====================================");
 /**
  * TODO - Build Home screen component
  *
@@ -143,11 +145,8 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
 
   return (
     <>
-      <TouchableWithoutFeedback
-        onPress={togglePlay}
-        style={{ flex: 1, borderWidth: 5, borderColor: "red", borderStyle: "solid" }}
-      >
-        <View style={{ flex: 1, height }}>
+      <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
+        <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 0) }}>
           <Video
             source={{
               uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
@@ -249,7 +248,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "flex-end",
-    marginBottom: "23%",
+    // marginBottom: "23%",
     paddingHorizontal: 10,
   },
 });
