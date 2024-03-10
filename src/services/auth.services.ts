@@ -1,3 +1,4 @@
+import { toastInfo } from "@twikkl/utils/common";
 import { fetchFromApi, handleFetchError } from "@twikkl/utils/fetch";
 export interface Signup {
   email: string;
@@ -10,7 +11,7 @@ export interface Login {
 }
 export interface ForgotPassword {
   email: string;
-  code: string;
+  // code: string;
 }
 export interface ResetPassword {
   email: string;
@@ -43,12 +44,18 @@ export const doLogin = async (formData: Login) => {
     return data;
   } catch (error) {
     handleFetchError(error);
+    // console.log("====================================");
+    // console.log("logError", error);
+    // console.log("====================================");
     throw error;
   }
 };
 
 export const doForgotPassword = async (formData: ForgotPassword) => {
   try {
+    // console.log("====================================");
+    // console.log("formmm", formData);
+    // console.log("====================================");
     const { data } = await fetchFromApi({
       path: "auth/recover-password",
       method: "post",
@@ -94,10 +101,13 @@ export const getOTP = async () => {
     const { data } = await fetchFromApi({
       path: "auth/verify-email",
     });
-    console.log({ data });
-  } catch (error) {
+    console.log({ otpDataaaa: data });
+    if (data?.message.includes("if you have not received the verification code, please make another request")) {
+      toastInfo(data.message);
+    }
+  } catch (error: any) {
     handleFetchError(error);
-    console.log({ otpError: error });
+    console.log({ otpError: error.response.data });
     throw error;
   }
 };
@@ -106,7 +116,7 @@ export const createUsername = async (username: string) => {
   try {
     const { data } = await fetchFromApi({
       path: "auth/create-username",
-      method: "post",
+      method: "patch",
       body: { username },
     });
     return data;

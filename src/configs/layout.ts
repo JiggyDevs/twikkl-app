@@ -22,6 +22,6 @@ export const ViewVariant = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     backgroundColor: "#F1FCF2",
-    paddingTop: 60,
+    paddingTop: 55,
   },
 });

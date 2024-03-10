@@ -23,6 +23,9 @@ const defaultSignUpData = {
 const Register = () => {
   const router = useRouter();
   const { signupDone = false } = useLocalSearchParams();
+  console.log("====================================");
+  console.log("sign up doneeeee", signupDone);
+  console.log("====================================");
   const [suffix, setSuffix] = useState(".jgy");
   const [dropDown, setDropDown] = useState(false);
   const [tc, setTc] = useState(false);
@@ -42,7 +45,13 @@ const Register = () => {
     currentStage === "signup" ? _signup() : currentStage === "verify" ? _verifyOtp() : _createUsername();
 
   const backClick = () =>
-    currentStage === "signup" ? router.push("auth") : currentStage === "verify" ? setCurrentStage("signup") : null;
+    signupDone
+      ? router.back()
+      : currentStage === "signup"
+      ? router.push("auth")
+      : currentStage === "verify"
+      ? setCurrentStage("signup")
+      : null;
 
   const disableButton =
     currentStage === "signup"
@@ -57,8 +66,11 @@ const Register = () => {
   const nameArr = [".jgy", ".eth", ".avax", ".lens"];
 
   useEffect(() => {
-    currentStage === "verify" && getOTP();
-  }, [currentStage]);
+    if (signupDone) {
+      getOTP();
+      setCurrentStage("verify");
+    }
+  }, []);
 
   return (
     <View style={ViewVariant.wrapper}>

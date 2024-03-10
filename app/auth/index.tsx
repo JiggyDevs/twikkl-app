@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 150,
+    paddingTop: 120,
     backgroundColor: "#F1FCF2",
   },
   bigText: {

@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: "center",
-    marginBottom: 16,
+    marginBottom: 5,
   },
   email: {
     textAlign: "center",
