@@ -44,18 +44,12 @@ export const doLogin = async (formData: Login) => {
     return data;
   } catch (error) {
     handleFetchError(error);
-    // console.log("====================================");
-    // console.log("logError", error);
-    // console.log("====================================");
     throw error;
   }
 };
 
 export const doForgotPassword = async (formData: ForgotPassword) => {
   try {
-    // console.log("====================================");
-    // console.log("formmm", formData);
-    // console.log("====================================");
     const { data } = await fetchFromApi({
       path: "auth/recover-password",
       method: "post",
@@ -101,7 +95,7 @@ export const getOTP = async () => {
     const { data } = await fetchFromApi({
       path: "auth/verify-email",
     });
-    console.log({ otpDataaaa: data });
+    console.log({ otpData: data });
     if (data?.message.includes("if you have not received the verification code, please make another request")) {
       toastInfo(data.message);
     }

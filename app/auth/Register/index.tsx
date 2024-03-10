@@ -8,8 +8,6 @@ import ConfirmationField from "@twikkl/components/ConfirmationField";
 import Signup, { SubSignup } from "./Signup";
 import { ViewVariant } from "@twikkl/configs";
 import { useEffect, useState } from "react";
-import { fetchFromApi, handleFetchError } from "@twikkl/utils/fetch";
-import { useAuth } from "@twikkl/entities/auth.entity";
 import { getOTP } from "@twikkl/services";
 
 const defaultSignUpData = {
@@ -23,23 +21,13 @@ const defaultSignUpData = {
 const Register = () => {
   const router = useRouter();
   const { signupDone = false } = useLocalSearchParams();
-  console.log("====================================");
-  console.log("sign up doneeeee", signupDone);
-  console.log("====================================");
   const [suffix, setSuffix] = useState(".jgy");
   const [dropDown, setDropDown] = useState(false);
   const [tc, setTc] = useState(false);
-  const {
-    form,
-    updateField,
-    _signup,
-    _resendOtp,
-    _verifyOtp,
-    currentStage,
-    setCurrentStage,
-    loading,
-    _createUsername,
-  } = useSignup(defaultSignUpData, Boolean(signupDone));
+  const { form, updateField, _signup, _verifyOtp, currentStage, setCurrentStage, loading, _createUsername } = useSignup(
+    defaultSignUpData,
+    Boolean(signupDone),
+  );
 
   const handleClick = () =>
     currentStage === "signup" ? _signup() : currentStage === "verify" ? _verifyOtp() : _createUsername();

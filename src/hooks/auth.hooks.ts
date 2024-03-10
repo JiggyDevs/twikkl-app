@@ -85,23 +85,9 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
     }
   };
 
-  const _resendOtp = async () => {
-    // showLoader();
-    // const emailToUse = {
-    //   email: email || authEmail,
-    // };
-    // try {
-    //   await resendOtp(emailToUse);
-    // } catch (error) {
-    // } finally {
-    //   hideLoader();
-    // }
-  };
-
   return {
     _signup,
     _verifyOtp,
-    _resendOtp,
     form,
     updateField,
     loading,
