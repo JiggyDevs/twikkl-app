@@ -12,10 +12,10 @@ import { Text, Badge, Button } from "react-native-paper";
 import { ViewVariant, TwikklIcon, EIcon } from "@twikkl/configs";
 import { useColors } from "@twikkl/hooks";
 import VideoFeedItem from "@twikkl/components/VideoFeedItem";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
 import { useFeedHook } from "@twikkl/hooks/feed.hooks";
 import AppLoader from "@twikkl/components/AppLoader";
@@ -41,7 +41,7 @@ export default function ScreenHome() {
   const [shareVisible, setShareVisible] = useState(false);
   const [comment, setComment] = useState(false);
 
-  const { isLoading, posts, refetch } = useFeedHook();
+  const { isLoading, posts, refetch, pageMeta, page, setPage, postsData } = useFeedHook();
 
   const { t } = useTranslation();
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
@@ -49,8 +49,14 @@ export default function ScreenHome() {
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffset = event.nativeEvent.contentOffset.y;
     const index = Math.floor(contentOffset / height);
-
     setVisibleIndex(index);
+  };
+
+  const handleEndReached = (info: any) => {
+    if (isLoading) return;
+    if (page < pageMeta.lastPage) {
+      setPage((currentPage) => currentPage + 1);
+    }
   };
 
   const visiblePost = posts[visibleIndex];
@@ -73,7 +79,7 @@ export default function ScreenHome() {
       {posts.length ? (
         <FlatList
           style={[StyleSheet.absoluteFill]}
-          data={posts}
+          data={postsData}
           renderItem={({ item, index }) => (
             <VideoFeedItem
               item={item}
@@ -87,6 +93,7 @@ export default function ScreenHome() {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onScroll={onScroll}
+          onEndReached={handleEndReached}
         />
       ) : null}
       <SafeAreaView style={styles.innerContainer}>

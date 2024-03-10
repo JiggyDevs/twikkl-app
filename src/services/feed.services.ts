@@ -1,3 +1,4 @@
+import { hideLoader, showLoader } from "@twikkl/entities";
 import { TUser } from "@twikkl/entities/auth.entity";
 import { handleFetchError, fetchFromApi, isAxiosError } from "@twikkl/utils/fetch";
 import { AxiosError } from "axios";
@@ -44,19 +45,22 @@ export type BookmarkPost = {
   updatedAt: string;
   user: string;
 };
-interface UserFeedsResponse {
+export interface UserFeedsResponse {
   data: Post[];
   pagination?: Pagination;
 }
 
 export type FetchUserFeedsResponse = UserFeedsResponse | AxiosError;
 
-export const fetchUserFeeds = async (perPage?: number): Promise<FetchUserFeedsResponse | undefined> => {
+export const fetchUserFeeds = async (page?: number, perPage?: number): Promise<FetchUserFeedsResponse | undefined> => {
+  const _page = page ?? 1;
+  showLoader();
   try {
     const { data: posts } = await fetchFromApi({
-      path: `posts/feed?${perPage ? `perpage=${perPage}` : ""}`,
+      path: `posts/feed?${perPage ? `perpage=${perPage}&` : ""}page=${_page}`,
       method: "get",
     });
+
     const computeData = {
       ...posts,
       data: posts.data.map((post: Post) => {
@@ -76,6 +80,8 @@ export const fetchUserFeeds = async (perPage?: number): Promise<FetchUserFeedsRe
     }
 
     // throw error;
+  } finally {
+    hideLoader();
   }
 };
 export const fetchUserPost = async (userId: string, perPage?: number): Promise<FetchUserFeedsResponse | undefined> => {

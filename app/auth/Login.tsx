@@ -45,7 +45,10 @@ const Login = () => {
               onChangeText={(val) => updateField("password", val)}
             />
           </View>
-          <Pressable onPress={() => router.push("auth/ForgotPassword")}>
+          <Pressable
+            style={{ alignSelf: "flex-end", paddingLeft: 20 }}
+            onPress={() => router.push("auth/ForgotPassword")}
+          >
             <Text style={styles.forgot}>Forgot Password?</Text>
           </Pressable>
         </>

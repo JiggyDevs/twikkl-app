@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, View, Dimensions, TouchableWithoutFeedback, StatusBar } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 import { TwikklIcon, EIcon } from "@twikkl/configs";
@@ -153,10 +153,25 @@ export default function VideoFeedItem({ item, index, visibleIndex, onShareClick,
     }, 2000);
   }, [shouldPlay]);
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        shouldPlay && setShouldPlay(false);
+      };
+    }, []),
+  );
+
   return (
     <>
       <TouchableWithoutFeedback onPress={togglePlay} style={{ flex: 1 }}>
-        <View style={{ flex: 1, height: height + (StatusBar.currentHeight ?? 0) }}>
+        <View
+          style={{
+            flex: 1,
+            height: height + (StatusBar.currentHeight ?? 0),
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Video
             source={{
               uri: `${item.video}?auth_token=${s5ClientAuthToken}`,
