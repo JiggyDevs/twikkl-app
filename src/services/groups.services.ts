@@ -17,16 +17,18 @@ export type Groups = {
   isAdminDeleted: boolean;
 };
 
-interface GroupResponse {
+export interface GroupResponse {
   data: Groups[];
+  pagination: Record<any, any>;
 }
 
 type FetchGroupsResponse = GroupResponse | AxiosError;
 
-export const fetchGroups = async (): Promise<FetchGroupsResponse> => {
+export const fetchGroups = async (page?: number): Promise<FetchGroupsResponse> => {
+  const _page = page ?? 1;
   try {
     const { data: posts } = await fetchFromApi({
-      path: "groups?excludeJoined=true",
+      path: `groups?excludeJoined=true&page=${_page}`,
       method: "get",
     });
     const computeData = {
@@ -43,6 +45,7 @@ export const fetchGroups = async (): Promise<FetchGroupsResponse> => {
     // Handle other types of errors or return a default value
     return {
       data: [],
+      pagination: {},
 
       // Other properties as needed
     };
@@ -213,10 +216,12 @@ export const unfavouriteGroup = async (groupId: string): Promise<boolean | Axios
     // throw error;
   }
 };
-export const fetchUserGroups = async (): Promise<FetchGroupsResponse> => {
+export const fetchUserGroups = async (page?: number): Promise<FetchGroupsResponse> => {
+  const _page = page ?? 1;
+
   try {
     const { data: posts } = await fetchFromApi({
-      path: "groups/user",
+      path: `groups/user?page=${_page}`,
       // method: "get",
     });
     const computeData = {
@@ -233,6 +238,7 @@ export const fetchUserGroups = async (): Promise<FetchGroupsResponse> => {
     // Handle other types of errors or return a default value
     return {
       data: [],
+      pagination: {},
 
       // Other properties as needed
     };
@@ -240,10 +246,11 @@ export const fetchUserGroups = async (): Promise<FetchGroupsResponse> => {
     // throw error;
   }
 };
-export const fetchFavouriteGroups = async (): Promise<FetchGroupsResponse> => {
+export const fetchFavouriteGroups = async (page?: number): Promise<FetchGroupsResponse> => {
+  const _page = page ?? 1;
   try {
     const { data: groups } = await fetchFromApi({
-      path: "favorite-groups",
+      path: `favorite-groups?page=${_page}`,
       method: "get",
     });
     const computeData = {
@@ -260,6 +267,7 @@ export const fetchFavouriteGroups = async (): Promise<FetchGroupsResponse> => {
     // Handle other types of errors or return a default value
     return {
       data: [],
+      pagination: {},
 
       // Other properties as needed
     };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Pressable, Image, FlatList } from "react-native";
 import { Octicons, AntDesign, Ionicons, FontAwesome5, Feather } from "@expo/vector-icons";
 import Highlights from "@twikkl/components/Discover/Highlights";
 import Card from "@twikkl/components/Discover/Card";
@@ -34,6 +34,11 @@ export interface Group extends Groups {}
 interface GroupsObject {
   [key: string]: Group[];
 }
+
+export interface GroupsData {
+  [key: string]: Record<any, any>;
+}
+
 const discoverTabs = [
   {
     title: "For you",
@@ -63,11 +68,35 @@ const Discover = () => {
   const [modalType, setModalType] = useState<ModalType>(null);
   const router = useRouter();
 
-  const { groups, refetch: groupsRefetch } = useGroupHook();
+  const {
+    groups,
+    refetch: groupsRefetch,
+    forYouGroupsData,
+    forYouPage,
+    setForYouPage,
+    isForYouLoading,
+    forYouPageMeta,
+  } = useGroupHook();
 
-  const { yourGroups, refetch: yourGroupsRefetch } = useYourGroupsHook();
+  const {
+    yourGroups,
+    yourGroupsData,
+    yourPageMeta,
+    setYourGroupPage,
+    isYourGroupLoading,
+    yourGroupPage,
+    refetch: yourGroupsRefetch,
+  } = useYourGroupsHook();
 
-  const { favouriteGroups, refetch: favouriteGroupRefetch } = useYourFavouriteGroupsHook();
+  const {
+    favouriteGroups,
+    favouriteGroupsData,
+    favPage,
+    favPageMeta,
+    setFavPage,
+    isFavLoading,
+    refetch: favouriteGroupRefetch,
+  } = useYourFavouriteGroupsHook();
 
   const { _uploadPhoto } = useUploadPhoto();
 
@@ -218,12 +247,45 @@ const Discover = () => {
     </ModalEl>
   );
 
-  const getFavouriteGroups = favouriteGroups.map((group) => group.group);
+  const getFavouriteGroups = favouriteGroupsData.map((group: any) => group.group);
 
   const getGroups: GroupsObject = {
-    "0": groups,
-    "1": yourGroups,
-    "2": yourGroups.filter((group) => getFavouriteGroups.includes(group._id)),
+    "0": forYouGroupsData,
+    "1": yourGroupsData,
+    "2": yourGroupsData.filter((group: any) => getFavouriteGroups.includes(group._id)),
+  };
+
+  const groupsData: GroupsData = {
+    "0": {
+      page: forYouPage,
+      setPage: setForYouPage,
+      pageMeta: forYouPageMeta,
+      groupData: forYouGroupsData,
+      isLoading: isForYouLoading,
+    },
+    "1": {
+      page: yourGroupPage,
+      setPage: setYourGroupPage,
+      pageMeta: yourPageMeta,
+      groupData: yourGroupsData,
+      isLoading: isYourGroupLoading,
+    },
+    "2": {
+      page: favPage,
+      setPage: setFavPage,
+      pageMeta: favPageMeta,
+      groupData: favouriteGroupsData,
+      isLoading: isFavLoading,
+    },
+  };
+
+  const handleEndReached = (info: any) => {
+    const activeGroupData = groupsData[`${activeTabIndex}`];
+    if (!activeGroupData) return;
+    if (activeGroupData.isLoading) return;
+    if (activeGroupData.page < activeGroupData.pageMeta.lastPage) {
+      activeGroupData.setPage((currentPage: number) => currentPage + 1);
+    }
   };
 
   // const navigation = useNavigation();
@@ -266,7 +328,7 @@ const Discover = () => {
       <Highlights />
       <View style={styles.groupContainer}>
         <Text style={styles.text}>{titleText}</Text>
-        <Scroll>
+        {/* <Scroll>
           {getGroups[`${activeTabIndex}`].map((item) => (
             <Pressable
               key={item._id}
@@ -300,7 +362,49 @@ const Discover = () => {
               />
             </Pressable>
           ))}
-        </Scroll>
+        </Scroll> */}
+        <FlatList
+          // style={[StyleSheet.absoluteFill]}
+          data={getGroups[`${activeTabIndex}`]}
+          renderItem={({ item }) => (
+            <Pressable
+              key={item._id}
+              onPress={() => {
+                if (activeTabIndex === 0) return;
+                updateGroup(item);
+                router.push({
+                  pathname: `/Discover/${item._id}`,
+                });
+              }}
+            >
+              <Card
+                onAccessGroup={() => {
+                  updateGroup(item);
+                  router.push({
+                    pathname: `/Discover/${item._id}`,
+                  });
+                }}
+                onPress={() => {
+                  setModalType("access");
+                  setSelectedGroup(item);
+                }}
+                leaveGroup={() => {
+                  setModalType("leave");
+                  setSelectedGroup(item);
+                }}
+                fav={getFavouriteGroups.includes(item._id)}
+                favPress={(checked: boolean) => favPress(item, checked)}
+                forYou={activeTabIndex === 0}
+                {...item}
+              />
+            </Pressable>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          // onScroll={onScroll}
+          onEndReached={handleEndReached}
+        />
       </View>
       {renderModalContent()}
     </View>
