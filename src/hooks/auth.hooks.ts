@@ -78,30 +78,16 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
       toastSuccess(data.message);
       router.push("Home");
     } catch (error) {
-      console.log({ verifyOtpError: error });
+      console.log({ usernameError: error });
     } finally {
       requestEnded();
       hideLoader();
     }
   };
 
-  const _resendOtp = async () => {
-    // showLoader();
-    // const emailToUse = {
-    //   email: email || authEmail,
-    // };
-    // try {
-    //   await resendOtp(emailToUse);
-    // } catch (error) {
-    // } finally {
-    //   hideLoader();
-    // }
-  };
-
   return {
     _signup,
     _verifyOtp,
-    _resendOtp,
     form,
     updateField,
     loading,
@@ -117,9 +103,6 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
   const router = useRouter();
   const canLogin = isValidFormSubmit(form);
   const requesting = isRequesting("login");
-  // const { email } = form;
-
-  // router.push({ pathname: "/", params: { post: "random", id, other } });
 
   const login = async () => {
     showLoader();
@@ -130,13 +113,12 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
       setAuth(data.data, data.token);
       toastSuccess(data.message);
       router.push("Home");
-      if (data.message === "email is not verified ") {
-        // setEmail(email);
-        // resendOtp({ email });
-        // navigation.navigate('Register', { signupDone: true });
-      }
     } catch (error: any) {
-      console.log("loginError", error);
+      if (error.response?.data.message === "email is not verified") {
+        setToken(error.response?.data.token);
+        router.push({ pathname: "auth/Register", params: { signupDone: true } });
+      }
+      console.log("loginError", error.response?.data);
     } finally {
       requestEnded();
       hideLoader();
@@ -169,7 +151,7 @@ export const useForgotPassword = <T extends Record<any, any>>(defaultForm: T) =>
     showLoader();
     const formData = {
       email,
-      code: token,
+      // code: token,
     };
     try {
       const data = await doForgotPassword(formData);

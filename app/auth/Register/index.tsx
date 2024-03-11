@@ -8,8 +8,6 @@ import ConfirmationField from "@twikkl/components/ConfirmationField";
 import Signup, { SubSignup } from "./Signup";
 import { ViewVariant } from "@twikkl/configs";
 import { useEffect, useState } from "react";
-import { fetchFromApi, handleFetchError } from "@twikkl/utils/fetch";
-import { useAuth } from "@twikkl/entities/auth.entity";
 import { getOTP } from "@twikkl/services";
 
 const defaultSignUpData = {
@@ -26,23 +24,22 @@ const Register = () => {
   const [suffix, setSuffix] = useState(".jgy");
   const [dropDown, setDropDown] = useState(false);
   const [tc, setTc] = useState(false);
-  const {
-    form,
-    updateField,
-    _signup,
-    _resendOtp,
-    _verifyOtp,
-    currentStage,
-    setCurrentStage,
-    loading,
-    _createUsername,
-  } = useSignup(defaultSignUpData, Boolean(signupDone));
+  const { form, updateField, _signup, _verifyOtp, currentStage, setCurrentStage, loading, _createUsername } = useSignup(
+    defaultSignUpData,
+    Boolean(signupDone),
+  );
 
   const handleClick = () =>
     currentStage === "signup" ? _signup() : currentStage === "verify" ? _verifyOtp() : _createUsername();
 
   const backClick = () =>
-    currentStage === "signup" ? router.push("auth") : currentStage === "verify" ? setCurrentStage("signup") : null;
+    signupDone
+      ? router.back()
+      : currentStage === "signup"
+      ? router.push("auth")
+      : currentStage === "verify"
+      ? setCurrentStage("signup")
+      : null;
 
   const disableButton =
     currentStage === "signup"
@@ -57,8 +54,11 @@ const Register = () => {
   const nameArr = [".jgy", ".eth", ".avax", ".lens"];
 
   useEffect(() => {
-    currentStage === "verify" && getOTP();
-  }, [currentStage]);
+    if (signupDone) {
+      getOTP();
+      setCurrentStage("verify");
+    }
+  }, []);
 
   return (
     <View style={ViewVariant.wrapper}>
