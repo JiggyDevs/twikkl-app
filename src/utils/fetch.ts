@@ -63,7 +63,8 @@ export const handleFetchError = (err: any, key?: any) => {
     // }
     if (
       err.response.data.message === "Session expired, please login again" ||
-      err.response.data.message === "Authentication expired, login again please"
+      err.response.data.message === "Authentication expired, login again please" ||
+      err.response.data.message === "Unauthorized"
     ) {
       clearAuth();
     }

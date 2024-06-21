@@ -10,8 +10,8 @@ import {
   Dimensions,
 } from "react-native";
 import { MaterialCommunityIcons, FontAwesome5, Octicons, AntDesign, Ionicons } from "@expo/vector-icons";
-import { colors } from "../../../app/Discover/index";
-import { IGroup } from "../../../app/Discover/[id]";
+import { colors } from "../../../app/(app)/Discover/index";
+import { IGroup } from "../../../app/(app)/Discover/[id]";
 import PlayUpload from "@assets/svg/PlayUpload";
 import { imgArr } from "../Discover/Card";
 import GroupSettings from "@assets/svg/GroupSettings";

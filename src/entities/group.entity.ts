@@ -1,6 +1,6 @@
 import { entity, persistence } from "simpler-state";
 import { remoteStorage } from "./entityHelpers";
-import { Group } from "../../app/Discover";
+import { Group } from "../../app/(app)/Discover";
 
 interface IGroupEntity {
   group: null | Group;

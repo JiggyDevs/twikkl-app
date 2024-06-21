@@ -4,7 +4,7 @@ import { Octicons, AntDesign, Ionicons, FontAwesome5, Feather } from "@expo/vect
 import Highlights from "@twikkl/components/Discover/Highlights";
 import Card from "@twikkl/components/Discover/Card";
 import ModalEl from "@twikkl/components/ModalEl";
-import { useGroupHook, useYourFavouriteGroupsHook, useYourGroupsHook } from "@twikkl/hooks/groups.hooks";
+import { useGroupHook2, useYourFavouriteGroupsHook2, useYourGroupsHook2 } from "@twikkl/hooks/groups.hooks";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import Scroll from "@twikkl/components/Scrollable";
 import { useRouter } from "expo-router";
@@ -25,8 +25,8 @@ export const colors = {
 };
 
 const criterias = [
-  { icon: require("../../assets/imgs/bayc.png"), text: "BAYC NFT" },
-  { icon: require("../../assets/imgs/jgy.png"), text: "10 JGY" },
+  { icon: require("../../../assets/imgs/bayc.png"), text: "BAYC NFT" },
+  { icon: require("../../../assets/imgs/jgy.png"), text: "10 JGY" },
 ];
 
 export interface Group extends Groups {}
@@ -69,40 +69,21 @@ const Discover = () => {
   const router = useRouter();
 
   const {
-    groups,
-    refetch: groupsRefetch,
-    forYouGroupsData,
-    forYouPage,
-    setForYouPage,
-    isForYouLoading,
-    forYouPageMeta,
-  } = useGroupHook();
+    action: { refetch: groupsRefetch, loadMore: forYouLoadMore },
+    state: { groups, isLoading: isForYouLoading },
+  } = useGroupHook2();
 
   const {
-    yourGroups,
-    yourGroupsData,
-    yourPageMeta,
-    setYourGroupPage,
-    isYourGroupLoading,
-    yourGroupPage,
-    refetch: yourGroupsRefetch,
-  } = useYourGroupsHook();
+    action: { refetch: yourGroupsRefetch, loadMore: yourGroupLoadMore },
+    state: { yourGroups, isLoading: isYourGroupLoading },
+  } = useYourGroupsHook2();
 
   const {
-    favouriteGroups,
-    favouriteGroupsData,
-    favPage,
-    favPageMeta,
-    setFavPage,
-    isFavLoading,
-    refetch: favouriteGroupRefetch,
-  } = useYourFavouriteGroupsHook();
+    action: { refetch: favouriteGroupRefetch, loadMore: favLoadMore },
+    state: { favouriteGroups, isLoading: isFavLoading },
+  } = useYourFavouriteGroupsHook2();
 
   const { _uploadPhoto } = useUploadPhoto();
-
-  // console.log("====================================");
-  // console.log(groups);
-  // console.log("====================================");
 
   const handleCreateGroup = async (data: {
     name: string;
@@ -247,35 +228,26 @@ const Discover = () => {
     </ModalEl>
   );
 
-  const getFavouriteGroups = favouriteGroupsData.map((group: any) => group.group);
+  const getFavouriteGroups = favouriteGroups.map((group: any) => group.group);
 
   const getGroups: GroupsObject = {
-    "0": forYouGroupsData,
-    "1": yourGroupsData,
-    "2": yourGroupsData.filter((group: any) => getFavouriteGroups.includes(group._id)),
+    "0": groups,
+    "1": yourGroups,
+    "2": yourGroups.filter((group: any) => getFavouriteGroups.includes(group._id)),
   };
 
   const groupsData: GroupsData = {
     "0": {
-      page: forYouPage,
-      setPage: setForYouPage,
-      pageMeta: forYouPageMeta,
-      groupData: forYouGroupsData,
       isLoading: isForYouLoading,
+      loadMore: forYouLoadMore,
     },
     "1": {
-      page: yourGroupPage,
-      setPage: setYourGroupPage,
-      pageMeta: yourPageMeta,
-      groupData: yourGroupsData,
       isLoading: isYourGroupLoading,
+      loadMore: yourGroupLoadMore,
     },
     "2": {
-      page: favPage,
-      setPage: setFavPage,
-      pageMeta: favPageMeta,
-      groupData: favouriteGroupsData,
       isLoading: isFavLoading,
+      loadMore: favLoadMore,
     },
   };
 
@@ -283,9 +255,7 @@ const Discover = () => {
     const activeGroupData = groupsData[`${activeTabIndex}`];
     if (!activeGroupData) return;
     if (activeGroupData.isLoading) return;
-    if (activeGroupData.page < activeGroupData.pageMeta.lastPage) {
-      activeGroupData.setPage((currentPage: number) => currentPage + 1);
-    }
+    activeGroupData.loadMore();
   };
 
   // const navigation = useNavigation();
@@ -328,43 +298,8 @@ const Discover = () => {
       <Highlights />
       <View style={styles.groupContainer}>
         <Text style={styles.text}>{titleText}</Text>
-        {/* <Scroll>
-          {getGroups[`${activeTabIndex}`].map((item) => (
-            <Pressable
-              key={item._id}
-              onPress={() => {
-                if (activeTabIndex === 0) return;
-                updateGroup(item);
-                router.push({
-                  pathname: `/Discover/${item._id}`,
-                });
-              }}
-            >
-              <Card
-                onAccessGroup={() => {
-                  updateGroup(item);
-                  router.push({
-                    pathname: `/Discover/${item._id}`,
-                  });
-                }}
-                onPress={() => {
-                  setModalType("access");
-                  setSelectedGroup(item);
-                }}
-                leaveGroup={() => {
-                  setModalType("leave");
-                  setSelectedGroup(item);
-                }}
-                fav={getFavouriteGroups.includes(item._id)}
-                favPress={(checked: boolean) => favPress(item, checked)}
-                forYou={activeTabIndex === 0}
-                {...item}
-              />
-            </Pressable>
-          ))}
-        </Scroll> */}
+
         <FlatList
-          // style={[StyleSheet.absoluteFill]}
           data={getGroups[`${activeTabIndex}`]}
           renderItem={({ item }) => (
             <Pressable
@@ -404,6 +339,7 @@ const Discover = () => {
           showsHorizontalScrollIndicator={false}
           // onScroll={onScroll}
           onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
         />
       </View>
       {renderModalContent()}

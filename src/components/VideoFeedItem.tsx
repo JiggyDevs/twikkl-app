@@ -46,7 +46,7 @@ type Props = {
     likes: { user: TUser }[];
     _id: string;
     description: string;
-    creator: TUser;
+    creator: Partial<TUser>;
   };
   index: number;
   visibleIndex: number;

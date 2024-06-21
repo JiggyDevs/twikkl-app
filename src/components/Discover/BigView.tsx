@@ -29,7 +29,7 @@ const BigView = ({
         <View style={[StyleSheet.absoluteFill]}>
           <VideoFeedItem
             item={{
-              ...post,
+              ...(post as Post),
               video: post.contentUrl || "",
               comments: post?.comments || comments?.data,
             }}

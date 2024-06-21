@@ -24,7 +24,7 @@ export type Post = {
   totalLikes: number;
   totalComments: number;
   description: string;
-  creator: TUser;
+  creator: Partial<TUser>;
   comments: TComment[];
   category: { name: string };
   likes: { user: TUser }[];
@@ -84,10 +84,16 @@ export const fetchUserFeeds = async (page?: number, perPage?: number): Promise<F
     hideLoader();
   }
 };
-export const fetchUserPost = async (userId: string, perPage?: number): Promise<FetchUserFeedsResponse | undefined> => {
+export const fetchUserPost = async (
+  userId: string,
+  page?: number,
+  perPage?: number,
+): Promise<FetchUserFeedsResponse | undefined> => {
+  const _page = page ?? 1;
+
   try {
     const { data: posts } = await fetchFromApi({
-      path: `posts/user/${userId}?${perPage ? `perPage=${perPage}` : ""}`,
+      path: `posts/user/${userId}?${perPage ? `perPage=${perPage}&` : ""}page=${_page}`,
       method: "get",
     });
     const computeData = {

@@ -76,7 +76,7 @@ export const useSignup = <T extends Record<any, any>>(defaultForm: T, signupDone
       const data = await createUsername(username);
       console.log({ createUsername: data });
       toastSuccess(data.message);
-      router.push("Home");
+      router.replace("Home");
     } catch (error) {
       console.log({ usernameError: error });
     } finally {
@@ -112,7 +112,7 @@ export const useLogin = <T extends Login>(defaultForm: T) => {
       console.log("loginData", data);
       setAuth(data.data, data.token);
       toastSuccess(data.message);
-      router.push("Home");
+      router.replace("Home");
     } catch (error: any) {
       if (error.response?.data.message === "email is not verified") {
         setToken(error.response?.data.token);

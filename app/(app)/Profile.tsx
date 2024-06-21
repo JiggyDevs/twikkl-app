@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  FlatList,
 } from "react-native";
 import React, { useMemo, useState } from "react";
 import Back from "@assets/svg/Back";
@@ -29,6 +30,7 @@ import ImgBgRender from "@twikkl/components/ImgBgRender";
 import BigView from "@twikkl/components/Discover/BigView";
 import Settings from "@assets/svg/Settings";
 import { hideLoader, showLoader } from "@twikkl/entities";
+import { useProfile } from "@twikkl/hooks/profile.hooks";
 
 const iconsArr = [{ Icon: Play }, { Icon: PinIcon }, { Icon: LiveIcon }, { Icon: LabelIcon }];
 
@@ -52,13 +54,18 @@ const Profile = () => {
   console.log("====================================");
   console.log("markkk", bookmarks);
   console.log("====================================");
-  const [pageSize, setPageSize] = useState(10);
+  // const [pageSize, setPageSize] = useState(10);
 
-  const { data: userPosts, refetch } = useQuery(["user-posts", user, pageSize], () => fetchUserPost(user || ""));
+  // const { data: userPosts, refetch } = useQuery(["user-posts", user, pageSize], () => fetchUserPost(user || ""));
 
-  const posts = isUserFeedsResponse(userPosts) ? userPosts.data : [];
+  const {
+    action: { refetch, loadMore },
+    state: { userPosts, pagination },
+  } = useProfile(user as string);
 
-  const postsPagination = isUserFeedsResponse(userPosts) ? userPosts.pagination : null;
+  const posts = isUserFeedsResponse({ data: userPosts, pagination }) ? userPosts : [];
+
+  const postsPagination = isUserFeedsResponse({ data: userPosts, pagination }) ? pagination : null;
 
   const handleFollow = async (userId: string) => {
     if (!userId) return;
@@ -87,16 +94,16 @@ const Profile = () => {
     }
   };
 
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
+  // const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+  //   const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
 
-    if (isEndReached && postsPagination && active === 0) {
-      if (!isLoading && (postsPagination.total || 0) > pageSize) {
-        setPageSize((prev) => prev + 10);
-      }
-    }
-  };
+  //   if (isEndReached && postsPagination && active === 0) {
+  //     if (!isLoading && (postsPagination.total || 0) > pageSize) {
+  //       setPageSize((prev) => prev + 10);
+  //     }
+  //   }
+  // };
 
   const loggedInProfile = loggedInUser?._id === user;
 
@@ -145,7 +152,7 @@ const Profile = () => {
           <MoreIcon />
         )}
       </View>
-      <ScrollView style={{ paddingHorizontal: 10 }} onScroll={handleScroll}>
+      <ScrollView style={{ paddingHorizontal: 10 }}>
         <View style={styles.center}>
           <Image source={{ uri: data?.avatar }} style={styles.profileImg} />
           <Text style={styles.boldTextSpace}>{data?.username}</Text>
@@ -209,16 +216,33 @@ const Profile = () => {
           ))}
         </View>
         <View style={styles.img}>
-          {active === 0 &&
-            posts &&
-            posts.map((post, idx) => (
-              <ImgBgRender
-                key={post._id}
-                img={post.video}
-                likes={post.totalLikes}
-                handleView={() => setViewPost(idx)}
+          {
+            active === 0 && posts && (
+              <FlatList
+                data={posts}
+                renderItem={({ item, index: idx }) => (
+                  <ImgBgRender
+                    key={item._id}
+                    img={item.video}
+                    likes={item.totalLikes}
+                    handleView={() => setViewPost(idx)}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                onEndReached={() => loadMore()}
+                onEndReachedThreshold={0.5}
               />
-            ))}
+            )
+            // posts.map((post, idx) => (
+            //   <ImgBgRender
+            //     key={post._id}
+            //     img={post.video}
+            //     likes={post.totalLikes}
+            //     handleView={() => setViewPost(idx)}
+            //   />
+          }
           {/* {active === 1 &&
             bookmarks &&
             bookmarks.data.map((bookmark, idx) => (

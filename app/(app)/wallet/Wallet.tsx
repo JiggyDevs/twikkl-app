@@ -17,7 +17,7 @@ import { isPriceToken, nfts, receiveNFt, tokens } from "@twikkl/data/constant";
 import { useAuth } from "@twikkl/entities/auth.entity";
 import { addToken, removeToken, updateToken, useSavedTokenNft } from "@twikkl/entities/tokenNft.entity";
 import { useWallet } from "@twikkl/hooks/wallet.hooks";
-import { createWallet, getWalletDetails, sendFund } from "@twikkl/services/wallet.services";
+import { createWalletPin, getWalletDetails, sendFund } from "@twikkl/services/wallet.services";
 import { useWalletHook } from "@twikkl/SmartAccount/hook";
 import { searchFilter, toastInfo } from "@twikkl/utils/common";
 import { TOAST_MESSAGE } from "@twikkl/utils/helper.enum";
@@ -198,7 +198,7 @@ export default function Wallet(): ReactElement {
                     marginTop: 40,
                   }}
                 >
-                  <Image source={require("../../assets/imgs/qrCode.png")} />
+                  <Image source={require("../../../assets/imgs/qrCode.png")} />
                   <Text style={{ textAlign: "center" }}>{nft.address}</Text>
                 </View>
                 <View

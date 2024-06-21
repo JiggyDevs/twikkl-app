@@ -106,7 +106,7 @@ const CaptionVideo = ({
       <BackHeader title="Post" onPress={() => setCaption(false)} />
       <View style={styles.post}>
         <View style={styles.nameAvatar}>
-          <Avatar.Image size={34} source={require("../../assets/imgs/avatar1.png")} />
+          <Avatar.Image size={34} source={require("../../../assets/imgs/avatar1.png")} />
           <View>
             <Text style={{ fontWeight: "600", fontSize: 15 }}>@glorypraise.eth</Text>
             <View>

@@ -64,11 +64,6 @@
 //     },
 //   ];
 
-//   const criterias = [
-//     { icon: require("../../assets/imgs/bayc.png"), text: "BAYC NFT" },
-//     { icon: require("../../assets/imgs/jgy.png"), text: "10 JGY" },
-//   ];
-
 //   const pressButton = (item: any) => {
 //     setAccessModal(false);
 //     const filtered = forYou.filter((ite) => ite.title !== item.title);

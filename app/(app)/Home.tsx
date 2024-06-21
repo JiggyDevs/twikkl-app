@@ -17,7 +17,7 @@ import BottomNav from "@twikkl/components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import AppBottomSheet from "@twikkl/components/BottomSheet";
-import { useFeedHook } from "@twikkl/hooks/feed.hooks";
+import { useFeedHook2 } from "@twikkl/hooks/feed.hooks";
 import AppLoader from "@twikkl/components/AppLoader";
 import Share from "@twikkl/components/Share";
 import Comment from "@twikkl/components/Comment";
@@ -41,7 +41,10 @@ export default function ScreenHome() {
   const [shareVisible, setShareVisible] = useState(false);
   const [comment, setComment] = useState(false);
 
-  const { isLoading, posts, refetch, pageMeta, page, setPage, postsData } = useFeedHook();
+  const {
+    state: { posts, isLoading },
+    action,
+  } = useFeedHook2();
 
   const { t } = useTranslation();
   const [visibleIndex, setVisibleIndex] = useState<number>(0);
@@ -52,13 +55,6 @@ export default function ScreenHome() {
     setVisibleIndex(index);
   };
 
-  const handleEndReached = (info: any) => {
-    if (isLoading) return;
-    if (page < pageMeta.lastPage) {
-      setPage((currentPage) => currentPage + 1);
-    }
-  };
-
   const visiblePost = posts[visibleIndex];
 
   // console.log("====================================");
@@ -66,7 +62,7 @@ export default function ScreenHome() {
   // console.log("====================================");
 
   useEffect(() => {
-    refetch();
+    // refetch();
     setTokenDefault();
   }, []);
 
@@ -79,7 +75,7 @@ export default function ScreenHome() {
       {posts.length ? (
         <FlatList
           style={[StyleSheet.absoluteFill]}
-          data={postsData}
+          data={posts}
           renderItem={({ item, index }) => (
             <VideoFeedItem
               item={item}
@@ -93,7 +89,8 @@ export default function ScreenHome() {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onScroll={onScroll}
-          onEndReached={handleEndReached}
+          onEndReached={() => action.loadMore()}
+          onEndReachedThreshold={0.5}
         />
       ) : null}
       <SafeAreaView style={styles.innerContainer}>
@@ -142,7 +139,7 @@ export default function ScreenHome() {
             comments={visiblePost.comments}
             postId={visiblePost._id}
             newComment={() => {
-              refetch();
+              action.refetch();
             }}
           />
         </AppBottomSheet>

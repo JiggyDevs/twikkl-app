@@ -1,38 +1,46 @@
 import { UserFeedsResponse, fetchUserFeeds, isUserFeedsResponse } from "@twikkl/services/feed.services";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export const useFeedHook = () => {
-  const [page, setPage] = useState(1);
-  const [pageMeta, setPageMeta] = useState<any>({ currentPage: 0, lastPage: 1 });
+export const useFeedHook2 = () => {
   const [posts, setPosts] = useState<any>([]);
 
-  const { data, isLoading, isSuccess, ...rest } = useQuery(["user-feed", page], () => fetchUserFeeds(page), {
-    keepPreviousData: true,
+  const { data, hasNextPage, fetchNextPage, isLoading, refetch } = useInfiniteQuery({
+    queryKey: ["user-feed"],
+    queryFn: async ({ pageParam = 1 }) => fetchUserFeeds(pageParam),
+    getNextPageParam: (resData: any) => {
+      if (resData?.pagination?.currentPage === resData?.paginatio?.lastPage) {
+        return undefined;
+      }
+
+      return resData.pagination.currentPage + 1;
+    },
   });
 
-  useEffect(() => {
-    if (!isLoading && isSuccess) {
-      const pagination = (data as UserFeedsResponse)?.pagination as Record<any, any>;
-
-      if (pagination?.currentPage > pageMeta.currentPage) {
-        const _postData = isUserFeedsResponse(data) ? data.data : [];
-        setPosts((oldPosts: any) => oldPosts.concat(_postData));
-        setPageMeta(pagination);
-      }
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
     }
-  }, [isLoading, rest.isPreviousData]);
+  };
+
+  console.log({ data, isLoading });
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setPosts(data.pages.map((page) => page.data).flat());
+    }
+  }, [data]);
 
   return {
-    ...rest,
-    pagination: !isLoading && isSuccess && (data as UserFeedsResponse)?.pagination,
-    posts: isUserFeedsResponse(data) ? data.data : [],
-    isLoading,
-    postsData: isUserFeedsResponse({ data: posts }) ? posts : [],
-    setPostsData: setPosts,
-    setPage,
-    page,
-    pageMeta,
-    setPageMeta,
+    state: {
+      posts,
+      data,
+      isLoading,
+    },
+    action: {
+      setPosts,
+      loadMore,
+      refetch,
+    },
   };
 };

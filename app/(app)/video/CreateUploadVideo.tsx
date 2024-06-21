@@ -259,14 +259,14 @@ const CreateUploadvideo = ({
                 )}
                 {actions !== "Effect" && (
                   <View style={styles.recordLine}>
-                    {!isRecording && <Image source={require("../../assets/imgs/left.png")} />}
+                    {!isRecording && <Image source={require("../../../assets/imgs/left.png")} />}
                     <View style={{ ...styles.recordWrapper, marginBottom: isRecording ? 70 : 0 }}>
                       <Pressable
                         onPress={isRecording ? stopRecording : startRecording}
                         style={{ ...styles.record, backgroundColor: isRecording ? "#A10000" : "#fff" }}
                       />
                     </View>
-                    {!isRecording && <Image source={require("../../assets/imgs/right.png")} />}
+                    {!isRecording && <Image source={require("../../../assets/imgs/right.png")} />}
                   </View>
                 )}
                 {actions !== "Effect" && !isRecording && (

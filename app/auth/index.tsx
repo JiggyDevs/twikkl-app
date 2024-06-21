@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import ButtonEl from "@twikkl/components/ButtonEl";
 import { ViewVariant } from "@twikkl/configs";
 import { useRouter } from "expo-router";
-import { createWallet } from "@twikkl/services/wallet.services";
+import { createWalletPin } from "@twikkl/services/wallet.services";
 
 const Index = () => {
   const router = useRouter();
 
   // useEffect(() => {
-  //   createWallet();
+  //   createWalletPin();
   // }, []);
 
   return (

@@ -1,4 +1,13 @@
-import { View, Text, StyleSheet, Pressable, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  FlatList,
+} from "react-native";
 import React, { useState } from "react";
 import Back from "@assets/svg/Back";
 import isToday from "dayjs/plugin/isToday";
@@ -12,6 +21,8 @@ import { NotificationResponse, markNotification, userNotifications } from "@twik
 import AppLoader from "@twikkl/components/AppLoader";
 import dayjs from "dayjs";
 import BigView from "@twikkl/components/Discover/BigView";
+import { useNotification } from "@twikkl/hooks/notification.hooks";
+import { Post } from "@twikkl/services/feed.services";
 
 const arr = ["All", "Likes", "Comments", "Mentions", "Following"];
 
@@ -20,30 +31,19 @@ dayjs.extend(isYesterday);
 dayjs.extend(advancedFormat);
 
 const Notification = () => {
-  const { user } = authEntity.get();
   const router = useRouter();
   const [active, setActive] = useState("All");
-  const [page] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [viewNotification, setViewNotification] = useState<[number, number] | null>(null);
-  const { data, isLoading, refetch } = useQuery(["notifications", user?._id, pageSize], () =>
-    userNotifications(user?._id || "", page, pageSize),
-  );
+
+  const {
+    action: { refetch, loadMore },
+    state: { notifications: data, isLoading },
+  } = useNotification();
 
   const handleMarkNotification = async (notificationId: string) => {
     const response = await markNotification(notificationId);
     if (response) {
       refetch();
-    }
-  };
-
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height;
-    if (isEndReached) {
-      if (!isLoading && (data?.pagination.total || 0) > pageSize) {
-        setPageSize((prev) => prev + 10);
-      }
     }
   };
 
@@ -80,7 +80,7 @@ const Notification = () => {
     );
   }
 
-  const notifications = data.data;
+  const notifications = data;
   // Assuming `data` is an array of Notification objects
   const dataByDate = organizeDataByDate(notifications);
 
@@ -109,7 +109,7 @@ const Notification = () => {
       <BigView
         setBigView={() => setViewNotification(null)}
         post={{
-          ...postToShow.post,
+          ...(postToShow.post as Post),
           creator: {
             avatar: postToShow.user.avatar,
             username: postToShow.user.username,
@@ -150,13 +150,15 @@ const Notification = () => {
             ))}
           </ScrollView>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false} onScroll={handleScroll}>
-          <View style={{ flex: 1, gap: 15 }}>
-            {Array.from(getActive()).map(([key, value], idx) => (
-              <View key={key}>
+
+        <View style={{ flex: 1, gap: 15 }}>
+          <FlatList
+            data={Array.from(getActive())}
+            renderItem={({ item: [key, value], index: idx }) => (
+              <View>
                 <Text style={styles.dayText}>{computeDate(key)}</Text>
                 {value.length ? (
-                  value.map((item, index) => {
+                  value.map((item: any, index: number) => {
                     console.log("====================================");
                     console.log(item);
                     console.log("====================================");
@@ -184,9 +186,15 @@ const Notification = () => {
                   </View>
                 )}
               </View>
-            ))}
-          </View>
-        </ScrollView>
+            )}
+            keyExtractor={([key], index) => `${active}_${index.toString()}_${key}`}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            // onScroll={onScroll}
+            onEndReached={() => loadMore()}
+            onEndReachedThreshold={0.5}
+          />
+        </View>
       </View>
     </>
   );

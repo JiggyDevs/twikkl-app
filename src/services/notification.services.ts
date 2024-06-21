@@ -25,9 +25,11 @@ export const userNotifications = async (
     }
   | undefined
 > => {
+  const _pageSize = pageSize ?? 10;
+  const _page = page ?? 1;
   try {
     const { data } = await fetchFromApi({
-      path: `notifications/${userId}${pageSize ? `?perpage=${pageSize}` : ""}`,
+      path: `notifications/${userId}?${pageSize ? `perpage=${_pageSize}&` : ""}page=${_page}`,
       method: "get",
     });
     return data;
