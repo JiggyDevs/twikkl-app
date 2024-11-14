@@ -8,18 +8,21 @@
       "distribution": "internal",
       "ios": {
         "resourceClass": "m1-medium"
-      }
+      },
+      "android": {}
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "resourceClass": "m1-medium"
-      }
+      },
+      "android": {}
     },
     "production": {
       "ios": {
         "resourceClass": "m1-medium"
-      }
+      },
+      "android": {}
     }
   },
   "submit": {
