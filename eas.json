@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 13.2.0",
-    "appVersionSource": "remote"
+    "appVersionSource": "remote",
     "requireCommit": true
   },
   "build": {
@@ -11,20 +11,26 @@
       "ios": {
         "resourceClass": "m1-medium"
       },
-      "android": {}
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "resourceClass": "m1-medium"
       },
-      "android": {}
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
       "ios": {
         "resourceClass": "m1-medium"
       },
-      "android": {}
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {
